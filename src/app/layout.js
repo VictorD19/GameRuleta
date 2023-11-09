@@ -1,6 +1,8 @@
 import { Archivo } from 'next/font/google'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './globals.css'
-
+import paleta from '../styles/paletaColores'
+import MenuLateral from '@/Components/MenuLateral';
 const inter = Archivo({ subsets: ['latin'] })
 
 export const metadata = {
@@ -11,7 +13,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className} style={{background:paleta.NEGRO,color: paleta.BLANCO }}>
+      {children}
+      </body>
     </html>
   )
 }

@@ -1,9 +1,8 @@
 
-
 export default function Page() {
   return (
-    <main>
-      hola
-    </main>
+    <div>
+    homeasdasd
+    </div>
   )
 }

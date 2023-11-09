@@ -69,8 +69,8 @@ function StarGame() {
   HacerApuesta(jugador2, ValorApostar(), LADO_A);
   HacerApuesta(jugador3, ValorApostar(), LADO_A);
   HacerApuesta(jugador4, ValorApostar(), LADO_B);
-  // HacerApuesta(jugador5, ValorApostar(), LADO_B);
-  // HacerApuesta(jugador6, ValorApostar(), LADO_B);
+  HacerApuesta(jugador5, ValorApostar(), LADO_B);
+  HacerApuesta(jugador6, ValorApostar(), LADO_B);
 
   GerarRuleta();
 
