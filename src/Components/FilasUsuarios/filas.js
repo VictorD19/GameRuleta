@@ -1,6 +1,7 @@
 export default function Fila({ Jugadores }) {
   return (
-    <div className="card bg-dark text-white" style={{ width: "30rem" }}>
+    <div className=" col-sm-12 col-md-4 mb-4 mb-md-0" >
+      <div className="card bg-dark text-white">
       <div className="card-header d-flex justify-content-between">
         <span>Valor Total: R$ 100,00</span>
         <span>50%</span>
@@ -20,6 +21,7 @@ export default function Fila({ Jugadores }) {
         <Jugador />
         <Jugador />
         <Jugador />
+      </div>
       </div>
     </div>
   );

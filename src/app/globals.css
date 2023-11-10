@@ -100,3 +100,6 @@ a {
     color-scheme: dark;
   }
 }
+ul{
+  list-style: none;
+}

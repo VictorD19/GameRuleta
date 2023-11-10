@@ -1,6 +1,7 @@
 export default function Historico() {
   return (
-    <div className="card bg-dark text-white" style={{width: "25rem"}}>
+    <div className="col-sm-12 col-md-4 mb-4 mb-md-0">
+    <div className="card bg-dark text-white">
       <div className="card-header">Historicos Partidas</div>
       <div className="card-body">
         <div className="row text-start">
@@ -22,6 +23,7 @@ export default function Historico() {
         <HistoricoItem Lado="🩵"/>
         <HistoricoItem Lado="🩵"/>
       </div>
+    </div>
     </div>
   );
 }
