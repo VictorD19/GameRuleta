@@ -1,3 +1,7 @@
+'use client'
+
+import { CardJogador } from "./style.styled";
+
 export default function Fila({ Jugadores }) {
   return (
     <div className=" col-sm-12 col-md-4 mb-4 mb-md-0" >
@@ -8,11 +12,11 @@ export default function Fila({ Jugadores }) {
       </div>
       <div className="card-body">
         <div className="row">
-          <span className="col-9">
-            Nombre
+          <span className="col-7">
+            Usuarios
           </span>
-          <span className="col-2">Valor</span>
-          <span className="col-1">%</span>
+          <span className="col-3 text-end" >Valor (R$)</span>
+          <span className="col-2 text-end">%</span>
         </div>
         <Jugador />
         <Jugador />
@@ -29,21 +33,21 @@ export default function Fila({ Jugadores }) {
 
 const Jugador = () => {
   return (
-    <div className="row my-2">
-    <span className="col-9">
-      <div className="row">
+    <CardJogador className="row my-2 align-items-center">
+    <span className="col-7">
+      <div className="row align-items-center">
         <div className="col-3">
           <img
             src="https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small/default-avatar-profile-icon-of-social-media-user-vector.jpg"
-            width={60}
-            height={60}
+            width={50}
+            height={50}
           />
         </div>
         <div className="col-6">nombre</div>
       </div>
     </span>
-    <span className="col-2  ">Valor</span>
-    <span className="col-1  ">%</span>
-  </div>
+    <span className="col-3 valor   text-end">{Math.floor(Math.random() * 1000 + 1).toFixed(2)}</span>
+    <span className="col-2 text-end">{Math.floor(Math.random() * 100 + 1)}%</span>
+  </CardJogador>
   );
 };

@@ -13,10 +13,35 @@ import {
   FaSignOutAlt,
   FaUserAstronaut,
 } from "react-icons/fa";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const NavComponent = styled.nav``;
-
+const MENUS = [
+  {
+    Titulo: "CONTA",
+    Icon: <FaUserAstronaut />,
+    Path: "/Conta",
+  },
+  {
+    Titulo: "PARTIDAS",
+    Icon: <FaHistory />,
+    Path: "/Partidas",
+  },
+  {
+    Titulo: "FAQ",
+    Icon: <FaQuestionCircle />,
+    Path: "/Faq",
+  },
+  {
+    Titulo: "SAIR",
+    Icon: <FaSignOutAlt />,
+    Path: "/Logout",
+  },
+];
 export function Sidebar() {
+  const pathname = usePathname();
+
   return (
     <NavComponent>
       <div className="sidebar-top">
@@ -47,13 +72,11 @@ export function Sidebar() {
         <div className="row">
           <div className="col-6  px-2">
             <Button variant="success" className="w-100">
-            
               Depositar
             </Button>
           </div>
           <div className="col-6 px-2">
             <Button value="primary" className="w-100">
-           
               Sacar
             </Button>
           </div>
@@ -61,42 +84,15 @@ export function Sidebar() {
       </div>
 
       <div className="sidebar-links">
-        <ul>
-          <div className="active-tab"></div>
-          <li className="tooltip-element" data-tooltip="0">
-            <a href="#" className="active" data-active="0">
-              <div className="icon">
-                <FaUserAstronaut />
-              </div>
-              <span className="link hide">CONTA</span>
-            </a>
-          </li>
-          <li className="tooltip-element" data-tooltip="2">
-            <a href="#" data-active="2">
-              <div className="icon">
-                <FaHistory />
-              </div>
-              <span className="link hide">PARTIDAS</span>
-            </a>
-          </li>
-          <li className="tooltip-element" data-tooltip="1">
-            <a href="#" data-active="1">
-              <div className="icon">
-                <FaQuestionCircle />
-              </div>
-              <span className="link hide">FAQ</span>
-            </a>
-          </li>
-
-          <li className="tooltip-element" data-tooltip="3">
-            <a href="#" data-active="3">
-              <div className="icon">
-                <i className="bx bx-bar-chart-square"></i>
-                <FaSignOutAlt />
-              </div>
-              <span className="link hide">SAIR</span>
-            </a>
-          </li>
+        <ul className="p-0">
+          {MENUS.map((x, i) => (
+            <li className={` tooltip-element  ${pathname.toLocaleLowerCase().includes(x.Titulo.toLocaleLowerCase()) ? "active-tab" : ""}`} data-tooltip="0" key={x.Titulo + i}>
+              <Link href={x.Path} className="" data-active="0">
+                <div className="icon ps-4">{x.Icon}</div>
+                <span className="link hide">{x.Titulo}</span>
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
     </NavComponent>

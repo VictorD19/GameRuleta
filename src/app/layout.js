@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import paleta from "../styles/paletaColores";
 import { Sidebar } from "@/Components/Sidebar/Sidebar";
+import SalasCard from "@/Components/Salas";
 const inter = Archivo({ subsets: ["latin"] });
 
 export const metadata = {
@@ -14,13 +15,16 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${inter.className} row gap 2`}
+        className={`${inter.className} row`}
         style={{ background: paleta.NEGRO, color: paleta.BLANCO }}
       >
         <div className="col-2">
-          <Sidebar/>
+          <Sidebar />
         </div>
-        <div className="col-12  col-lg-10 ">{children}</div>
+        <div className="col-12  col-lg-10 ">
+          <SalasCard />
+          {children}
+        </div>
       </body>
     </html>
   );
