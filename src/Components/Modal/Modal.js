@@ -1,13 +1,24 @@
-
 import Modal from "react-bootstrap/Modal";
-
-export function ModalComponent({ show = false, titulo, cerrarModal, children }) {
+import styled from "styled-components";
+const ModalComp = styled(Modal)`
+  @media only screen and (max-width: 767px) {
+    width: 95%;
+    margin: 0;
+    padding-left: 0;
+  }
+`;
+export function ModalComponent({
+  show = false,
+  titulo,
+  cerrarModal,
+  children,
+}) {
   return (
-    <Modal show={show} onHide={cerrarModal} >
-      <Modal.Header closeButton  className="bg-dark border-bottom-0">
+    <ModalComp show={show} onHide={cerrarModal}>
+      <Modal.Header closeButton className="bg-dark border-bottom-0">
         <Modal.Title>{titulo}</Modal.Title>
       </Modal.Header>
-      <Modal.Body  className="bg-dark">{children}</Modal.Body>
-    </Modal>
+      <Modal.Body className="bg-dark">{children}</Modal.Body>
+    </ModalComp>
   );
 }

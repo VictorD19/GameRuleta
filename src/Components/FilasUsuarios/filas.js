@@ -2,11 +2,11 @@
 
 import { CardJogador } from "./style.styled";
 
-export default function Fila({ Jugadores }) {
+export default function Fila({ Jugadores,color = "primary" }) {
   return (
     <div className=" col-sm-12 col-md-4 mb-4 mb-md-0" >
       <div className="card bg-dark text-white">
-      <div className="card-header d-flex justify-content-between">
+      <div className={`card-header d-flex justify-content-between bg-${color}`}>
         <span>Valor Total: R$ 100,00</span>
         <span>50%</span>
       </div>
