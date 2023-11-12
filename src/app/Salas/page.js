@@ -8,12 +8,12 @@ export default function Page() {
   return (
     <div className="">
 
-      <div className="row mb-4 ">
+      <div className="row mb-4 semMarginRow ">
         <Mesa />
         <CuadroAposta />
       </div>
 
-      <div className="row">
+      <div className="row semMarginRow">
         <Fila />
         <Fila />
         <Historico />

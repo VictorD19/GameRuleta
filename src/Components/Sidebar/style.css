@@ -112,7 +112,7 @@ nav:hover .shrink-btn,
   padding: 2.5px 0;
 }
 
-.sidebar-links a {
+.sidebar-links div {
   color: var(--text-color);
   font-weight: 400;
   font-size: 0.9rem;
@@ -142,11 +142,11 @@ nav:hover .shrink-btn,
 }
 
 .sidebar-links a.active,
-.sidebar-links a:hover {
+.sidebar-links div:hover {
   color: #fff;
 }
 
-.sidebar-links a .link {
+.sidebar-links div .link {
   transition: opacity 0.3s 0.2s, color 0.3s;
 }
 

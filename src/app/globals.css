@@ -113,3 +113,9 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.semMarginRow{
+  margin-left: 0;
+  margin-right: 0;
+  padding-right: 0;
+}

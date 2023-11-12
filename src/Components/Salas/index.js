@@ -1,18 +1,18 @@
-'use client'
+"use client";
 import Image from "next/image";
 import "./style.css";
 import Loading from "../../Assert/loading-animated.svg";
 import Relogio from "../../Assert/border-relogio.svg";
-import {useRouter} from 'next/navigation'
+import { useRouter } from "next/navigation";
 export default function SalasCard() {
   const route = useRouter();
   let judoresAtivos = true;
 
-  const irParaSala = ()=>{
-    route.push("/Salas")
-  }
+  const irParaSala = () => {
+    route.push("/Salas");
+  };
   return (
-    <div className="row my-3">
+    <div className="row my-3 semMarginRow">
       <div className="col-sm-12 col-md-4">
         <div className="card bg-dark" onClick={irParaSala}>
           <div className="inner p-3 card-body d-flex justify-content-between text-white">

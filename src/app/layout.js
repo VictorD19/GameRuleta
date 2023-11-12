@@ -2,7 +2,7 @@ import { Archivo } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import paleta from "../styles/paletaColores";
-import { Sidebar } from "@/Components/Sidebar/Sidebar";
+import { Menu } from "@/Components/Menu/Menu";
 import SalasCard from "@/Components/Salas";
 const inter = Archivo({ subsets: ["latin"] });
 
@@ -19,9 +19,9 @@ export default function RootLayout({ children }) {
         style={{ background: paleta.NEGRO, color: paleta.BLANCO }}
       >
         <div className="col-2">
-          <Sidebar />
+          <Menu />
         </div>
-        <div className="col-12  col-lg-10 ">
+        <div className="col-12  col-lg-10 me-sm-0 semMarginRow">
           <SalasCard />
           {children}
         </div>
