@@ -29,14 +29,6 @@ const RuletaComponente = styled.div`
   width: 100%;
   height: 80px;
   overflow: hidden;
-
-  :after {
-    content: "";
-    width: 3px;
-    height: 100%;
-    background: white;
-    position: absolute;
-  }
 `;
 const RuletaItems = styled.div`
   display: flex;
