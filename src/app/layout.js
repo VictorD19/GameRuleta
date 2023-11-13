@@ -18,6 +18,7 @@ export default function RootLayout({ children }) {
         className={`${inter.className} row`}
         style={{ background: paleta.NEGRO, color: paleta.BLANCO }}
       >
+        {/* Provider   */}
         <div className="col-2">
           <Menu />
         </div>

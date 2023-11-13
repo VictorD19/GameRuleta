@@ -4,7 +4,6 @@ import "./style.css";
 import Image from "next/image";
 import Profile from "./face-1.png";
 import Logo from "./logo.png";
-import "./FuncoesAuxiliares";
 import { Button } from "react-bootstrap";
 import {
   FaBars,
@@ -62,6 +61,7 @@ const MENUS = [
     Path: "/Logout",
   },
 ];
+
 export function Sidebar({ visible = false, toogle }) {
   const [modalDeposito, setModalDeposito] = useState(false);
   const [modalSaque, setModalSaque] = useState(false);
@@ -86,9 +86,7 @@ export function Sidebar({ visible = false, toogle }) {
       <NavComponent $visible={{ visible: visible == true ? true : false }}>
         <div className="sidebar-top d-flex justify-content-between">
           <div className="d-flex align-items-center">
-            <span className="shrink-btn">
-              <i className="bx bx-chevron-left"></i>
-            </span>
+       
             <Image src={Logo} width={50} height={50} />
             <h3 className="hide">Aqumex</h3>
           </div>
@@ -187,25 +185,25 @@ export function Sidebar({ visible = false, toogle }) {
           </div>
           <div className=" my-3">
             <label for="metodoPagamento">Método de Deposito</label>
-            <div class="form-check">
+            <div className="form-check">
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="flexRadioDefault"
                 id="Pix"
               />
-              <label class="form-check-label" for="Pix">
+              <label className="form-check-label" for="Pix">
                 Pix
               </label>
             </div>
-            <div class="form-check">
+            <div className="form-check">
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="flexRadioDefault"
                 id="CartaoCredito"
               />
-              <label class="form-check-label" for="CartaoCredito" disabled>
+              <label className="form-check-label" for="CartaoCredito" disabled>
                 Cartão de Credito
               </label>
             </div>

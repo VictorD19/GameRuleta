@@ -8,13 +8,13 @@ export default function SalasCard() {
   const route = useRouter();
   let judoresAtivos = true;
 
-  const irParaSala = () => {
-    route.push("/Salas");
+  const irParaSala = (sala) => {
+    route.push(`/Salas${sala == 1 ? "" : `/Sala${sala}`}`);
   };
   return (
     <div className="row my-3 semMarginRow">
       <div className="col-sm-12 col-md-4">
-        <div className="card bg-dark" onClick={irParaSala}>
+        <div className="card bg-dark" onClick={()=>irParaSala(1)}>
           <div className="inner p-3 card-body d-flex justify-content-between text-white">
             <>
               <div className="mt-2">
@@ -28,7 +28,7 @@ export default function SalasCard() {
         </div>
       </div>
       <div className="col-sm-12 col-md-4 mt-4 mt-md-0">
-        <div className="card bg-dark" onClick={irParaSala}>
+        <div className="card bg-dark" onClick={()=>irParaSala(2)}>
           <div className="inner p-3 card-body  d-flex justify-content-between text-white">
             <div className="mt-2">
               <h4 className="TituloSala">Sala Nº 2</h4>
@@ -56,7 +56,7 @@ export default function SalasCard() {
           </div>
         </div>
       </div>
-      <div className="col-sm-12 col-md-4 mt-4 mt-md-0" onClick={irParaSala}>
+      <div className="col-sm-12 col-md-4 mt-4 mt-md-0" onClick={()=>irParaSala(3)}>
         <div className="card bg-dark">
           <div className="inner p-3  card-body  d-flex justify-content-between text-white">
             <>

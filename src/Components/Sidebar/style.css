@@ -19,14 +19,14 @@ nav {
   transition: width 0.5s ease-in-out;
 }
 
-nav::before {
+/* nav::before {
   content: "";
   position: absolute;
   width: 2rem;
   height: 100%;
   top: 0;
   left: 100%;
-}
+} */
 
 .sidebar-top {
   position: relative;
@@ -75,32 +75,6 @@ nav:hover .shrink-btn,
   transform: translateY(-50%) translateX(0px);
   opacity: 1;
   pointer-events: all;
-}
-
-.search {
-  min-height: 2.7rem;
-  background-color: var(--main-color-light);
-  margin: 2rem 0.5rem 1.7rem;
-  display: grid;
-  grid-template-columns: 2.7rem 1fr;
-  align-items: center;
-  text-align: center;
-  border-radius: 50px;
-  cursor: pointer;
-}
-
-.search input {
-  height: 100%;
-  border: none;
-  background: none;
-  outline: none;
-  color: #fff;
-  caret-color: #fff;
-  font-family: inherit;
-}
-
-.search input::placeholder {
-  color: var(--text-color);
 }
 
 .sidebar-links ul {
@@ -245,24 +219,6 @@ nav:hover .shrink-btn,
   line-height: 1;
 }
 
-.log-out {
-  display: flex;
-  height: 40px;
-  min-width: 2.4rem;
-  background-color: var(--main-color-dark);
-  color: var(--text-color);
-  align-items: center;
-  justify-content: center;
-  font-size: 1.15rem;
-  border-radius: 10px;
-  margin: 0 0.65rem;
-  transition: color 0.3s;
-}
-
-.log-out:hover {
-  color: #fff;
-}
-
 .tooltip {
   background-color: var(--main-color);
   position: absolute;
@@ -296,7 +252,11 @@ nav:hover .shrink-btn,
   opacity: 1;
 }
 
-.tooltip-element:hover ~ .tooltip {
-  opacity: 1;
-  pointer-events: all;
+nav::before {
+  content: "";
+  position: absolute;
+  width: 2rem;
+  height: 100%;
+  top: 0;
+  left: 100%;
 }

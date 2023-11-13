@@ -7,10 +7,13 @@ export const CuadroAposta = () => {
   const [valor, setValor] = useState([]);
 
   const obterValorInserido = (e) => {
-    let nuevoValor = e.target.value;
-    let valorAtual = valor;
     setValor(e.target.value);
   };
+
+  const ApostarLadoA = () => {};
+
+  const ApostarLadoB = () => {};
+
   return (
     <div className=" col-sm-12 col-md-4 mt-4 mt-md-0">
       <div className="card bg-dark" style={{ height: "100%" }}>
@@ -25,12 +28,23 @@ export const CuadroAposta = () => {
           />
           <div className="row w-100 ">
             <div className="col-6 p-0">
-              <Button variant="danger" className="p-2" style={{width:"99%", fontSize: "0.8em" }}>
+              <Button
+                variant="danger"
+                className="p-2"
+                style={{ width: "99%", fontSize: "0.8em" }}
+                onClick={ApostarLadoA}
+              >
                 VERMELHO
               </Button>
             </div>
             <div className="col-6  p-0  mt-md-0">
-              <Button className="p-2" style={{width:"99%", fontSize: "0.8em" }}>AZUL</Button>
+              <Button
+                onClick={ApostarLadoB}
+                className="p-2"
+                style={{ width: "99%", fontSize: "0.8em" }}
+              >
+                AZUL
+              </Button>
             </div>
           </div>
         </div>
