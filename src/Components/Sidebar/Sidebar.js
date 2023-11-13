@@ -104,7 +104,6 @@ export function Sidebar({ visible = false, toogle }) {
             <Image src={Profile} width={50} height={50} />
             <div className="admin-info">
               <h3>John Doe</h3>
-              <h5>Admin</h5>
             </div>
           </div>
         </div>
@@ -124,7 +123,7 @@ export function Sidebar({ visible = false, toogle }) {
                 className="w-100"
                 onClick={abrirModalDeposito}
               >
-                Depositar
+                Recarga
               </Button>
             </div>
             <div className="col-6 px-2">
