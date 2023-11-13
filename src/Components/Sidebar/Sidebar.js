@@ -212,7 +212,9 @@ export function Sidebar({ visible = false, toogle }) {
           </div>
 
           <div className="my-3 d-flex justify-content-end">
-            <Button type="submit" variant="success">Depositar</Button>
+            <Button type="submit" variant="success">
+              Depositar
+            </Button>
           </div>
         </form>
       </ModalComponent>
@@ -246,12 +248,14 @@ export function Sidebar({ visible = false, toogle }) {
               id="chavePix"
             />
           </div>
-          <p className=" mt-3" style={{color:"#c1c1c1",fontSize:"0.8em"}}>
+          <p className=" mt-3" style={{ color: "#c1c1c1", fontSize: "0.8em" }}>
             Taxa de saque de 5%. Transferência do valor solicitado em até 24
             horas.
           </p>
           <div className="my-3 d-flex justify-content-end">
-            <Button type="submit" variant="success">Sacar</Button>
+            <Button type="submit" variant="success">
+              Sacar
+            </Button>
           </div>
         </form>
       </ModalComponent>

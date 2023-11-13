@@ -110,6 +110,7 @@ nav:hover .shrink-btn,
 .sidebar-links li {
   position: relative;
   padding: 2.5px 0;
+  cursor: pointer;
 }
 
 .sidebar-links div {
@@ -119,6 +120,7 @@ nav:hover .shrink-btn,
   display: flex;
   align-items: center;
   height: 53px;
+  cursor: pointer;
 }
 
 .icon {
