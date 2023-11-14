@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  fastapi_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+
+  nginx_proxy:
+    image: nginx
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - fastapi_app
+    command: nginx -g "daemon off;"
