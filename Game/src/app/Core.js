@@ -28,6 +28,7 @@ function CalcularPorcentagemAReceberPorValor(
   return porcentagem.toFixed(2);
 }
 
+
 function PagarJogadores(ladoGanador) {
   let jugadoresParaPagar = mesa.jugadores.filter((x) => x.lado == ladoGanador);
   let totalPagar = mesa.total;
