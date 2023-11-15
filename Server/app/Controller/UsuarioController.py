@@ -1,17 +1,16 @@
 from fastapi import WebSocket
 from Models.Apuesta import Apuesta
-
+import json
 
 class Usuario:
     def __init__(self, webSocket: WebSocket):
         self.WebSocket = webSocket
 
     async def HacerApuesta():
-        apuestaUsuario =await ObterApuestaUsuario()
-        
-        return apuestaUsuario
+        apuestaUsuario = await ObterApuestaUsuario()
+        return json.dumps(apuestaUsuario)
 
-    def ObterApuestaUsuario():
+    async def ObterApuestaUsuario():
         apuestaUsuario: Apuesta = Apuesta()
         apuestaUsuario.IdUsuario = self.Websocket.path_params["IdUsuario"]
         apuestaUsuario.IdLadoApostado = self.Websocket.path_params["IdLadoApostado"]

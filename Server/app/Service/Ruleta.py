@@ -1,6 +1,6 @@
 from Mesa import Mesa
 import math
-from random import random,randint
+from random import random
 
 
 class Ruleta:
