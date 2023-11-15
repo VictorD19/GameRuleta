@@ -29,3 +29,11 @@ class SalasGeral:
                 }
             }
         )
+    
+    async def ObterDadosSala(self,idSala: id):
+        return json.dumps(
+            {
+                "id":id,
+                "Valor":23
+            }
+        )

@@ -16,8 +16,7 @@ def generate_random_string():
 async def websocket_endpoint_status_salas(websocket: WebSocket):
     await websocket.accept()
     while True:
-        statusSalas = await SalasGeral().DadosGeraisSalas()
-        await websocket.send_text(statusSalas)
+        await websocket.send_text(await SalasGeral().DadosGeraisSalas())
         await asyncio.sleep(5)
 
 # WebSocket endpoint para sala1
