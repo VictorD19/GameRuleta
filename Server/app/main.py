@@ -1,11 +1,14 @@
 from fastapi import FastAPI, WebSocket
+from Controller.SalaController import SalasGeral
+from app.Routes.user_routes import router as user_router
 import asyncio
 import random
 import string
-from Controller.SalaController import SalasGeral
 
 # Crea una instancia de FastAPI
 app = FastAPI()
+app.include_router(user_router, prefix='/user')
+
 
 
 def generate_random_string():
