@@ -4,16 +4,9 @@ import string
 from fastapi import APIRouter, WebSocket
 from Controller.SalaController import SalasGeral
 
-router = APIRouter(prefix="/ws/Salas")
+router = APIRouter()
 
-
-def generate_random_string():
-    return "".join(
-        random.choice(string.ascii_uppercase + string.digits) for _ in range(10)
-    )
-
-
-@router.websocket("/status-salas")
+@router.websocket("/status-mesas")
 async def websocket_endpoint_status_salas(websocket: WebSocket):
     await websocket.accept()
     while True:
@@ -22,10 +15,9 @@ async def websocket_endpoint_status_salas(websocket: WebSocket):
 
 
 # WebSocket endpoint para sala1
-@router.websocket("/Sala/{idSala}")
+@router.websocket("/{idMesa}")
 async def websocket_endpoint_sala1(websocket: WebSocket):
     await websocket.accept()
-    while True:
-        random_string = generate_random_string()
-        await websocket.send_text(f"Test conexión WebSocket sala1: {random_string}")
+    while True:        
+        await websocket.send_text(f"Test conexión WebSocket sala1:")
         await asyncio.sleep(1)
