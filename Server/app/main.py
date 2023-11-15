@@ -1,6 +1,6 @@
 from fastapi import FastAPI, WebSocket
 from Controller.SalaController import SalasGeral
-from app.Routes.user_routes import router as user_router
+from Routes.user_routes import router as user_router
 import asyncio
 import random
 import string

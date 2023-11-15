@@ -6,13 +6,18 @@ class Usuario:
     def __init__(self, webSocket: WebSocket):
         self.WebSocket = webSocket
 
-    async def HacerApuesta():
-        apuestaUsuario = await ObterApuestaUsuario()
-        return json.dumps(apuestaUsuario)
 
-    async def ObterApuestaUsuario():
-        apuestaUsuario: Apuesta = Apuesta()
-        apuestaUsuario.IdUsuario = self.Websocket.path_params["IdUsuario"]
-        apuestaUsuario.IdLadoApostado = self.Websocket.path_params["IdLadoApostado"]
-        apuestaUsuario.ValorApostado = self.Websocket.path_params["ValorApostado"]
+    def ObterApuestaUsuario(self):
+        apuestaUsuario = Apuesta
+        print(self)
+        # apuestaUsuario.IdUsuario = self.WebSocket.query_params["IdUsuario"]
+        # apuestaUsuario.IdLadoApostado = self.WebSocket.query_params["IdLadoApostado"]
+        # apuestaUsuario.ValorApostado = self.WebSocket.query_params["ValorApostado"]
         return apuestaUsuario
+    
+    async def HacerApuesta(self):
+        apuestaUsuario = self.ObterApuestaUsuario()
+        return json.dumps({
+           "Apuesta":"qasas"
+        })
+

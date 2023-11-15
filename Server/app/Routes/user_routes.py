@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.Schemas.SchemaUser import UserPublic
+from Schemas.SchemaUser import UserPublic
 
 router = APIRouter()
 
