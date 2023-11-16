@@ -1,4 +1,4 @@
-from Mesa import Mesa
+from Server.app.Service.MesaServicio import Mesa
 import math
 from random import random
 

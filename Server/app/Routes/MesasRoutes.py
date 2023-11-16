@@ -1,16 +1,18 @@
 import asyncio
-import random
-import string
+import json
 from fastapi import APIRouter, WebSocket
-from Controller.SalaController import SalasGeral
+from fastapi import Depends, HTTPException
+from Controller.MesaController import SalasGeral
+from Models.model import Session, get_session
 
 router = APIRouter()
 
 @router.websocket("/status-mesas")
-async def websocket_endpoint_status_salas(websocket: WebSocket):
+async def websocket_endpoint_status_salas(websocket: WebSocket, session: Session = Depends(get_session)):
     await websocket.accept()
     while True:
-        await websocket.send_text(await SalasGeral().DadosGeraisSalas())
+        statusMesas = await SalasGeral(session).DadosGeraisSalas()       
+        await websocket.send_json(statusMesas)
         await asyncio.sleep(5)
 
 

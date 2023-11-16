@@ -1,6 +1,5 @@
 import asyncio
 from fastapi import APIRouter, WebSocket
-from app.Controller.ChatController import GetChatController
 
 router = APIRouter()
 
