@@ -2,12 +2,12 @@ from pydantic import BaseModel
 
 
 class User(BaseModel):
+    id : int | None = None
     username: str
     password: str   
 
 
-class UserUpdate(BaseModel):
-    id: int
+class UserUpdate(BaseModel):  
     username: str | None = None
     password: str | None = None
     avatar: str | None = None
@@ -27,4 +27,4 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    userId: str | None = None
+    userId: int | None = None

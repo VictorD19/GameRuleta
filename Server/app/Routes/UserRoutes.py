@@ -13,6 +13,7 @@ router = APIRouter()
 def read_user(user_id: int, 
               session: Session = Depends(get_session),              
               current_user: User = Depends(get_current_user)):
+    
     if current_user.id != user_id:
         raise HTTPException(status_code=400, detail='Permissões insuficientes')
 
@@ -56,7 +57,11 @@ def update_user(
     user_id: int,
     user: UserUpdate,
     session: Session = Depends(get_session),
-):
+    current_user: User = Depends(get_current_user)):
+    
+    if current_user.id != user_id:
+        raise HTTPException(status_code=400, detail='Permissões insuficientes')
+    
     db_user = session.scalar(select(UserModel).where(UserModel.id == user_id))
 
     if db_user is None:
@@ -79,8 +84,8 @@ def update_user(
 @router.post('/login/', response_model=Token)
 def login_for_access_token(
     user: User, 
-    session: Session = Depends(get_session),
-):
+    session: Session = Depends(get_session)):
+    
     userdb = session.scalar(select(UserModel).where(UserModel.username == user.username))
 
     if not userdb:

@@ -26,7 +26,7 @@ pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.utcnow() + timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({'exp': expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -42,11 +42,11 @@ def verify_password(plain_password: str, hashed_password: str):
 
 async def get_current_user(
     session: Session = Depends(get_session),
-    token: str = Depends(oauth2_scheme),
-):
+    token: str = Depends(oauth2_scheme)):
+    
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Could not validate credentials',
+        detail='Não foi possível validar as credenciais',
         headers={'WWW-Authenticate': 'Bearer'},
     )
 
