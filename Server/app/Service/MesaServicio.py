@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select,and_
 from Schemas.Mesas import MesaStatus, ListMesas
 from Schemas.Apuesta import Apuesta
-from Porcentagem import Porcentagem
+from Service.Porcentagem import Porcentagem
 from datetime import datetime
 """
     ValorTotalMesa = 0
