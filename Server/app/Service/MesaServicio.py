@@ -1,9 +1,10 @@
 from Models.model import JugadaModel, ApuestaModel, MesaModel
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import select
+from sqlalchemy import select,and_
 from Schemas.Mesas import MesaStatus, ListMesas
-
-
+from Schemas.Apuesta import Apuesta
+from Porcentagem import Porcentagem
+from datetime import datetime
 """
     ValorTotalMesa = 0
     ValorTotalLadoA = 0
@@ -116,10 +117,50 @@ class Mesa:
         jugadasActivas = filter(lambda j: j.fin,jugadas)
         return sum([sum(jugada.ladoA, jugada.ladoB) for jugada in jugadasActivas])
 
+    async def ObterJogadaPorNumeroMesa(self,idNumeroMesa: int):
+        jogadaAtivaMesa = self.__session.execute(select(JugadaModel).where(and_(JugadaModel.mesa == idNumeroMesa,JugadaModel.fin == None))).first()
+        return jogadaAtivaMesa
+    
+    
+    async def CriarNovaJogada(self,apuesta:Apuesta):
+        novaJogada = JugadaModel(
+            mesa=apuesta.IdMesa,
+            creacion=datetime.now()
+        )
+        
+        if(apuesta.IdLadoApostado == 1):
+            novaJogada.ladoA = apuesta.ValorApostado
+        else:
+            novaJogada.ladoB = apuesta.ValorApostado
+            
+        self.__session.add(novaJogada)
+        self.__session.commit()
+        self.__session.refresh(novaJogada)
+        return novaJogada
 
+            
+             
+    async def CriarApuestaJugador(self,apuesta:Apuesta,jugada:JugadaModel):
+        valorTotalLado = jugada.ladoA if(apuesta.IdLadoApostado == 1) else jugada.ladoB
+        porcentagemJugada = Porcentagem(valorTotalLado).CalcularPorcentagemAReceberPorValor(apuesta.ValorApostado)
+        nuevaApuesta = ApuestaModel(
+            usuario=apuesta.IdUsuario,
+            monto=apuesta.ValorApostado,
+            lado=apuesta.IdLadoApostado,
+            jugada= jugada,
+            porcentaje =porcentagemJugada,
+            fecha=datetime.now(),
+            
+        )
+        self.__session.add(nuevaApuesta)
+        self.__session.commit()
+        self.__session.refresh(nuevaApuesta)
+        return nuevaApuesta
+
+    
     async def ObterDetallesMesas(self):
                 
-        mesas = (
+        mesas = await (
                 self.__session.query(MesaModel)
                 .options(joinedload(MesaModel.jugada).joinedload(JugadaModel.apuestas))
                 .all())

@@ -1,14 +1,12 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends
 from fastapi import APIRouter
+from Schemas.Apuesta import Apuesta 
+from Models.model import get_session
 from sqlalchemy.orm import Session
-from sqlalchemy import select
-from Schemas.SchemaUser import UserPublic, User
-from Models.model import get_session, UserModel
-
+from Controller.ApuestaController import ApuestaController
 
 router = APIRouter()
 
-@router.get("/{user_id}", response_model=UserPublic)
-def read_user(user_id: int):
-    ...
-    return {"user_id": user_id}
+@router.post("/HacerApuesta",status_code=200)
+async def hacer_apuesta(novaApuesta: Apuesta,session: Session = Depends(get_session)):
+    return await ApuestaController(session).HacerApuesta(novaApuesta)

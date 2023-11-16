@@ -4,3 +4,4 @@ class Apuesta(BaseModel):
     IdUsuario: int
     ValorApostado: float
     IdLadoApostado: int
+    IdMesa: int
