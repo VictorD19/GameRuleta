@@ -1,5 +1,5 @@
 from Models.model import JugadaModel, ApuestaModel, MesaModel
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select
 from Schemas.Mesas import MesaStatus, ListMesas
 
@@ -102,14 +102,33 @@ class Mesa:
     #         "PorcentagemMaior": porcentagemMaior,
     #         "LadoMenor": ladoContrario,
     #     }
+    def obtenerTotalJugadores(self, jugadas: list) -> int:
+        
+        if len(jugadas) == 0:
+            return 0
+        
+        return len(filter(lambda j: j.fin,jugadas))
+
+    def obterTotalApostado(self, jugadas: list) -> float:
+
+        if len(jugadas) == 0:
+            return 0
+        jugadasActivas = filter(lambda j: j.fin,jugadas)
+        return sum([sum(jugada.ladoA, jugada.ladoB) for jugada in jugadasActivas])
+
 
     async def ObterDetallesMesas(self):
                 
-        mesas = self.__session.scalars(select(MesaModel)).all()           
-        return  [{'jugadores':sum([1,1]),
+        mesas = (
+                self.__session.query(MesaModel)
+                .options(joinedload(MesaModel.jugada).joinedload(JugadaModel.apuestas))
+                .all())
+
+
+        return  [{'jugadores':self.obtenerTotalJugadores(mesa.jugada),
                 'maximo' : mesa.maximo if mesa.maximo else 0,
                 'minimo' : mesa.minimo if mesa.minimo else 0,
-                'totalApostado': 0,
+                'totalApostado': self.obterTotalApostado(mesa.jugada),
                 'numero': mesa.numero
                 } for mesa in mesas]
 
