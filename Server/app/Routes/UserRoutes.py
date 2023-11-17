@@ -2,10 +2,11 @@ from fastapi import Depends, HTTPException
 from fastapi import APIRouter
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from Schemas.SchemaUser import (UserPublic, User, UserUpdate, Token)
+from Schemas.SchemaUser import (UserPublic, User, UserUpdate, Token, QrPix)
 from Models.model import get_session, UserModel
 from Service.securtity import (get_password_hash, verify_password,
                                   create_access_token, get_current_user)
+from Controller.UsuarioController import Banco
 
 router = APIRouter()
 
@@ -52,6 +53,7 @@ def create_user(user: User, session: Session = Depends(get_session)):
 
     return db_user
 
+
 @router.patch('/update/{user_id}', response_model=UserPublic)
 def update_user(
     user_id: int,
@@ -85,7 +87,7 @@ def update_user(
 def login_for_access_token(
     user: User, 
     session: Session = Depends(get_session)):
-    
+
     userdb = session.scalar(select(UserModel).where(UserModel.username == user.username))
 
     if not userdb:
@@ -101,3 +103,23 @@ def login_for_access_token(
     access_token = create_access_token(data={'id': userdb.id})
 
     return {'access_token': access_token, 'token_type': 'bearer'}
+
+
+@router.post('/refresh_token/', response_model=Token)
+def refresh_access_token(
+    user: User = Depends(get_current_user)):
+
+    new_access_token = create_access_token(data={'id': user.id})
+
+    return {'access_token': new_access_token, 'token_type': 'bearer'}
+
+
+@router.get('/new-cobro-pix/{user_id}/{monto}/', response_model= QrPix)
+def newCobroPix(user_id : int, monto: float, current_user: User = Depends(get_current_user)):
+
+    if current_user.id != user_id:
+        raise HTTPException(status_code=400, detail='Permissões insuficientes')
+    
+    return Banco(monto=monto).getQR()
+
+    

@@ -1,6 +1,6 @@
 from fastapi import WebSocket
 #from Models.Apuesta import Apuesta
-
+from Service.APIAsaasService import NewCobropix
 
 class Usuario:
     def __init__(self, webSocket: WebSocket):
@@ -21,3 +21,17 @@ class Usuario:
            "Apuesta":"qasas"
         })
 
+class Banco:
+
+    def __init__(self, monto) -> None:
+        self.monto = monto
+    
+    def getQR(self):
+
+        datos = NewCobropix(monto=self.monto).PIX()
+
+        if datos:
+            return { 'encodedImage': datos['encodedImage'],
+                     'payload':datos['payload'],
+                     'expirationDate' :datos['expirationDate']}
+                        

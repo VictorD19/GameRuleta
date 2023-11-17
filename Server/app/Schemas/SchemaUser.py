@@ -28,3 +28,9 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     userId: int | None = None
+
+
+class QrPix(BaseModel):
+    encodedImage: str
+    payload: str
+    expirationDate : str
