@@ -31,6 +31,7 @@ class TokenData(BaseModel):
 
 
 class QrPix(BaseModel):
-    encodedImage: str
-    payload: str
-    expirationDate : str
+    encodedImage: str | None = None 
+    payload: str | None = None 
+    expirationDate : str | None = None 
+    error : str | None = None 

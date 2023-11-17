@@ -48,7 +48,7 @@ class NewCobropix(AuthenticationAsaas):
             data=json.dumps(data),
         )        
 
-        return json.loads(r.text) if r.status_code == 200 else False
+        return json.loads(r.text) , r.status_code == 200
 
 
 

@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Response
 from fastapi import APIRouter
 from sqlalchemy.orm import Session
 from sqlalchemy import select
@@ -120,6 +120,8 @@ def newCobroPix(user_id : int, monto: float, current_user: User = Depends(get_cu
     if current_user.id != user_id:
         raise HTTPException(status_code=400, detail='Permissões insuficientes')
     
-    return Banco(monto=monto).getQR()
+    getData =  Banco(monto=monto).getQR()
+    
+    return 
 
     

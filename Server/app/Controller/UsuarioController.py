@@ -1,6 +1,7 @@
-from fastapi import WebSocket
+from fastapi import WebSocket,HTTPException
 #from Models.Apuesta import Apuesta
 from Service.APIAsaasService import NewCobropix
+from Schemas.Exection import  ControllerException
 
 class Usuario:
     def __init__(self, webSocket: WebSocket):
@@ -28,10 +29,20 @@ class Banco:
     
     def getQR(self):
 
-        datos = NewCobropix(monto=self.monto).PIX()
+        try:
+            datos, status_code = NewCobropix(monto=self.monto).PIX()
 
-        if datos:
+            if status_code != 200:
+                raise ControllerException("Não foi possivel gerar o pix")
+
             return { 'encodedImage': datos['encodedImage'],
-                     'payload':datos['payload'],
-                     'expirationDate' :datos['expirationDate']}
-                        
+                        'payload':datos['payload'],
+                        'expirationDate' :datos['expirationDate']}
+       
+        except ControllerException as ex:
+            raise HTTPException(status_code=400,detail=str(ex))
+        
+        except Exepcion as ex:
+            raise HTTPException(status_code=400,detail=str(ex))
+
+
