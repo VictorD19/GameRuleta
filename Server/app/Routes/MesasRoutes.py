@@ -6,6 +6,7 @@ from Controller.MesaController import SalasGeral
 from Models.model import Session, get_session
 
 router = APIRouter()
+# prefix='/mesas'apuesta
 
 @router.websocket("/status-mesas")
 async def websocket_endpoint_status_salas(websocket: WebSocket, session: Session = Depends(get_session)):

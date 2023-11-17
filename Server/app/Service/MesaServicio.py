@@ -1,10 +1,11 @@
 from Models.model import JugadaModel, ApuestaModel, MesaModel
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import select,and_
+from sqlalchemy import select, and_
 from Schemas.Mesas import MesaStatus, ListMesas
 from Schemas.Apuesta import Apuesta
 from Service.Porcentagem import Porcentagem
 from datetime import datetime
+
 """
     ValorTotalMesa = 0
     ValorTotalLadoA = 0
@@ -17,11 +18,8 @@ from datetime import datetime
 """
 
 
-
-
-class Mesa:    
-
-    def __init__(self, session: Session ) -> None:
+class Mesa:
+    def __init__(self, session: Session) -> None:
         # self.ValorTotalMesa = math.floor(random() * 100 + 1)
         # self.__ServicoJogador = Jogador()
         # self.__mesas = [1,2,3]
@@ -33,18 +31,13 @@ class Mesa:
     # def ObterJogadoresDoLado(jogador: any, idLado: int):
     #     return jogador.Lado == idLado
 
-    # def ObterNovoValorTotalDoLadoApostado(valorApostado: float, idLado: int):
-    #     valorLado = map(
-    #         lambda jogador: jogador.ValorApostado + jogador.ValorApostado,
-    #         filter(lambda jogador: ObterJogadoresDoLado(jogador, idLado), Jogadores),
-    #     )
-
-    #     if idLado == 1:
-    #         ValorTotalLadoA += valorLado
-    #         return ValorTotalLadoA
-    #     else:
-    #         ValorTotalLadoB += valorLado
-    #         return ValorTotalLadoB
+    def ObterNovoValorTotalDoLadoApostado(self,
+        valorApostado: float, jugada: JugadaModel, idLado: int
+    ):
+        if idLado == 1:
+            jugada.ladoA += valorApostado
+        else:
+            jugada.ladoB += valorApostado
 
     # def HacerApuesta(idJogador: int, valorApuesta: float, idLado: int):
     #     nuevoValorApostado = ObterNovoValorTotalDoLadoApostado(valorApuesta, idLado)
@@ -104,74 +97,84 @@ class Mesa:
     #         "LadoMenor": ladoContrario,
     #     }
     def obtenerTotalJugadores(self, jugadas: list) -> int:
-        
         if len(jugadas) == 0:
             return 0
-        
-        return len(filter(lambda j: j.fin,jugadas))
+
+        jugadasActivas = list(filter(lambda j: j.fin == None, jugadas))
+        return len(jugadasActivas)
 
     def obterTotalApostado(self, jugadas: list) -> float:
-
         if len(jugadas) == 0:
             return 0
-        jugadasActivas = filter(lambda j: j.fin,jugadas)
-        return sum([sum(jugada.ladoA, jugada.ladoB) for jugada in jugadasActivas])
+        jugadasActivas = list(filter(lambda j: j.fin == None, jugadas))
+        valoresJugada = [
+            (
+                jugada.ladoA
+                if jugada.ladoA != None
+                else 0 + jugada.ladoB
+                if jugada.ladoB != None
+                else 0
+            )
+            for jugada in jugadasActivas
+        ]
+        return sum(valoresJugada)
 
-    async def ObterJogadaPorNumeroMesa(self,idNumeroMesa: int):
-        jogadaAtivaMesa = self.__session.execute(select(JugadaModel).where(and_(JugadaModel.mesa == idNumeroMesa,JugadaModel.fin == None))).first()
+    async def ObterJogadaPorNumeroMesa(self, idNumeroMesa: int):
+        jogadaAtivaMesa = self.__session.scalars(
+            select(JugadaModel).where(
+                and_(JugadaModel.mesa == idNumeroMesa, JugadaModel.fin == None)
+            )
+        ).first()
         return jogadaAtivaMesa
-    
-    
-    async def CriarNovaJogada(self,apuesta:Apuesta):
-        novaJogada = JugadaModel(
-            mesa=apuesta.IdMesa,
-            creacion=datetime.now()
-        )
-        
-        if(apuesta.IdLadoApostado == 1):
+
+    async def CriarNovaJogada(self, apuesta: Apuesta):
+        novaJogada = JugadaModel(mesa=apuesta.IdMesa, creacion=datetime.now())
+
+        if apuesta.IdLadoApostado == 1:
             novaJogada.ladoA = apuesta.ValorApostado
+            novaJogada.ladoB = 0
         else:
             novaJogada.ladoB = apuesta.ValorApostado
+            novaJogada.ladoA = 0
             
         self.__session.add(novaJogada)
         self.__session.commit()
-        self.__session.refresh(novaJogada)
         return novaJogada
 
-            
-             
-    async def CriarApuestaJugador(self,apuesta:Apuesta,jugada:JugadaModel):
-        valorTotalLado = jugada.ladoA if(apuesta.IdLadoApostado == 1) else jugada.ladoB
-        porcentagemJugada = Porcentagem(valorTotalLado).CalcularPorcentagemAReceberPorValor(apuesta.ValorApostado)
+    async def CriarApuestaJugador(self, apuesta: Apuesta, jugada: JugadaModel):
+        valorTotalLado = jugada.ladoA if (apuesta.IdLadoApostado == 1) else jugada.ladoB
+
+        if valorTotalLado == None or valorTotalLado == 0:
+            valorTotalLado = apuesta.ValorApostado
+
+        porcentagemJugada = Porcentagem(
+            valorTotalLado
+        ).CalcularPorcentagemAReceberPorValor(apuesta.ValorApostado)
         nuevaApuesta = ApuestaModel(
             usuario=apuesta.IdUsuario,
             monto=apuesta.ValorApostado,
             lado=apuesta.IdLadoApostado,
-            jugada= jugada,
-            porcentaje =porcentagemJugada,
+            jugada=jugada.id,
+            porcentaje=porcentagemJugada,
             fecha=datetime.now(),
-            
         )
         self.__session.add(nuevaApuesta)
-        self.__session.commit()
-        self.__session.refresh(nuevaApuesta)
         return nuevaApuesta
 
-    
     async def ObterDetallesMesas(self):
-                
-        mesas = await (
-                self.__session.query(MesaModel)
-                .options(joinedload(MesaModel.jugada).joinedload(JugadaModel.apuestas))
-                .all())
+        mesas = (
+            self.__session.query(MesaModel)
+            .options(joinedload(MesaModel.jugada).joinedload(JugadaModel.apuestas))
+            .all()
+        )
 
-
-        return  [{'jugadores':self.obtenerTotalJugadores(mesa.jugada),
-                'maximo' : mesa.maximo if mesa.maximo else 0,
-                'minimo' : mesa.minimo if mesa.minimo else 0,
-                'totalApostado': self.obterTotalApostado(mesa.jugada),
-                'numero': mesa.numero
-                } for mesa in mesas]
-
-
-      
+        return [
+            {
+                "jugadores": self.obtenerTotalJugadores(mesa.jugada),
+                "maximo": mesa.maximo if mesa.maximo else 0,
+                "minimo": mesa.minimo if mesa.minimo else 0,
+                "totalApostado": self.obterTotalApostado(mesa.jugada),
+                "numero": mesa.numero,
+            }
+            for mesa in mesas
+        ]

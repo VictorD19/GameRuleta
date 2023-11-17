@@ -1,4 +1,5 @@
 from Service.MesaServicio import *
+import asyncio
 
 class SalasGeral:
 
@@ -6,7 +7,6 @@ class SalasGeral:
         self.__session = session
 
     async def DadosGeraisSalas(self):
-
         return await Mesa(self.__session).ObterDetallesMesas()
         
     
