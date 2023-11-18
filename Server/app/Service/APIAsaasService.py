@@ -1,10 +1,12 @@
 import os
 import json
+import requests
+
+from fastapi import HTTPException
+from Schemas.Exection import  ControllerException
 from datetime import datetime, timedelta
-from pprint import pprint
 from urllib.parse import urljoin
 
-import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -30,25 +32,28 @@ class NewCobropix(AuthenticationAsaas):
         super().__init__()
 
     def PIX(self):
+        try:
 
-        data = {
-            "addressKey": self.chavePIX,
-            "description": "Recarga",
-            "value": self.monto,
-            "format": "ALL",
-            "expirationDate": str(self.duedate),
-            "expirationSeconds": None,
-            "allowsMultiplePayments" : False
-        }
+            data = {
+                "addressKey": self.chavePIX,
+                "description": "Recarga",
+                "value": self.monto,
+                "format": "ALL",
+                "expirationDate": str(self.duedate),
+                "expirationSeconds": None,
+                "allowsMultiplePayments" : False
+            }
 
+            r = requests.post(
+                headers=self.header(),
+                url=urljoin(self.url, self.uri),
+                data=json.dumps(data),
+            )    
+            return json.loads(r.text), r.status_code
+        
+        except Exception as ex:
+            return HTTPException(status_code=400, detail=str(ex))
 
-        r = requests.post(
-            headers=self.header(),
-            url=urljoin(self.url, self.uri),
-            data=json.dumps(data),
-        )        
-
-        return json.loads(r.text) , r.status_code == 200
 
 
 

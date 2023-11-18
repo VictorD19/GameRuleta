@@ -22,6 +22,7 @@ class Usuario:
            "Apuesta":"qasas"
         })
 
+
 class Banco:
 
     def __init__(self, monto) -> None:
@@ -32,17 +33,22 @@ class Banco:
         try:
             datos, status_code = NewCobropix(monto=self.monto).PIX()
 
-            if status_code != 200:
-                raise ControllerException("Não foi possivel gerar o pix")
+            if not status_code in {200, 201}:
+                raise ControllerException(
+                    f"Error en la solicitud del QRPIX a Assas con status_code -> {status_code} -> {datos}"
+                    )
 
-            return { 'encodedImage': datos['encodedImage'],
-                        'payload':datos['payload'],
-                        'expirationDate' :datos['expirationDate']}
+            return {'encodedImage': datos['encodedImage'],
+                    'payload':datos['payload'],
+                    'expirationDate' :datos['expirationDate']}
        
         except ControllerException as ex:
-            raise HTTPException(status_code=400,detail=str(ex))
+            return HTTPException(status_code=400,detail=str(ex))
         
-        except Exepcion as ex:
-            raise HTTPException(status_code=400,detail=str(ex))
+        except Exception as ex:
+            return HTTPException(status_code=400,detail=str(ex))
+
+    def guardaTransaccionInicial(self,  transacion : str):
+        ...
 
 

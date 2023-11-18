@@ -35,7 +35,7 @@ def create_user(user: User, session: Session = Depends(get_session)):
 
     if db_user:
         raise HTTPException(
-            status_code=400, detail='Username already registered'
+            status_code=400, detail='Nome de usuario ja esta em uso'
         )
     
     hashed_password = get_password_hash(user.password)
@@ -67,7 +67,7 @@ def update_user(
     db_user = session.scalar(select(UserModel).where(UserModel.id == user_id))
 
     if db_user is None:
-        raise HTTPException(status_code=404, detail='User not found')
+        raise HTTPException(status_code=404, detail='Usuario não encontrado')
 
     if user.username:
         db_user.username = user.username
@@ -99,29 +99,38 @@ def login_for_access_token(
         raise HTTPException(
             status_code=400, detail='Usuario ou senha incorretos'
         )
-
     access_token = create_access_token(data={'id': userdb.id})
 
+    if not access_token:
+        raise HTTPException(
+            status_code=400, detail='No fue posible obtener un token'
+        )
     return {'access_token': access_token, 'token_type': 'bearer'}
-
+    
+  
+    
 
 @router.post('/refresh_token/', response_model=Token)
 def refresh_access_token(
-    user: User = Depends(get_current_user)):
+        user: User = Depends(get_current_user)):
+    
+        new_access_token = create_access_token(data={'id': user.id})
+        if not new_access_token:
+            raise HTTPException(
+                status_code=400, detail='No fue posible obtener un refresh_token'
+            )
+        return {'access_token': new_access_token, 'token_type': 'bearer'}
 
-    new_access_token = create_access_token(data={'id': user.id})
-
-    return {'access_token': new_access_token, 'token_type': 'bearer'}
-
+    
+    
 
 @router.get('/new-cobro-pix/{user_id}/{monto}/', response_model= QrPix)
 def newCobroPix(user_id : int, monto: float, current_user: User = Depends(get_current_user)):
-
+    
     if current_user.id != user_id:
         raise HTTPException(status_code=400, detail='Permissões insuficientes')
     
-    getData =  Banco(monto=monto).getQR()
+    return Banco(monto=monto).getQR()
+            
     
-    return 
-
     
