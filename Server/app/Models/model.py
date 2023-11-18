@@ -38,7 +38,10 @@ class UserModel(Base):
     apuestas: Mapped[List["ApuestaModel"]] = relationship(
         back_populates="usuarioRelacion"
     )
-    transacciones: Mapped[List["TransaccionesModel"]] = relationship(
+    transaccionesEntrada: Mapped[List["TransacEntradaModel"]] = relationship(
+        back_populates="usuarioTransaccion"
+    )
+    transaccionesSalida: Mapped[List["TransacSalidaModel"]] = relationship(
         back_populates="usuarioTransaccion"
     )
 
@@ -88,16 +91,30 @@ class ApuestaModel(Base):
 
 
 class TransacEntradaModel(Base):
-    __tablename__ = "transacciones"
+    __tablename__ = "transaccionesEntrada"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     usuarioTransaccion: Mapped["UserModel"] = relationship(
-        back_populates="transacciones"
+        back_populates="transaccionesEntrada"
     )
     usuario: Mapped[int] = mapped_column(ForeignKey("users.id"))
     idExterno: Mapped[str] = mapped_column(nullable=True)
     monto: Mapped[float] = mapped_column(nullable=True)
     fechaCreado: Mapped[datetime]
-    fechaPagado:Mapped[datetime] = mapped_column(nullable=True)
-    status = Mapped[bool] = mapped_column(default= False)
+    fechaPagado: Mapped[datetime] = mapped_column(nullable=True)
+    status : Mapped[bool] = mapped_column(default=False)
 
+
+class TransacSalidaModel(Base):
+    __tablename__ = "transaccionesSalida"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    usuarioTransaccion: Mapped["UserModel"] = relationship(
+        back_populates="transaccionesSalida"
+    )
+    usuario: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    idExterno: Mapped[str] = mapped_column(nullable=True)
+    monto: Mapped[float] = mapped_column(nullable=True)
+    fechaCreado: Mapped[datetime]
+    fechaPagado: Mapped[datetime] = mapped_column(nullable=True)
+    status : Mapped[bool] = mapped_column(default=False)

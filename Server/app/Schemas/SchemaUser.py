@@ -5,6 +5,7 @@ class User(BaseModel):
     id: int | None = None
     username: str
     password: str
+    avatar: str | None = None
 
 
 class UserUpdate(BaseModel):
