@@ -4,80 +4,21 @@ from sqlalchemy import select, and_
 from Schemas.Mesas import MesaStatus, ListMesas
 from Schemas.Apuesta import Apuesta
 from Service.Porcentagem import Porcentagem
+from Schemas.Exection import ServicoException
 from datetime import datetime
-
-"""
-    ValorTotalMesa = 0
-    ValorTotalLadoA = 0
-    ValorTotalLadoB = 0
-    PorcentagemLadoA = 0
-    PorcentagemLadoB = 0
-
-    Jogadores = []
-    PORCENTAGEMPADRAO = 100
-"""
 
 
 class Mesa:
     def __init__(self, session: Session) -> None:
-        # self.ValorTotalMesa = math.floor(random() * 100 + 1)
-        # self.__ServicoJogador = Jogador()
-        # self.__mesas = [1,2,3]
         self.__session = session
 
-    # def ObterValorTotalDoLadoApostado(idLad: int):
-    #     return ValorTotalMesa
-
-    # def ObterJogadoresDoLado(jogador: any, idLado: int):
-    #     return jogador.Lado == idLado
-
-    def ObterNovoValorTotalDoLadoApostado(self,
-        valorApostado: float, jugada: JugadaModel, idLado: int
+    def ObterNovoValorTotalDoLadoApostado(
+        self, valorApostado: float, jugada: JugadaModel, idLado: int
     ):
         if idLado == 1:
             jugada.ladoA += valorApostado
         else:
             jugada.ladoB += valorApostado
-
-    # def HacerApuesta(idJogador: int, valorApuesta: float, idLado: int):
-    #     nuevoValorApostado = ObterNovoValorTotalDoLadoApostado(valorApuesta, idLado)
-    #     jugador = self.__ServicoJogador.ObterJugadorPorCodigo(idJogador)
-    #     jugador.ValorApostado += valorApuesta
-    #     jugador.Lado = idLado
-    #     NovoJogadorNaMesa(jugador)
-    #     RecalcularValorPagarJugadoresPorLado(idLado)
-    #     RecalcularValorGeralMesa()
-
-    # def NovoJogadorNaMesa(jogador: any):
-    #     self.Jogadores.append(jogador)
-
-    # def RecalcularValorPagarJugadoresPorLado(idLado: int):
-    #     valorTotalLado = 0
-    #     if idLado == 1:
-    #         valorTotalLado = self.ValorTotalLadoA
-    #     else:
-    #         valorTotalLado = self.ValorTotalLadoB
-
-    #     servicosPorcentagem = Porcentagem(valorTotalLado)
-    #     jugadoresDelLado = filter(
-    #         lambda jogador: ObterJogadoresDoLado(jogador, idLado), self.Jugadores
-    #     )
-    #     for jugador in jugadoresDelLado:
-    #         jugador.Porcentagem = (
-    #             servicosPorcentagem.CalcularPorcentagemAReceberPorValor(
-    #                 jugador.ValorApostado
-    #             )
-    #         )
-
-    # def RecalcularValorGeralMesa():
-    #     self.ValorTotalMesa = self.ValorTotalLadoA + self.ValorTotalLadoB
-    #     servicosPorcentagem = Porcentagem(self.ValorTotalMesa)
-    #     porcentagemLadoPorId = servicosPorcentagem.CalcularPorcentagemAReceberPorValor(
-    #         self.ValorTotalLadoA
-    #     )
-    #     porcentagemLadoContrario = PORCENTAGEMPADRAO - porcentagemLadoPorId
-    #     self.PorcentagemLadoA = porcentagemLadoPorId
-    #     self.PorcentagemLadoB = porcentagemLadoContrario
 
     # def ObterPorcentagemLadoPorId(idLado: int):
     #     if idLado == 1:
@@ -96,27 +37,27 @@ class Mesa:
     #         "PorcentagemMaior": porcentagemMaior,
     #         "LadoMenor": ladoContrario,
     #     }
-    def obtenerTotalJugadores(self, jugadas: list) -> int:
+    def obtenerTotalJugadores(self, jugadas: list[JugadaModel]) -> int:
         if len(jugadas) == 0:
             return 0
 
         jugadasActivas = list(filter(lambda j: j.fin == None, jugadas))
-        return len(jugadasActivas)
+        apuestasJugadores = list(map(lambda a: a.usuario, jugadasActivas[0].apuestas))
+
+        return len(list(set(apuestasJugadores)))
 
     def obterTotalApostado(self, jugadas: list) -> float:
         if len(jugadas) == 0:
             return 0
         jugadasActivas = list(filter(lambda j: j.fin == None, jugadas))
-        valoresJugada = [
-            (
-                jugada.ladoA
-                if jugada.ladoA != None
-                else 0 + jugada.ladoB
-                if jugada.ladoB != None
-                else 0
-            )
-            for jugada in jugadasActivas
-        ]
+        valoresJugada = []
+
+        for jugada in jugadasActivas:
+            if jugada.ladoA != None:
+                valoresJugada.append(jugada.ladoA)
+            if jugada.ladoB != None:
+                valoresJugada.append(jugada.ladoB)
+
         return sum(valoresJugada)
 
     async def ObterJogadaPorNumeroMesa(self, idNumeroMesa: int):
@@ -127,6 +68,15 @@ class Mesa:
         ).first()
         return jogadaAtivaMesa
 
+    async def ObterUltimasJogadaPorMesa(self, idMesa: int):
+        jogadaAtivaMesa = (
+            self.__session.query(JugadaModel)
+            .filter(and_(JugadaModel.mesa == idMesa, JugadaModel.fin != None))
+            .limit(15)
+            .all()
+        )
+        return list(jogadaAtivaMesa)
+
     async def CriarNovaJogada(self, apuesta: Apuesta):
         novaJogada = JugadaModel(mesa=apuesta.IdMesa, creacion=datetime.now())
 
@@ -136,7 +86,7 @@ class Mesa:
         else:
             novaJogada.ladoB = apuesta.ValorApostado
             novaJogada.ladoA = 0
-            
+
         self.__session.add(novaJogada)
         self.__session.commit()
         return novaJogada
@@ -178,3 +128,13 @@ class Mesa:
             }
             for mesa in mesas
         ]
+
+    async def ObterMesaPorId(self, idMesa: int):
+        existeMesa = self.__session.scalars(
+            select(MesaModel).where(MesaModel.id == idMesa)
+        ).first()
+
+        if existeMesa == None:
+            raise ServicoException("Registro da mesa não encontrado")
+
+        return existeMesa

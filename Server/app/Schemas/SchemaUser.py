@@ -2,12 +2,12 @@ from pydantic import BaseModel
 
 
 class User(BaseModel):
-    id : int | None = None
+    id: int | None = None
     username: str
-    password: str   
+    password: str
 
 
-class UserUpdate(BaseModel):  
+class UserUpdate(BaseModel):
     username: str | None = None
     password: str | None = None
     avatar: str | None = None
@@ -31,7 +31,17 @@ class TokenData(BaseModel):
 
 
 class QrPix(BaseModel):
-    encodedImage: str | None = None 
-    payload: str | None = None 
-    expirationDate : str | None = None 
-    error : str | None = None 
+    encodedImage: str | None = None
+    payload: str | None = None
+    expirationDate: str | None = None
+    error: str | None = None
+
+
+class DetalhesApuestaUsuario:
+    def __init__(
+        self, nombre: str, imagen: str, porcentagem: float, valorApostado: float
+    ):
+        self.nombre = nombre
+        self.imagen = imagen
+        self.porcentagem = porcentagem
+        self.valorApostado = valorApostado
