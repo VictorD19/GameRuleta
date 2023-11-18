@@ -1,7 +1,6 @@
 from Models.model import JugadaModel, ApuestaModel, MesaModel
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select, and_
-from Schemas.Mesas import MesaStatus, ListMesas
 from Schemas.Apuesta import Apuesta
 from Service.Porcentagem import Porcentagem
 from Schemas.Exection import ServicoException
@@ -12,6 +11,7 @@ class Mesa:
     def __init__(self, session: Session) -> None:
         self.__session = session
 
+    # region Metodos Auxiliares
     def ObterNovoValorTotalDoLadoApostado(
         self, valorApostado: float, jugada: JugadaModel, idLado: int
     ):
@@ -20,23 +20,6 @@ class Mesa:
         else:
             jugada.ladoB += valorApostado
 
-    # def ObterPorcentagemLadoPorId(idLado: int):
-    #     if idLado == 1:
-    #         return self.PorcentagemLadoA
-    #     else:
-    #         return self.PorcentagemLadoB
-
-    # def ObterDadosParaGerarRuleta():
-    #     ladoMaior = self.PorcentagemLadoA > self.PorcentagemLadoB
-    #     porcentagemMaior = self.PorcentagemLadoA if ladoMaior else self.PorcentagemLadoB
-    #     ladoMaiorId = 1 if ladoMaior else 0
-    #     ladoContrario = 0 if (ladoMaiorId == 1) else 1
-
-    #     return {
-    #         "LadoMaior": ladoMaiorId,
-    #         "PorcentagemMaior": porcentagemMaior,
-    #         "LadoMenor": ladoContrario,
-    #     }
     def obtenerTotalJugadores(self, jugadas: list[JugadaModel]) -> int:
         if len(jugadas) == 0:
             return 0
@@ -60,6 +43,8 @@ class Mesa:
 
         return sum(valoresJugada)
 
+    # endregion
+    # region Metodos Principales
     async def ObterJogadaPorNumeroMesa(self, idNumeroMesa: int):
         jogadaAtivaMesa = self.__session.scalars(
             select(JugadaModel).where(
@@ -138,3 +123,9 @@ class Mesa:
             raise ServicoException("Registro da mesa não encontrado")
 
         return existeMesa
+
+    async def PagarJugadoresGanador(self, jugada: JugadaModel):
+        pass
+
+
+# endregion
