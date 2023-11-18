@@ -22,13 +22,13 @@ class ApuestaController:
             if existeJogadaAtiva == None:
                 existeJogadaAtiva = await self.__MesaService.CriarNovaJogada(apuesta)
             else:
-                self.__MesaService.ObterNovoValorTotalDoLadoApostado(apuesta.ValorApostado,existeJogadaAtiva,apuesta.IdLadoApostado)
+                self.__MesaService.ObterNovoValorTotalDoLadoApostado(
+                    apuesta.ValorApostado, existeJogadaAtiva, apuesta.IdLadoApostado
+                )
 
             nuevaApuesta = await self.__MesaService.CriarApuestaJugador(
                 apuesta, jugada=existeJogadaAtiva
             )
-
-
             self.__session.commit()
 
             return ResponseRequest().CrearRespuestaSucesso({"Status": "ok"})
@@ -38,6 +38,8 @@ class ApuestaController:
             return ResponseRequest().CrearRespuestaError(str(ex))
         except Exception as ex:
             self.__session.rollback()
-            return ResponseRequest().CrearRespuestaError("Não foi possivel Processar a requisição")
+            return ResponseRequest().CrearRespuestaError(
+                "Não foi possivel Processar a requisição"
+            )
         finally:
             self.__session.close()
