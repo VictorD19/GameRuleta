@@ -102,7 +102,7 @@ class TransacEntradaModel(Base):
     monto: Mapped[float] = mapped_column(nullable=True)
     fechaCreado: Mapped[datetime]
     fechaPagado: Mapped[datetime] = mapped_column(nullable=True)
-    status : Mapped[bool] = mapped_column(default=False)
+    status: Mapped[bool] = mapped_column(default=False)
 
 
 class TransacSalidaModel(Base):
@@ -117,4 +117,4 @@ class TransacSalidaModel(Base):
     monto: Mapped[float] = mapped_column(nullable=True)
     fechaCreado: Mapped[datetime]
     fechaPagado: Mapped[datetime] = mapped_column(nullable=True)
-    status : Mapped[bool] = mapped_column(default=False)
+    status: Mapped[bool] = mapped_column(default=False)

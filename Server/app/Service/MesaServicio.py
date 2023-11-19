@@ -1,10 +1,11 @@
-from Models.model import JugadaModel, ApuestaModel, MesaModel
+from Models.model import JugadaModel, ApuestaModel, MesaModel, UserModel
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select, and_
 from Schemas.Apuesta import Apuesta
 from Service.Porcentagem import Porcentagem
 from Schemas.Exection import ServicoException
 from datetime import datetime
+from Schemas.Ruleta import Lados
 
 
 class Mesa:
@@ -124,8 +125,51 @@ class Mesa:
 
         return existeMesa
 
-    async def PagarJugadoresGanador(self, jugada: JugadaModel):
-        pass
+    async def PagarJugadoresGanador(self, jugada: JugadaModel, ladoGanador: Lados):
+        apuestasRelacionada = list(jugada.apuestas)
+        apuestasDelLadoGanador = list(
+            filter(lambda a: a.lado == ladoGanador, apuestasRelacionada)
+        )
+        idsUsuariosApostas = list(
+            set(list(map(lambda a: a.usuario, apuestasDelLadoGanador)))
+        )  # selecionamos los id de los usuarios que devemos pagar. para agrupar e pagarConforme aposta
+        totalValorJugada = jugada.ladoA + jugada.ladoB
+        totalLadoGanador = jugada.ladoA if ladoGanador == Lados.AZUL else jugada.ladoB
+        valorTotalPagado = totalValorJugada
+        for index in range(1, len(idsUsuariosApostas)):
+            idUsuario = idsUsuariosApostas[index]
+            apuestasPorUsuario = list(
+                filter(lambda a: a.usuario == idUsuario), apuestasDelLadoGanador
+            )
+            jugador: UserModel = apuestasPorUsuario[0].usuarioRelacion
+
+            if index == (len(idsUsuariosApostas) - 1):
+                jugador.account += valorTotalPagado
+                break
+
+            totalValorApostadoJugador = sum(
+                list(map(lambda a: a.monto, apuestasPorUsuario))
+            )
+
+            porcentagemAReceber = Porcentagem(
+                totalLadoGanador
+            ).CalcularPorcentagemAReceberPorValor(totalValorApostadoJugador)
+            valorAReceber = Porcentagem(
+                totalValorJugada
+            ).CalcularValorPagarPorPorcentagem(porcentagemAReceber)
+
+            for apuestaUser in apuestasPorUsuario:
+                porcentagemApuesta = Porcentagem(
+                    totalLadoGanador
+                ).CalcularPorcentagemAReceberPorValor(apuestaUser.monto)
+                apuestaUser.montoResultado = Porcentagem(
+                    totalLadoGanador
+                ).CalcularValorPagarPorPorcentagem(porcentagemApuesta)
+                apuestaUser.resultado = True
+
+            jugador.account += valorAReceber
+            valorTotalPagado -= valorAReceber
+            self.__session.commit()
 
 
 # endregion
