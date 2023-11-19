@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from datetime import datetime
+from typing import List
 
 
 class User(BaseModel):
@@ -46,3 +48,16 @@ class DetalhesApuestaUsuario:
         self.imagen = imagen
         self.porcentagem = porcentagem
         self.valorApostado = valorApostado
+
+
+class TransaccionesBanco(BaseModel):
+    idExterno: str
+    tipo: str
+    monto: float
+    fechaCreado: datetime
+    fechaPagado: datetime | None = None
+    status: bool
+
+
+class ListTransaccionesBanco(BaseModel):
+    ListTransacciones: List[TransaccionesBanco]

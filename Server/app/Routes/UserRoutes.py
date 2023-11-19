@@ -2,8 +2,15 @@ from fastapi import Depends, HTTPException, Response
 from fastapi import APIRouter, Header
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from Schemas.SchemaUser import UserPublic, User, UserUpdate, Token, QrPix
-from Schemas.SchemaWebhooks import EventPaymentReceived
+from Schemas.SchemaUser import (
+    UserPublic,
+    User,
+    UserUpdate,
+    Token,
+    QrPix,
+    ListTransaccionesBanco,
+)
+from Schemas.SchemaWebhooks import PaymentEvent
 from Models.model import get_session, UserModel
 from Service.securtity import (
     get_password_hash,
@@ -122,24 +129,47 @@ def refresh_access_token(user: User = Depends(get_current_user)):
 
 @router.get("/new-cobro-pix/{user_id}/{monto}/", response_model=QrPix)
 def newCobroPix(
-    user_id: int,
-    monto: float,
-    current_user: User = Depends(get_current_user),
-    session: Session = Depends(get_session),
+    user_id: int, monto: float, current_user: User = Depends(get_current_user)
 ):
     if current_user.id != user_id:
         raise HTTPException(status_code=400, detail="Permissões insuficientes")
 
-    return Banco(monto=monto, session=session, user=current_user).getQR()
+    return Banco(monto=monto, user=current_user).getQR()
 
 
-@router.get("/webhook-asaas/", status_code=200)
+@router.post("/webhook-asaas/", status_code=200)
 def webhookAsaas(
-    event: EventPaymentReceived,
+    event: PaymentEvent,
     asaaS_access_token: str = Header(..., convert_underscores=False),
+    session: Session = Depends(get_session),
 ):
     if not asaaS_access_token or asaaS_access_token != os.getenv("WEBHOOK_TOKEN_ASAAS"):
         raise HTTPException(
             status_code=400,
             detail="Encabezado HTTP_ASAAS_ACCESS_TOKEN no proporcionado",
         )
+    if event.event == "PAYMENT_CREATED":
+        ...
+
+    if event.event == "PAYMENT_RECEIVED" and event.payment.billingType == "PIX":
+        Banco(
+            monto=float(event.payment.value), session=session
+        ).actualizaTransaccionEntrada(idTransac=event.payment.pixQrCodeId)
+        Response(status_code=200)
+
+
+@router.get(
+    "/transac/{user_id}/", status_code=200, response_model=ListTransaccionesBanco
+)
+def obterTransacciones(
+    user_id: int,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=400, detail="Permissões insuficientes")
+    return ListTransaccionesBanco(
+        ListTransacciones=Banco(
+            session=session, user=current_user
+        ).ObterTransaccionesGeral()
+    )

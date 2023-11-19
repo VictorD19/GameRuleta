@@ -1,10 +1,18 @@
-from fastapi import WebSocket, HTTPException
+from fastapi import Depends, WebSocket, HTTPException
+from sqlalchemy import or_, and_
+from sqlalchemy.orm import joinedload
 
 # from Models.Apuesta import Apuesta
 from Service.APIAsaasService import NewCobropix
 from Schemas.Exection import ControllerException
-from Schemas.SchemaUser import UserPublic
-from Models.model import Session, TransacEntradaModel
+from Schemas.SchemaUser import UserPublic, TransaccionesBanco
+from Models.model import (
+    Session,
+    get_session,
+    TransacEntradaModel,
+    UserModel,
+    TransacSalidaModel,
+)
 from datetime import datetime
 
 
@@ -26,7 +34,12 @@ class Usuario:
 
 
 class Banco:
-    def __init__(self, session: Session, user: int, monto: float = 0.0):
+    def __init__(
+        self,
+        session: Session,
+        user: UserModel = None,
+        monto: float = 0.0,
+    ):
         self.monto = monto
         self.session = session
         self.user = user
@@ -65,7 +78,71 @@ class Banco:
             self.session.add(transaccion)
             self.session.commit()
             self.session.refresh(transaccion)
+
         except Exception as ex:
             raise HTTPException(
                 status_code=400, detail=f"Error al guarda la transaccion inicial {ex}"
             )
+
+    def actualizaTransaccionEntrada(self, idTransac: str) -> None:
+        transac = (
+            self.session.query(TransacEntradaModel)
+            .filter(
+                and_(
+                    TransacEntradaModel.idExterno == idTransac,
+                    TransacEntradaModel.monto == self.monto,
+                )
+            )
+            .first()
+        )
+
+        if not transac:
+            raise HTTPException(
+                status_code=400, detail="Monto invalido para actualizar"
+            )
+
+        transac.status = True
+        transac.fechaPagado = datetime.now()
+        self.session.commit()
+        self.session.refresh(transac)
+
+    def ObterTransaccionesGeral(self):
+        TransEnt = (
+            self.session.query(TransacEntradaModel)
+            .filter(TransacEntradaModel.usuario == self.user.id)
+            .limit(50)
+            .all()
+        )
+        TransSal = (
+            self.session.query(TransacSalidaModel)
+            .filter(TransacSalidaModel.usuario == self.user.id)
+            .limit(50)
+            .all()
+        )
+        out = [
+            TransaccionesBanco(
+                **{
+                    "idExterno": transacc.idExterno,
+                    "tipo": "entrada",
+                    "monto": transacc.monto,
+                    "fechaCreado": transacc.fechaCreado,
+                    "fechaPagado": transacc.fechaPagado,
+                    "status": transacc.status,
+                }
+            )
+            for transacc in TransEnt
+        ] + [
+            TransaccionesBanco(
+                **{
+                    "idExterno": transacc.idExterno,
+                    "tipo": "salida",
+                    "monto": transacc.monto,
+                    "fechaCreado": transacc.fechaCreado,
+                    "fechaPagado": transacc.fechaPagado,
+                    "status": transacc.status,
+                }
+            )
+            for transacc in TransSal
+        ]
+
+        return sorted(out, key=(lambda t: t.fechaCreado), reverse=True)
