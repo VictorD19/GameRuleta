@@ -5,7 +5,7 @@ const ContextoApp = createContext()
 export const ContextAppProvider = async ({ children }) => {
 
     return (
-        <ContextoApp.Provider value={{ dadosUsuario, dispatchUsuario }}>
+        <ContextoApp.Provider value={{}}>
             {children}
         </ContextoApp.Provider>
     );

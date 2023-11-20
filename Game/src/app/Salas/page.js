@@ -14,8 +14,8 @@ export default function Page() {
       </div>
 
       <div className="row semMarginRow">
-        <Fila  />
-        <Fila color="danger"/>
+        <Fila />
+        <Fila color="danger" />
         <Historico />
       </div>
     </div>

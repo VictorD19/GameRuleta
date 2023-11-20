@@ -5,7 +5,8 @@ import paleta from "../styles/paletaColores";
 import { Menu } from "@/Components/Menu/Menu";
 import SalasCard from "@/Components/Salas";
 const inter = Archivo({ subsets: ["latin"] });
-import { socketSalas } from "../Api"
+import { socket } from "../Api"
+import { Providers } from "@/Providers";
 
 export const metadata = {
   title: "Create Next App",
@@ -13,7 +14,7 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  await socketSalas.on("connect", () => { console.log(socketSalas.connected); })
+  socket.on("connect", () => { console.log("Conectado ao servidor" + socket.connected); })
   return (
     <html lang="en">
       <body
@@ -21,13 +22,15 @@ export default async function RootLayout({ children }) {
         style={{ background: paleta.NEGRO, color: paleta.BLANCO }}
       >
         {/* Provider   */}
-        <div className="col-2">
-          <Menu />
-        </div>
-        <div className="col-12  col-lg-10 me-sm-0 semMarginRow">
-          <SalasCard />
-          {children}
-        </div>
+        <Providers>
+          <div className="col-2">
+            <Menu />
+          </div>
+          <div className="col-12  col-lg-10 me-sm-0 semMarginRow">
+            <SalasCard />
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );
