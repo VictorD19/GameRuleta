@@ -46,7 +46,7 @@ export default function Page() {
 
           <Accordion defaultActiveKey="0" flush>
             {PERGUNTAS_REPOSTA.map((item, i) => (
-              <Accordion.Item eventKey={i}>
+              <Accordion.Item eventKey={i} key={"pergunta" + i}>
                 <Accordion.Header>{item.TITULO}</Accordion.Header>
                 <Accordion.Body>{item.DESCRICION}</Accordion.Body>
               </Accordion.Item>

@@ -2,8 +2,7 @@
 import styled from "styled-components";
 import "./style.css";
 import Image from "next/image";
-import Profile from "./face-1.png";
-import Logo from "./logo.png";
+import Logo from "../../Assert/logo.svg";
 import { Button } from "react-bootstrap";
 import {
   FaBars,
@@ -16,6 +15,7 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { ModalComponent } from "../Modal/Modal";
 import { useState } from "react";
+import { useDataContext } from "@/Context";
 
 const NavComponent = styled.nav`
   @media only screen and (max-width: 767px) {
@@ -63,6 +63,9 @@ const MENUS = [
 ];
 
 export function Sidebar({ visible = false, toogle }) {
+  const {
+    appData: { Usuario },
+  } = useDataContext();
   const [modalDeposito, setModalDeposito] = useState(false);
   const [modalSaque, setModalSaque] = useState(false);
   const router = useRouter();
@@ -85,10 +88,8 @@ export function Sidebar({ visible = false, toogle }) {
     <>
       <NavComponent $visible={{ visible: visible == true ? true : false }}>
         <div className="sidebar-top d-flex justify-content-between">
-          <div className="d-flex align-items-center">
-       
-            <Image src={Logo} width={50} height={50} />
-            <h3 className="hide">Aqumex</h3>
+          <div className="">
+            <Image src={Logo} height={44} />
           </div>
 
           <Button
@@ -101,9 +102,9 @@ export function Sidebar({ visible = false, toogle }) {
         </div>
         <div className="admin-user tooltip-element mt-4 mb-2" data-tooltip="1">
           <div className="admin-profile hide">
-            <Image src={Profile} width={50} height={50} />
+            <Image src={Usuario.FotoAvatar} width={50} height={50} />
             <div className="admin-info">
-              <h3>John Doe</h3>
+              <h3>{Usuario.Nombre}</h3>
             </div>
           </div>
         </div>
@@ -114,7 +115,7 @@ export function Sidebar({ visible = false, toogle }) {
                 <FaMoneyBillWave /> Conta{" "}
               </b>
             </span>
-            <h1>R$ 100,00</h1>
+            <h1>R$ {Usuario.Saldo}</h1>
           </div>
           <div className="row">
             <div className="col-6  px-2">

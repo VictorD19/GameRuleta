@@ -5,7 +5,6 @@ import paleta from "../styles/paletaColores";
 import { Menu } from "@/Components/Menu/Menu";
 import SalasCard from "@/Components/Salas";
 const inter = Archivo({ subsets: ["latin"] });
-import { socket } from "../Api"
 import { Providers } from "@/Providers";
 
 export const metadata = {
@@ -14,7 +13,6 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  socket.on("connect", () => { console.log("Conectado ao servidor" + socket.connected); })
   return (
     <html lang="en">
       <body
@@ -23,7 +21,7 @@ export default async function RootLayout({ children }) {
       >
         {/* Provider   */}
         <Providers>
-          <div className="col-2">
+          <div className="col-12 col-md-2">
             <Menu />
           </div>
           <div className="col-12  col-lg-10 me-sm-0 semMarginRow">
