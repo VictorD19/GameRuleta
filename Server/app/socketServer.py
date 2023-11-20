@@ -2,7 +2,7 @@ from Models.model import Session, get_session
 from fastapi import Depends
 from Controller.MesaController import SalasGeral
 
-import socketio
+#import socketio
 
 socketServer = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins="*")
 socketApp = socketio.ASGIApp(socketServer)

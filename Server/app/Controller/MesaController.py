@@ -2,12 +2,12 @@ from Service.MesaServicio import Mesa
 from Schemas.Response import ResponseRequest
 from Schemas.Mesas import MesaDetalhesCompletos, HistoricoMesa
 from Schemas.SchemaUser import DetalhesApuestaUsuario
-from Models.model import ApuestaModel, JugadaModel
+from Models.model import ApuestaModel, JugadaModel, Session
 from Service.Porcentagem import Porcentagem
 
 
 class SalasGeral:
-    def __init__(self, session) -> None:
+    def __init__(self, session:Session) -> None:
         self.__session = session
         self.__porcentagemPadrao = 100
 

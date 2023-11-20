@@ -202,13 +202,13 @@ class Banco:
             # Llamar funcion que hace el pix
             datos, status_code = NewTransferenciaPIX(
                 retiro=retiro, usuario=self.user
-            ).enviarPix()          
+            ).enviarPix()
 
             if status_code != 200:
                 raise ControllerException("erro na conexão do banco para enviar pix")
-            
+
             # actualizamos el ID de la transaccion en la tabla
-            transaccSalida.idExterno = datos['id']
+            transaccSalida.idExterno = datos["id"]
             self.session.commit()
             self.session.refresh(transaccSalida)
             return
