@@ -33,6 +33,7 @@ class UserModel(Base):
     password: Mapped[str]
     avatar: Mapped[str] = mapped_column(nullable=True)
     account: Mapped[float] = mapped_column(default=0.0)
+    ganancias: Mapped[float] = mapped_column(default=0.0, nullable= True)
     status: Mapped[bool] = mapped_column(default=True)
     codreferencia: Mapped[str] = mapped_column(nullable=True)
     apuestas: Mapped[List["ApuestaModel"]] = relationship(

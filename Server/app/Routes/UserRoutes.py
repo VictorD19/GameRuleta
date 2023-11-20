@@ -9,6 +9,7 @@ from Schemas.SchemaUser import (
     Token,
     QrPix,
     ListTransaccionesBanco,
+    RetiroFondos
 )
 from Schemas.SchemaWebhooks import PaymentEvent
 from Models.model import get_session, UserModel
@@ -155,7 +156,8 @@ def webhookAsaas(
         Banco(
             monto=float(event.payment.value), session=session
         ).actualizaTransaccionEntrada(idTransac=event.payment.pixQrCodeId)
-        Response(status_code=200)
+    
+    return Response(status_code=200)
 
 
 @router.get(
@@ -173,3 +175,17 @@ def obterTransacciones(
             session=session, user=current_user
         ).ObterTransaccionesGeral()
     )
+
+
+@router.post("/retiros/", status_code=200)
+def retiroDeFondos(
+    retiro : RetiroFondos,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.id != retiro.userId:
+        raise HTTPException(status_code=400, detail="Permissões insuficientes")
+
+    Banco(session=session, user=current_user).retiroFondos(retiro)
+       
+    return Response(status_code=200)
