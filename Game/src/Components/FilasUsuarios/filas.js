@@ -1,53 +1,51 @@
-'use client'
+"use client";
 
+import Image from "next/image";
 import { CardJogador } from "./style.styled";
 
-export default function Fila({ Jugadores,color = "primary" }) {
+export default function Fila({
+  Jugadores = [],
+  color = "primary",
+  totalLado = 0,
+  porcentagem = 0,
+}) {
   return (
-    <div className=" col-sm-12 col-md-4 mb-4 mb-md-0" >
+    <div className=" col-sm-12 col-md-4 mb-4 mb-md-0">
       <div className="card bg-dark text-white">
-      <div className={`card-header d-flex justify-content-between bg-${color}`}>
-        <span>Valor Total: R$ 100,00</span>
-        <span>50%</span>
-      </div>
-      <div className="card-body">
-        <div className="row">
-          <span className="col-7">
-            Usuarios
-          </span>
-          <span className="col-3 text-end" >Valor (R$)</span>
-          <span className="col-2 text-end">%</span>
+        <div
+          className={`card-header d-flex justify-content-between bg-${color}`}
+        >
+          <span>Valor Total: R$ {totalLado}</span>
+          <span>{porcentagem}%</span>
         </div>
-        <Jugador />
-        <Jugador />
-        <Jugador />
-        <Jugador />
-        <Jugador />
-        <Jugador />
-        <Jugador />
-      </div>
+        <div className="card-body">
+          <div className="row">
+            <span className="col-7">Usuarios</span>
+            <span className="col-3 text-end">Valor (R$)</span>
+            <span className="col-2 text-end">%</span>
+          </div>
+          {Jugadores.map((jugador, i) => (
+            <Jugador jugador={jugador} key={"jugador_" + jugador.id} />
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-const Jugador = () => {
+const Jugador = ({ jugador }) => {
   return (
     <CardJogador className="row my-2 align-items-center">
-    <span className="col-7">
-      <div className="row align-items-center">
-        <div className="col-3">
-          <img
-            src="https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small/default-avatar-profile-icon-of-social-media-user-vector.jpg"
-            width={50}
-            height={50}
-          />
+      <span className="col-7">
+        <div className="row align-items-center">
+          <div className="col-3">
+            <Image src={jugador.imagem} width={50} height={50} />
+          </div>
+          <div className="col-6">{jugador.nombre}</div>
         </div>
-        <div className="col-6">nombre</div>
-      </div>
-    </span>
-    <span className="col-3 valor   text-end">{Math.floor(Math.random() * 1000 + 1).toFixed(2)}</span>
-    <span className="col-2 text-end">{Math.floor(Math.random() * 100 + 1)}%</span>
-  </CardJogador>
+      </span>
+      <span className="col-3 valor   text-end">{jugador.valor}</span>
+      <span className="col-2 text-end">{jugador.porcentagem}</span>
+    </CardJogador>
   );
 };
