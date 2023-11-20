@@ -61,3 +61,10 @@ class TransaccionesBanco(BaseModel):
 
 class ListTransaccionesBanco(BaseModel):
     ListTransacciones: List[TransaccionesBanco]
+
+
+class RetiroFondos(BaseModel):
+    userId: int
+    monto: float
+    chavePix: str
+    chaveTipo: str
