@@ -11,7 +11,7 @@ class Ruleta:
         self.__ruletaGenerada: list[ItemRuleta] = []
 
     def GenerarRuleta(self):
-        dadoGerarRuleta = self.ObterDatosParaGenerarRuleta()
+        dadoGerarRuleta = self.__ObterDatosParaGenerarRuleta()
         for numerador in range(1, 101):
             self.__ruletaGenerada.append(
                 ItemRuleta(
@@ -22,11 +22,11 @@ class Ruleta:
                 )
             )
 
-        self.DesordenarRuleta()
-        ganador: ItemRuleta = self.SelecionarAlGanador()
+        self.__DesordenarRuleta()
+        self.__SelecionarAlGanador()
 
     # region Metodos auxiliare
-    def ObterDatosParaGenerarRuleta(self) -> DadosParaGenerarRuleta:
+    def __ObterDatosParaGenerarRuleta(self) -> DadosParaGenerarRuleta:
         valorTotal = self.__jugada.ladoA + self.__jugada.ladoB
         idLadoMaior: Lados = (
             Lados.AZUL if self.__jugada.ladoA > self.__jugada.ladoB else Lados.ROJO
@@ -43,7 +43,7 @@ class Ruleta:
             PorcentagemLadoMenor=porcentagemMenor,
         )
 
-    def DesordenarRuleta(self):
+    def __DesordenarRuleta(self):
         for i in range(len(self.__ruletaGenerada) - 1, 0, -1):
             j = random.randint(0, i)
             self.__ruletaGenerada[i], self.__ruletaGenerada[j] = (
@@ -51,7 +51,7 @@ class Ruleta:
                 self.__ruletaGenerada[i],
             )
 
-    def SelecionarAlGanador(self):
+    def __SelecionarAlGanador(self):
         min = 0
         max = 0
 
@@ -61,44 +61,12 @@ class Ruleta:
         else:
             max = self.__jugada.ladoB
             min = self.__jugada.ladoA
-        ganador = self.__ruletaGenerada[math.floor(random() * (max - min) + min)]
-        return ganador
+        numeroAleatorio = math.floor(random() * (max - min) + min)
+        ganador = self.__ruletaGenerada[numeroAleatorio]
+        ganador.PosicaoInicial = numeroAleatorio
+        self.Ganador = ganador
+
+    def ObterGanador(self):
+        return self.Ganador
 
     # endregion
-
-    # def GenerarRuleta():
-    #     servicoMesa = Mesa()
-    #     dadosGerarRuleta = servicoMesa.ObterDadosParaGerarRuleta()
-    #     for itemRuleta in range(1, 100):
-    #         if itemRuleta <= dadosGerarRuleta.LadoMaior:
-    #             self.RULETA.append(
-    #                 {"Id": itemRuleta, "Lado": dadosGerarRuleta.LadoMaior}
-    #             )
-    #         else:
-    #             self.RULETA.append(
-    #                 {"Id": itemRuleta, "Lado": dadosGerarRuleta.LadoMenor}
-    #             )
-    #     DesordenarRuleta()
-
-    # def DesordenarRuleta():
-    #     for i in range(len(self.RULETA) - 1, 0, -1):
-    #         j = random.randint(0, i)
-    #         self.RULETA[i], self.RULETA[j] = self.RULETA[j], self.RULETA[i]
-
-    # def SelecionarAoGanador():
-    #     servicoMesa = Mesa()
-    #     valores = ValoresGerarNumeroAletorio(servicoMesa.ObterPorcentagemLadoPorId(1),servicoMesa.ObterPorcentagemLadoPorId(2))
-    #     Ganador = self.RULETA[math.floor(random() * (valores["MIN"] -valores["MAX"]) + valores["MIN"])]
-    #     return Ganador
-
-    # def ValoresGerarNumeroAletorio(valorA: float, valorb: float):
-    #     if valorA > valorb:
-    #         return {
-    #             MIN: valorb,
-    #             MAX: valorA,
-    #         }
-    #     else:
-    #         return {
-    #             MIN: valorA,
-    #             MAX: valorb,
-    #         }
