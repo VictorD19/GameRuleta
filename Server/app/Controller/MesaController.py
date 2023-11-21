@@ -7,7 +7,7 @@ from Service.Porcentagem import Porcentagem
 
 
 class SalasGeral:
-    def __init__(self, session:Session) -> None:
+    def __init__(self, session: Session) -> None:
         self.__session = session
         self.__porcentagemPadrao = 100
 
@@ -16,55 +16,59 @@ class SalasGeral:
         return await Mesa(self.__session).ObterDetallesMesas()
 
     async def ObterDadosMesaPorId(self, idMesa: int):
+        # Instanciamos la clase mesa
         servicoMesa = Mesa(self.__session)
+        # Obetenemos los distintos valores de la mesa
         existeMesa = await servicoMesa.ObterMesaPorId(idMesa)
         jogadaActivaMesa = await servicoMesa.ObterJogadaPorNumeroMesa(idMesa)
         ultimasJogadas = await servicoMesa.ObterUltimasJogadaPorMesa(idMesa)
 
         apuestas = (
             jogadaActivaMesa.apuestas
-            if (jogadaActivaMesa != None and jogadaActivaMesa.apuestas != None)
+            if (jogadaActivaMesa and jogadaActivaMesa.apuestas)
             else []
         )
-        ultimasJogadas = ultimasJogadas if ultimasJogadas != None else []
-        valorLadoA = jogadaActivaMesa.ladoA if (jogadaActivaMesa != None) else 0
-        valorLadoB = jogadaActivaMesa.ladoB if (jogadaActivaMesa != None) else 0
 
-        retornoMesa = MesaDetalhesCompletos(
-            idMesa=existeMesa.id if existeMesa != None else 0,
-            jugadoresLadoA=self.ObterDatosJugadoresPorLado(
-                list(apuestas),
-                idlado=1,
-                valorTotalLado=valorLadoA,
-            ),
-            JugadoresLadoB=self.ObterDatosJugadoresPorLado(
-                list(apuestas),
-                idlado=2,
-                valorTotalLado=valorLadoB,
-            ),
-            TotalLadoA=float(f"{valorLadoA:.2f}"),
-            TotalLadoB=float(f"{valorLadoB :.2f}"),
-            TotalApostado=float(f"{valorLadoA +valorLadoB :.2f}"),
-            PorcentagemLadoA=Porcentagem(
+        ultimasJogadas = ultimasJogadas if ultimasJogadas else []
+        valorLadoA = jogadaActivaMesa.ladoA if jogadaActivaMesa else 0
+        valorLadoB = jogadaActivaMesa.ladoB if jogadaActivaMesa else 0
+
+        jugadoresLadoA = self.ObterDatosJugadoresPorLado(
+            list(apuestas),
+            idlado=1,
+            valorTotalLado=valorLadoA,
+        )
+        jugadoresLadoB = self.ObterDatosJugadoresPorLado(
+            list(apuestas),
+            idlado=2,
+            valorTotalLado=valorLadoB,
+        )
+
+        detallesMesa = MesaDetalhesCompletos(
+            idMesa=existeMesa.id if existeMesa else 0,
+            jugadoresLadoA=jugadoresLadoA,
+            jugadoresLadoB=jugadoresLadoB,
+            totalLadoA=float(f"{valorLadoA:.2f}"),
+            totalLadoB=float(f"{valorLadoB :.2f}"),
+            totalApostado=float(f"{valorLadoA + valorLadoB :.2f}"),
+            porcentagemLadoA=Porcentagem(
                 valorLadoA + valorLadoB
             ).CalcularPorcentagemAReceberPorValor(valorLadoA),
-            HistoricoMesa=self.ObterHitoricoMesa(ultimasJogadas),
+            historicoMesa=self.ObterHitoricoMesa(ultimasJogadas),
         )
-        return ResponseRequest().CrearRespuestaSucesso(
-            data=retornoMesa, status_code=200, type="WS"
-        )
+        return detallesMesa
 
     # endregion
     # region Privada
     def ObterDatosJugadoresPorLado(
-        self, apuestas: list[ApuestaModel], idlado: int, valorTotalLado: float
-    ) -> list[DetalhesApuestaUsuario]:
+        self, apuestas:list, idlado:int, valorTotalLado: float
+    ):
         apuestaLadoRequerido = list(filter(lambda a: a.lado == idlado, apuestas))
         jugadoresLado = list(
             set(list(map(lambda a: a.usuarioRelacion, apuestaLadoRequerido)))
         )  # Aqui obtemos los id de los jugadores sin duplicidade para hacer el agrupamento
 
-        retornoJugadas: list[DetalhesApuestaUsuario] = []
+        retornoJugadas = []
 
         for usuario in jugadoresLado:
             apuestasDelJugador = list(

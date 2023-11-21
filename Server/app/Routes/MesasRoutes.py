@@ -38,11 +38,12 @@ async def websocket_endpoint_status_salas(
             out['estatusGeral'] = await SalasGeral(session).DadosGeraisSalas()
                         
             if id_mesa != 0:
-                out['statusMesas'] = await SalasGeral(session).ObterDadosMesaPorId(id_mesa)
+                datosMesa = await SalasGeral(session).ObterDadosMesaPorId(id_mesa)
+                out['statusMesas'] = datosMesa.model_dump()
 
             
             await websocket.send_json(out)        
-            asyncio.sleep(1)
+            await asyncio.sleep(0.3)
 
     except WebSocketDisconnect as ex:        
         print(f"El usuario:{user_id} se ha desconectado de manera inesperada durante el envío, Erro -> {ex}")

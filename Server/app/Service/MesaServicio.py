@@ -47,21 +47,20 @@ class Mesa:
     # endregion
     # region Metodos Principales
     async def ObterJogadaPorNumeroMesa(self, idNumeroMesa: int):
-        jogadaAtivaMesa = self.__session.scalars(
-            select(JugadaModel).where(
-                and_(JugadaModel.mesa == idNumeroMesa, JugadaModel.fin == None)
-            )
-        ).first()
-        return jogadaAtivaMesa
+        return (
+            self.__session.query(JugadaModel)
+            .filter(and_(JugadaModel.mesa == idNumeroMesa, JugadaModel.fin == None))
+            .first()
+        )
 
     async def ObterUltimasJogadaPorMesa(self, idMesa: int):
-        jogadaAtivaMesa = (
+        return (
             self.__session.query(JugadaModel)
             .filter(and_(JugadaModel.mesa == idMesa, JugadaModel.fin != None))
             .limit(15)
             .all()
         )
-        return list(jogadaAtivaMesa)
+        
 
     async def CriarNovaJogada(self, apuesta: Apuesta):
         novaJogada = JugadaModel(mesa=apuesta.IdMesa, creacion=datetime.now())
@@ -116,11 +115,11 @@ class Mesa:
         ]
 
     async def ObterMesaPorId(self, idMesa: int):
-        existeMesa = self.__session.scalars(
-            select(MesaModel).where(MesaModel.id == idMesa)
-        ).first()
+        existeMesa = (
+            self.__session.query(MesaModel).filter(MesaModel.id == idMesa).first()
+        )
 
-        if existeMesa == None:
+        if not existeMesa:
             raise ServicoException("Registro da mesa não encontrado")
 
         return existeMesa

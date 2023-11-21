@@ -40,15 +40,11 @@ class QrPix(BaseModel):
     error: str | None = None
 
 
-class DetalhesApuestaUsuario:
-    def __init__(
-        self, nombre: str, imagen: str, porcentagem: float, valorApostado: float
-    ):
-        self.nombre = nombre
-        self.imagen = imagen
-        self.porcentagem = porcentagem
-        self.valorApostado = valorApostado
-
+class DetalhesApuestaUsuario(BaseModel):
+    nombre: str
+    imagen: str
+    porcentagem: float
+    valorApostado: float
 
 class TransaccionesBanco(BaseModel):
     idExterno: str

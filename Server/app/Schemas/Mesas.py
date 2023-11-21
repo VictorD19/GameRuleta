@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from Schemas.SchemaUser import DetalhesApuestaUsuario
+from typing import List
 
 
 class MesaStatus(BaseModel):
@@ -14,31 +15,19 @@ class ListMesas(BaseModel):
     mesas: list[MesaStatus]
 
 
-class HistoricoMesa:
-    def __init__(self, idjogada: int, idLadoGanador: int, TotalValoApostado: int):
-        self.idJogada = idjogada
-        self.idLadoGanador = idLadoGanador
-        self.TotalValoApostado = TotalValoApostado
+class HistoricoMesa(BaseModel):
+    idJogada: int
+    idLadoGanador: int
+    TotalValoApostado: int
 
 
-class MesaDetalhesCompletos:
-    def __init__(
-        self,
-        idMesa: id,
-        jugadoresLadoA: list[DetalhesApuestaUsuario],
-        JugadoresLadoB: list[DetalhesApuestaUsuario],
-        TotalLadoA: float,
-        TotalLadoB: float,
-        TotalApostado: float,
-        HistoricoMesa: list[HistoricoMesa],
-        PorcentagemLadoA: float,
-    ):
-        self.idMesa = idMesa
-        self.jugadoresLadoA = jugadoresLadoA
-        self.JugadoresLadoB = JugadoresLadoB
-        self.TotalLadoA = TotalLadoA
-        self.TotalLadoB = TotalLadoB
-        self.TotalApostado = TotalApostado
-        self.HistoricoMesa = HistoricoMesa
-        self.PorcentagemLadoA = PorcentagemLadoA
-        self.PorcentagemLadoB = 100 - PorcentagemLadoA
+class MesaDetalhesCompletos(BaseModel):
+    idMesa: int
+    jugadoresLadoA: List[DetalhesApuestaUsuario]
+    jugadoresLadoB: List[DetalhesApuestaUsuario]
+    totalLadoA: float
+    totalLadoB: float
+    totalApostado: float
+    historicoMesa: List[HistoricoMesa]
+    porcentagemLadoA: float
+    porcentagemLadoB: float | None = None
