@@ -39,12 +39,12 @@ const Jugador = ({ jugador }) => {
       <span className="col-7">
         <div className="row align-items-center">
           <div className="col-3">
-            <Image src={jugador.imagem} width={50} height={50} />
+            <Image src={jugador.imagen} width={50} height={50} />
           </div>
           <div className="col-6">{jugador.nombre}</div>
         </div>
       </span>
-      <span className="col-3 valor   text-end">{jugador.valor}</span>
+      <span className="col-3 valor   text-end">{jugador.valorApostado}</span>
       <span className="col-2 text-end">{jugador.porcentagem}</span>
     </CardJogador>
   );

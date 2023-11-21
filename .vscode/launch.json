@@ -9,18 +9,19 @@
             "type": "python",
             "request": "launch",
             "module": "uvicorn",
-            "cwd": "/home/macdo/Projects/GameRuleta/GameRuleta/Server/app",
+            "cwd": "${workspaceFolder}\\Server\\app",
             "args": [
                 "main:app",
                 "--reload",
+                "--host",
+                "0.0.0.0",
                 "--port",
                 "8000",
                 "--workers",
                 "4",
-                "--host",
-                "0.0.0.0"
-
-            ]
+            ],
+            "jinja": true,
+            "justMyCode": true
         }
     ]
 }

@@ -112,10 +112,12 @@ export const DataInicialApp = {
         porcentagem: 12,
       },
     ],
+    id: 1,
     TotalLadoA: 100,
     TotalLadoB: 140,
     PorcentagemA: 40,
     PorcentagemB: 60,
+    TotalApostado: 100,
     RuletaActiva: true,
     HistoricoPartidas: [
       {
@@ -153,6 +155,30 @@ export const DataInicialApp = {
 };
 
 export const reducer = (state, action) => {
-
+  console.log(action)
+  switch (action.tipo) {
+    case "DATOS_GENERAL_SALA":
+      return {
+        ...state, SalasGerais: action.data
+      };
+    case "SALA_ATUAL":
+      let salaAtual = state.SalaAtual
+      let dadosSalaAtual = action.data
+      salaAtual.id = dadosSalaAtual.idMesa
+      salaAtual.JugadoresA = dadosSalaAtual.jugadoresLadoA
+      salaAtual.JugadoresB = dadosSalaAtual.jugadoresLadob
+      salaAtual.TotalLadoA = dadosSalaAtual.totalLadoA
+      salaAtual.TotalLadoB = dadosSalaAtual.totalLadoB
+      salaAtual.PorcentagemA = dadosSalaAtual.porcentagemLadoA
+      salaAtual.PorcentagemB = dadosSalaAtual.porcentagemLadoB
+      salaAtual.RuletaActiva = dadosSalaAtual.ruletaActiva
+      salaAtual.TotalApostado = dadosSalaAtual.totalApostado
+      salaAtual.HistoricoPartidas = dadosSalaAtual.historicoMesa
+      state.SalaAtual = salaAtual
+      return state
+      break;
+    default:
+      break;
+  }
 
 };

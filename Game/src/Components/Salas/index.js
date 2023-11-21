@@ -10,7 +10,7 @@ import { useDataContext } from "@/Context";
 export default function SalasCard() {
   const route = useRouter();
   const { appData } = useDataContext();
-  useEffect(() => {}, []);
+  useEffect(() => { }, [appData.SalasGerais]);
 
   const irParaSala = (sala) => {
     route.push(`/Salas${sala == 1 ? "" : `/Sala${sala}`}`);
