@@ -119,6 +119,7 @@ export const DataInicialApp = {
     PorcentagemB: 60,
     TotalApostado: 100,
     RuletaActiva: true,
+    IndiceGanador: 0,
     HistoricoPartidas: [
       {
         id: 1,
@@ -155,13 +156,13 @@ export const DataInicialApp = {
 };
 
 export const reducer = (state, action) => {
-  console.log(action)
   switch (action.tipo) {
     case "DATOS_GENERAL_SALA":
       return {
         ...state, SalasGerais: action.data
       };
     case "SALA_ATUAL":
+      
       let salaAtual = state.SalaAtual
       let dadosSalaAtual = action.data
       salaAtual.id = dadosSalaAtual.idMesa
@@ -174,9 +175,13 @@ export const reducer = (state, action) => {
       salaAtual.RuletaActiva = dadosSalaAtual.ruletaActiva
       salaAtual.TotalApostado = dadosSalaAtual.totalApostado
       salaAtual.HistoricoPartidas = dadosSalaAtual.historicoMesa
-      state.SalaAtual = salaAtual
-      return state
-      break;
+      return {
+        ...state,SalaAtual: salaAtual
+      }
+    case "CONECTADO":
+      return {
+        ...state,Conectado: action.data
+      }
     default:
       break;
   }

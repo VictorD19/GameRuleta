@@ -15,7 +15,7 @@ export function MenuCelular({ toogle }) {
   return (
     <MenuCelularCOmponente className="w-100" >
       <div className="d-flex justify-content-between align-items-center py-2 ps-4">
-        <Image src={Logo}  height={45}/>
+        <Image src={Logo}  height={45} alt="logo"/>
         <FaBars size={25} onClick={toogle} />
       </div>
     </MenuCelularCOmponente>

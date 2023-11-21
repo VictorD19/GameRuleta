@@ -89,7 +89,7 @@ export function Sidebar({ visible = false, toogle }) {
       <NavComponent $visible={{ visible: visible == true ? true : false }}>
         <div className="sidebar-top d-flex justify-content-between">
           <div className="">
-            <Image src={Logo} height={44} />
+            <Image src={Logo} height={44} alt="logo" />
           </div>
 
           <Button
@@ -102,7 +102,12 @@ export function Sidebar({ visible = false, toogle }) {
         </div>
         <div className="admin-user tooltip-element mt-4 mb-2" data-tooltip="1">
           <div className="admin-profile hide">
-            <Image src={Usuario.FotoAvatar} width={50} height={50} />
+            <Image
+              src={Usuario.FotoAvatar}
+              width={50}
+              height={50}
+              alt="fotoPerfil"
+            />
             <div className="admin-info">
               <h3>{Usuario.Nombre}</h3>
             </div>
