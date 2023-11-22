@@ -30,4 +30,4 @@ class MesaDetalhesCompletos(BaseModel):
     totalApostado: float
     historicoMesa: List[HistoricoMesa]
     porcentagemLadoA: float
-    porcentagemLadoB: float | None = None
+    porcentagemLadoB: float

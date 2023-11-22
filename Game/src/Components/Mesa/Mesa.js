@@ -5,9 +5,10 @@ import "./style.css";
 import Image from "next/image";
 import { AiFillTrophy } from "react-icons/ai";
 import styled from "styled-components";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Azul from "../../Assert/fichaAzul.svg";
 import Rojo from "../../Assert/fichaRojo.svg";
+import { useDataContext } from "@/Context";
 
 function iniciarContador() {
   const clock = document.getElementsByClassName("clock")[0];
@@ -27,7 +28,7 @@ function iniciarContador() {
 const RuletaComponente = styled.div`
   position: relative;
   width: 100%;
-  height: 80px;
+  height: 10rem;
   overflow: hidden;
 `;
 const RuletaItems = styled.div`
@@ -50,7 +51,7 @@ const numbersArray = Array.from({ length: 100 }, (_, index) => index + 1);
 export function Mesa() {
   const [ruletaItems, setItemRuleta] = useState([]);
   const ruletaRef = useRef(null);
-
+  const { appData: { SalaAtual } } = useDataContext()
   function RodarRuleta() {
     for (let i = 0; i < numbersArray.length; i++) {
       const element = numbersArray[i];
@@ -61,10 +62,15 @@ export function Mesa() {
     }
     setTimeout(spinRoulette, 1000);
   }
+  useEffect(() => {
+    if (SalaAtual.RuletaGenerada != null && SalaAtual.RuletaGenerada.length > 0) {
+      setItemRuleta(SalaAtual.RuletaGenerada)
+      setTimeout(() => { spinRoulette(SalaAtual.PosicaoSelecionada) }, 1500);
+    }
 
-  function spinRoulette() {
-    const randomNumber = Math.floor(Math.random() * 100) + 1;
-    const rotation = randomNumber * -50;
+  }, [SalaAtual.RuletaActiva])
+  function spinRoulette(numeroRandom) {
+    const rotation = numeroRandom * -50;
     ruletaRef.current.style.transform = `translateX(${rotation}px)`;
   }
 
@@ -72,43 +78,48 @@ export function Mesa() {
     <div className="col-sm-12 col-md-8">
       <div className="card bg-dark ">
         <div className="card-body py-4  d-flex flex-column">
-          <RuletaComponente id="Ruleta">
-            <RuletaItems id="ruletaItems" ref={ruletaRef}>
-              {ruletaItems.map((_, i) => (
-                <RuletaItem lado={i % 2 == 0 ? 1 : 0} key={i} />
-              ))}
-            </RuletaItems>
-          </RuletaComponente>
+          {SalaAtual.RuletaActiva ? (
+            <RuletaComponente id="Ruleta">
+              <RuletaItems id="ruletaItems" ref={ruletaRef}>
+                {ruletaItems.map((_, i) => (
+                  <RuletaItem lado={i % 2 == 0 ? 1 : 0} key={i} />
+                ))}
+              </RuletaItems>
+            </RuletaComponente>
+          ) :
+            (
+              <> <div className="d-flex justify-content-between mx-3 mb-3 align-items-center ">
+                <Image src={Relogio} alt="loading" width={100} height={100} />
+                <div className="text-center text-white">
+                  <span>
+                    Total a Ganhar <AiFillTrophy color="gold" />
+                  </span>
+                  <h1>R$ {SalaAtual.TotalApostado}</h1>
+                </div>
+              </div>
 
-          <Button onClick={RodarRuleta}>Rodar Ruleta</Button>
-          <div className="d-flex justify-content-between mx-3 mb-3 align-items-center ">
-            <Image src={Relogio} alt="loading" width={100} height={100} />
-            <div className="text-center text-white">
-              <span>
-                Total a Ganhar <AiFillTrophy color="gold" />
-              </span>
-              <h1>R$ 100,00</h1>
-            </div>
-          </div>
+                <ProgressBar style={{ height: "2rem" }}>
+                  <ProgressBar
+                    animated
+                    striped
+                    variant="primary"
+                    now={SalaAtual.PorcentagemA}
+                    label={`${SalaAtual.PorcentagemA}%`}
+                    key={1}
+                  />
+                  <ProgressBar
+                    animated
+                    striped
+                    variant="danger"
+                    now={SalaAtual.PorcentagemB}
+                    label={`${SalaAtual.PorcentagemB}%`}
+                    key={2}
+                  />
+                </ProgressBar></>
+            )}
 
-          <ProgressBar style={{ height: "2rem" }}>
-            <ProgressBar
-              animated
-              striped
-              variant="primary"
-              now={50}
-              label={`${50}%`}
-              key={1}
-            />
-            <ProgressBar
-              animated
-              striped
-              variant="danger"
-              now={50}
-              label={`${50}%`}
-              key={2}
-            />
-          </ProgressBar>
+
+
         </div>
       </div>
     </div>

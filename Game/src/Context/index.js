@@ -22,15 +22,6 @@ let ReadyState = {
 };
 
 export const ContextAppProvider = ({ children }) => {
-  const funcoesWebsocket = useCallback(() => {
-    ((event) => {
-      let { estatusGeral, statusMesas } = JSON.parse(event.data);
-      d;
-
-      if (statusMesas != null)
-        dispatch({ tipo: "SALA_ATUAL", data: statusMesas });
-    })();
-  }, []);
 
   const [urlPadraoWs, setUrlWebSocket] = useState(URL + "0");
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
@@ -45,9 +36,7 @@ export const ContextAppProvider = ({ children }) => {
   const pathName = usePathname();
   const [appData, dispatch] = useReducer(reducer, DataInicialApp);
 
-  console.log(lastJsonMessage);
-  // dispatch({ tipo: "CONECTADO", data: true });
-  // dispatch({ tipo: "CONECTADO", data: false });
+
 
   useEffect(() => {
     if (lastJsonMessage != null) {
@@ -55,6 +44,12 @@ export const ContextAppProvider = ({ children }) => {
         dispatch({
           tipo: "DATOS_GENERAL_SALA",
           data: lastJsonMessage.estatusGeral,
+        });
+
+      if (lastJsonMessage.statusMesas != null)
+        dispatch({
+          tipo: "SALA_ATUAL",
+          data: lastJsonMessage.statusMesas,
         });
     }
   }, [lastJsonMessage]);

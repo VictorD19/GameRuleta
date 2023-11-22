@@ -55,13 +55,16 @@ class SalasGeral:
                 valorLadoA + valorLadoB
             ).CalcularPorcentagemAReceberPorValor(valorLadoA),
             historicoMesa=self.ObterHitoricoMesa(ultimasJogadas),
+            porcentagemLadoB=Porcentagem(
+                valorLadoA + valorLadoB
+            ).CalcularPorcentagemAReceberPorValor(valorLadoB),
         )
         return detallesMesa
 
     # endregion
     # region Privada
     def ObterDatosJugadoresPorLado(
-        self, apuestas:list, idlado:int, valorTotalLado: float
+        self, apuestas: list, idlado: int, valorTotalLado: float
     ):
         apuestaLadoRequerido = list(filter(lambda a: a.lado == idlado, apuestas))
         jugadoresLado = list(

@@ -119,6 +119,8 @@ export const DataInicialApp = {
     PorcentagemB: 60,
     TotalApostado: 100,
     RuletaActiva: true,
+    RuletaGenerada: [],
+    PosicaoSelecionada: 1,
     IndiceGanador: 0,
     HistoricoPartidas: [
       {
@@ -162,12 +164,12 @@ export const reducer = (state, action) => {
         ...state, SalasGerais: action.data
       };
     case "SALA_ATUAL":
-      
+
       let salaAtual = state.SalaAtual
       let dadosSalaAtual = action.data
       salaAtual.id = dadosSalaAtual.idMesa
-      salaAtual.JugadoresA = dadosSalaAtual.jugadoresLadoA
-      salaAtual.JugadoresB = dadosSalaAtual.jugadoresLadob
+      salaAtual.JugadoresA = dadosSalaAtual.jugadoresLadoA.sort((a, b) => b.porcentagem - a.porcentagem)
+      salaAtual.JugadoresB = dadosSalaAtual.jugadoresLadoB.sort((a, b) => b.porcentagem - a.porcentagem)
       salaAtual.TotalLadoA = dadosSalaAtual.totalLadoA
       salaAtual.TotalLadoB = dadosSalaAtual.totalLadoB
       salaAtual.PorcentagemA = dadosSalaAtual.porcentagemLadoA
@@ -176,11 +178,11 @@ export const reducer = (state, action) => {
       salaAtual.TotalApostado = dadosSalaAtual.totalApostado
       salaAtual.HistoricoPartidas = dadosSalaAtual.historicoMesa
       return {
-        ...state,SalaAtual: salaAtual
+        ...state, SalaAtual: salaAtual
       }
     case "CONECTADO":
       return {
-        ...state,Conectado: action.data
+        ...state, Conectado: action.data
       }
     default:
       break;

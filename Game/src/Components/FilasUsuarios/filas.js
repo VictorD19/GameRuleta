@@ -39,7 +39,7 @@ const Jugador = ({ jugador }) => {
       <span className="col-7">
         <div className="row align-items-center">
           <div className="col-3">
-            <Image src={jugador.imagen || DefaulJugador} width={50} height={50} alt="Img_hy" />
+            <Image src={DefaulJugador} width={50} height={50} alt="Img_hy" />
           </div>
           <div className="col-6">{jugador.nombre}</div>
         </div>
