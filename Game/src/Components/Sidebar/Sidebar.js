@@ -16,6 +16,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { ModalComponent } from "../Modal/Modal";
 import { useState } from "react";
 import { useDataContext } from "@/Context";
+import { CardLogin } from "./cardLogin";
 
 const NavComponent = styled.nav`
   @media only screen and (max-width: 767px) {
@@ -100,77 +101,87 @@ export function Sidebar({ visible = false, toogle }) {
             X
           </Button>
         </div>
-        <div className="admin-user tooltip-element mt-4 mb-2" data-tooltip="1">
-          <div className="admin-profile hide">
-            <Image
-              src={Usuario.FotoAvatar}
-              width={50}
-              height={50}
-              alt="fotoPerfil"
-            />
-            <div className="admin-info">
-              <h3>{Usuario.Nombre}</h3>
-            </div>
-          </div>
-        </div>
-        <div className="my-3">
-          <div>
-            <span>
-              <b>
-                <FaMoneyBillWave /> Conta{" "}
-              </b>
-            </span>
-            <h1>R$ {Usuario.Saldo}</h1>
-          </div>
-          <div className="row">
-            <div className="col-6  px-2">
-              <Button
-                variant="success"
-                className="w-100"
-                onClick={abrirModalDeposito}
-              >
-                Recarga
-              </Button>
-            </div>
-            <div className="col-6 px-2">
-              <Button
-                value="primary"
-                className="w-100"
-                onClick={abrirModalSaque}
-              >
-                Sacar
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <div className="sidebar-links">
-          <ul className="p-0">
-            {MENUS.map((x, i) => (
-              <li
-                className={` tooltip-element  ${
-                  pathname
-                    .toLocaleLowerCase()
-                    .includes(x.Titulo.toLocaleLowerCase())
-                    ? "active-tab"
-                    : ""
-                }`}
-                data-tooltip="0"
-                key={x.Titulo + i}
-              >
-                <div
-                  onClick={() => itParaLaPagina(x.Path)}
-                  className=""
-                  data-active="0"
-                >
-                  <div className="icon ps-4">{x.Icon}</div>
-                  <span className="link hide">{x.Titulo}</span>
+        {Usuario.Conectado ? (
+          <>
+            <div
+              className="admin-user tooltip-element mt-4 mb-2"
+              data-tooltip="1"
+            >
+              <div className="admin-profile hide">
+                <Image
+                  src={Usuario.FotoAvatar}
+                  width={50}
+                  height={50}
+                  alt="fotoPerfil"
+                />
+                <div className="admin-info">
+                  <h3>{Usuario.Nombre}</h3>
                 </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+              </div>
+            </div>
+            <div className="my-3">
+              <div>
+                <span>
+                  <b>
+                    <FaMoneyBillWave /> Conta{" "}
+                  </b>
+                </span>
+                <h1>R$ {Usuario.Saldo}</h1>
+              </div>
+              <div className="row">
+                <div className="col-6  px-2">
+                  <Button
+                    variant="success"
+                    className="w-100"
+                    onClick={abrirModalDeposito}
+                  >
+                    Recarga
+                  </Button>
+                </div>
+                <div className="col-6 px-2">
+                  <Button
+                    value="primary"
+                    className="w-100"
+                    onClick={abrirModalSaque}
+                  >
+                    Sacar
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="sidebar-links">
+              <ul className="p-0">
+                {MENUS.map((x, i) => (
+                  <li
+                    className={` tooltip-element  ${
+                      pathname
+                        .toLocaleLowerCase()
+                        .includes(x.Titulo.toLocaleLowerCase())
+                        ? "active-tab"
+                        : ""
+                    }`}
+                    data-tooltip="0"
+                    key={x.Titulo + i}
+                  >
+                    <div
+                      onClick={() => itParaLaPagina(x.Path)}
+                      className=""
+                      data-active="0"
+                    >
+                      <div className="icon ps-4">{x.Icon}</div>
+                      <span className="link hide">{x.Titulo}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        ) : (
+          <CardLogin />
+        )}
       </NavComponent>
+
       <ModalComponent
         show={modalDeposito}
         cerrarModal={cerrarModalDeposito}

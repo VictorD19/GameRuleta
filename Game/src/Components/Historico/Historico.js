@@ -1,3 +1,5 @@
+import { ObterDadosLado } from "@/app/Cores";
+
 export default function Historico({ historicos = [] }) {
   return (
     <div className="col-sm-12 col-md-4 mb-4 mb-md-0">
@@ -23,7 +25,7 @@ const HistoricoItem = ({ historico }) => {
   return (
     <div className="row justify-content-center text-start">
       <span className="col-3">{historico.id}</span>
-      <span className="col-3">{historico.Ganador}</span>
+      <span className="col-3">{ObterDadosLado(historico.Ganador).Icon}</span>
       <span className="col-3">{historico.Jugadores}</span>
       <span className="col-3">R$ {historico.Total}</span>
     </div>

@@ -21,7 +21,7 @@ export default function SalasCard() {
       {appData.SalasGerais.map((mesa, index) => {
         return (
           <div
-            className={`col-sm-12 col-md-4 ${index > 1 ? "mt-4 mt-md-0" : ""}`}
+            className={`col-sm-12 col-md-4 ${index > 0 ? "mt-4 mt-md-0" : ""}`}
             key={"mesa" + mesa.numero}
           >
             <div className="card bg-dark" onClick={() => irParaSala(index + 1)}>

@@ -2,7 +2,7 @@ import ProfileDefaul from "../Assert/profile_defaul.png"
 const LADO_A = "❤️";
 const LADO_B = "🩵";
 export const DataInicialApp = {
-  Conectado: true,
+  Conectado: false,
   SalasGerais: [
     {
       numero: 1,
