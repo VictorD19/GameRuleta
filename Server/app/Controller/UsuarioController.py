@@ -215,7 +215,7 @@ class Banco:
 
         except ControllerException as ex:
             self.session.rollback()
-            raise HTTPException(status_code=400, detail=f"Erro -> {ex}")
+            raise HTTPException(status_code=400, detail=f"Erro en retiroFondos -> {ex}")
 
         except Exception as ex:
             self.session.rollback()

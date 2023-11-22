@@ -27,7 +27,7 @@ async def notify_clients(message: json):
 
 @router.websocket("/status-mesas/{id_mesa}")
 async def websocket_endpoint_status_salas(
-    id_mesa: int, websocket: WebSocket, session: Session = Depends(get_session)
+    websocket: WebSocket, id_mesa: int = 0, session: Session = Depends(get_session)
 ):
     await websocket.accept()
     user_id = str(id(websocket))
@@ -39,6 +39,7 @@ async def websocket_endpoint_status_salas(
             out["estatusGeral"] = await SalasGeral(session).DadosGeraisSalas()
 
             if id_mesa != 0:
+                await SalasGeral(session).CheckStatusMesa(id_mesa)
                 datosMesa = await SalasGeral(session).ObterDadosMesaPorId(id_mesa)
                 out["statusMesas"] = datosMesa.model_dump()
 

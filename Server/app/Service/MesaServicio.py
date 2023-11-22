@@ -53,6 +53,13 @@ class Mesa:
             .first()
         )
 
+    async def ObterJogadaActivaPorMesa(self, idMesa: int):
+        return (
+            self.__session.query(JugadaModel)
+            .filter(and_(JugadaModel.mesa == idMesa, JugadaModel.fin != None))
+            .first()
+        )
+    
     async def ObterUltimasJogadaPorMesa(self, idMesa: int):
         return (
             self.__session.query(JugadaModel)
@@ -60,7 +67,6 @@ class Mesa:
             .limit(15)
             .all()
         )
-        
 
     async def CriarNovaJogada(self, apuesta: Apuesta):
         novaJogada = JugadaModel(mesa=apuesta.IdMesa, creacion=datetime.now())

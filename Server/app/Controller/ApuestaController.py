@@ -9,6 +9,7 @@ import json
 
 
 class ApuestaController:
+    
     def __init__(self, session: Session) -> None:
         self.__session = session
         self.__MesaService = MesaService(session)
