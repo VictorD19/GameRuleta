@@ -2,9 +2,15 @@ from Service.MesaServicio import Mesa
 from Schemas.Response import ResponseRequest
 from Schemas.Mesas import MesaDetalhesCompletos, HistoricoMesa
 from Schemas.SchemaUser import DetalhesApuestaUsuario
-from Models.model import ApuestaModel, JugadaModel, Session
+from Models.model import ApuestaModel, JugadaModel, Session, MesaModel
 from Service.Porcentagem import Porcentagem
+from sqlalchemy import and_
+from sqlalchemy.orm import joinedload
+from datetime import datetime, timedelta
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 class SalasGeral:
     def __init__(self, session: Session) -> None:
@@ -15,6 +21,37 @@ class SalasGeral:
     async def DadosGeraisSalas(self):
         return await Mesa(self.__session).ObterDetallesMesas()
 
+    async def CheckStatusMesa(self, idMesa: int):
+        try:
+            if not(mesa := (
+                self.__session.query(MesaModel)
+                .options(joinedload(MesaModel.jugada))
+                .filter(and_(MesaModel.status == True, MesaModel.id == idMesa))
+                .first()
+            )):                
+                return
+
+            if not (jugada :=  list(filter(lambda jug: jug.fin == None, mesa.jugada))):            
+                return
+            
+            jugada = jugada[0]
+
+            if not jugada.inicio:
+                jugada.inicio = datetime.now()
+                self.__session.commit()
+                self.__session.refresh(jugada)
+            
+            tiempoJugada = jugada.inicio + timedelta(seconds=int(os.getenv("TIME_RULETA")))
+            if datetime.now() >= tiempoJugada:
+                jugada.fin = datetime.now()
+                mesa.status = False
+                self.__session.commit()            
+
+            return     
+        except Exception as ex:
+            self.__session.rollback()
+            print(f'error CheckStatusMesa -> {ex}')
+            
     async def ObterDadosMesaPorId(self, idMesa: int):
         # Instanciamos la clase mesa
         servicoMesa = Mesa(self.__session)
@@ -46,6 +83,7 @@ class SalasGeral:
 
         detallesMesa = MesaDetalhesCompletos(
             idMesa=existeMesa.id if existeMesa else 0,
+            status=existeMesa.status,
             jugadoresLadoA=jugadoresLadoA,
             jugadoresLadoB=jugadoresLadoB,
             totalLadoA=float(f"{valorLadoA:.2f}"),
@@ -61,7 +99,7 @@ class SalasGeral:
     # endregion
     # region Privada
     def ObterDatosJugadoresPorLado(
-        self, apuestas:list, idlado:int, valorTotalLado: float
+        self, apuestas: list, idlado: int, valorTotalLado: float
     ):
         apuestaLadoRequerido = list(filter(lambda a: a.lado == idlado, apuestas))
         jugadoresLado = list(
