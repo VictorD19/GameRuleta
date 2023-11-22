@@ -17,7 +17,7 @@ class ListMesas(BaseModel):
 
 class HistoricoMesa(BaseModel):
     idJogada: int
-    idLadoGanador: int
+    idLadoGanador: int | int = 0
     TotalValoApostado: int
 
 

@@ -26,6 +26,10 @@ class Mesa:
             return 0
 
         jugadasActivas = list(filter(lambda j: j.fin == None, jugadas))
+        
+        if(len(jugadasActivas)==0):
+            return 0
+        
         apuestasJugadores = list(map(lambda a: a.usuario, jugadasActivas[0].apuestas))
 
         return len(list(set(apuestasJugadores)))
