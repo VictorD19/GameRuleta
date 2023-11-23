@@ -68,6 +68,7 @@ export const RegistroModal = ({ show, cerrarModal }) => {
     const password = data["senha"].value;
     const email = data["email"].value;
     const codReferencia = data["codReferencia"].value;
+
     if (username.length <= 6 || username.includes(" "))
       return CriarAlerta(
         TIPO_ALERTA.ERROR,
@@ -92,16 +93,21 @@ export const RegistroModal = ({ show, cerrarModal }) => {
     const novoUsuario = {
       username,
       password,
+      email,
+      avatar: selectedImages,
+      codReferencia,
     };
-    let { error, access_token } = await executarREST("user/login/", "POST", {
-      username,
-      password,
-    });
+    console.log(novoUsuario);
+    // };
+    // let { error, access_token } = await executarREST("user/login/", "POST", {
+    //   username,
+    //   password,
+    // });
 
-    if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
+    // if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
 
-    InserirRegistroLocalStorage("token", { access_token, data: new Date() });
-    dispatch({ tipo: "CONECTADO", data: true });
+    // InserirRegistroLocalStorage("token", { access_token, data: new Date() });
+    // dispatch({ tipo: "CONECTADO", data: true });
   };
 
   const toggleImageSelection = (imageName) => {

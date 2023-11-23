@@ -7,7 +7,9 @@ class User(BaseModel):
     id: int | None = None
     username: str
     password: str
-    avatar: str | None = None
+    avatar: str
+    codReferencia: str
+    email: str
 
 
 class UserUpdate(BaseModel):
@@ -23,7 +25,6 @@ class UserPublic(BaseModel):
     saldo: float
     status: bool = True
     dataCriacion: datetime
-
 
 
 class Token(BaseModel):
@@ -47,6 +48,7 @@ class DetalhesApuestaUsuario(BaseModel):
     imagen: str
     porcentagem: float
     valorApostado: float
+
 
 class TransaccionesBanco(BaseModel):
     idExterno: str

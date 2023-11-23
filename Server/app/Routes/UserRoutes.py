@@ -11,7 +11,7 @@ from Schemas.SchemaUser import (
     Token,
     QrPix,
     ListTransaccionesBanco,
-    RetiroFondos
+    RetiroFondos,
 )
 from Schemas.SchemaWebhooks import PaymentEvent
 from Models.model import get_session, UserModel
@@ -40,8 +40,8 @@ def read_user(
 
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    saldo= db_user.account + db_user.ganancias
-    user= UserPublic(saldo=saldo, **db_user)
+    saldo = db_user.account + db_user.ganancias
+    user = UserPublic(saldo=saldo, **db_user)
 
     return user
 
@@ -60,11 +60,13 @@ def create_user(user: User, session: Session = Depends(get_session)):
     db_user = UserModel(
         username=user.username,
         password=hashed_password,
-        avatar=user.avatar if user.avatar else "Foto",
+        avatar=user.avatar,
         account=0.0,
-        ganancias = 0.0,
-        dataCriacion = datetime.now(),
-        codreferencia = f"{user.username}{randint(1,299)}",
+        ganancias=0.0,
+        dataCriacion=datetime.now(),
+        codIndicacion=f"{user.username}{randint(1,299)}",
+        codreferencia=user.codReferencia,
+        email=user.email,
         status=True,
     )
 
@@ -163,7 +165,7 @@ def webhookAsaas(
         Banco(
             monto=float(event.payment.value), session=session
         ).actualizaTransaccionEntrada(idTransac=event.payment.pixQrCodeId)
-    
+
     return Response(status_code=200)
 
 
@@ -186,7 +188,7 @@ def obterTransacciones(
 
 @router.post("/retiros/", status_code=200)
 def retiroDeFondos(
-    retiro : RetiroFondos,
+    retiro: RetiroFondos,
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ):
@@ -194,5 +196,5 @@ def retiroDeFondos(
         raise HTTPException(status_code=400, detail="Permissões insuficientes")
 
     Banco(session=session, user=current_user).retiroFondos(retiro)
-       
+
     return Response(status_code=200)

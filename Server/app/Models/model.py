@@ -36,6 +36,7 @@ class UserModel(Base):
     ganancias: Mapped[float] = mapped_column(default=0.0, nullable= True)
     status: Mapped[bool] = mapped_column(default=True)
     codreferencia: Mapped[str] = mapped_column(nullable=True)
+    codIndicacion: Mapped[str] = mapped_column(nullable=True)
     dataCriacion: Mapped[datetime] = mapped_column(nullable=True)
     email: Mapped[str] = mapped_column(nullable=True)
     apuestas: Mapped[List["ApuestaModel"]] = relationship(
