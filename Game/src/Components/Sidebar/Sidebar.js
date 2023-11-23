@@ -3,6 +3,7 @@ import styled from "styled-components";
 import "./style.css";
 import Image from "next/image";
 import Logo from "../../Assert/logo.svg";
+import Defaul from "../../Assert/Profile/profile_1.webp";
 import { Button } from "react-bootstrap";
 import {
   FaBars,
@@ -14,9 +15,10 @@ import {
 } from "react-icons/fa";
 import { usePathname, useRouter } from "next/navigation";
 import { ModalComponent } from "../Modal/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDataContext } from "@/Context";
 import { CardLogin } from "./cardLogin";
+import { LimparTudoLocalStorage } from "@/Api";
 
 const NavComponent = styled.nav`
   @media only screen and (max-width: 767px) {
@@ -56,22 +58,21 @@ const MENUS = [
     Icon: <FaQuestionCircle />,
     Path: "/Faq",
   },
-  {
-    Titulo: "SAIR",
-    Icon: <FaSignOutAlt />,
-    Path: "/Logout",
-  },
 ];
 
 export function Sidebar({ visible = false, toogle }) {
-  const {
-    appData: { Usuario },
-  } = useDataContext();
+  const { appData, dispatch } = useDataContext();
+  const { Usuario } = appData;
   const [modalDeposito, setModalDeposito] = useState(false);
   const [modalSaque, setModalSaque] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
+  const sairDoSistema = () => {
+    LimparTudoLocalStorage();
+    dispatch({ tipo: "CONECTADO", data: false });
+    router.push(`/Salas`);
+  };
   const cerrarModalDeposito = () => setModalDeposito(false);
   const abrirModalDeposito = () => setModalDeposito(true);
 
@@ -85,6 +86,7 @@ export function Sidebar({ visible = false, toogle }) {
     router.push(`${pagina}`);
     toogle();
   };
+
   return (
     <>
       <NavComponent $visible={{ visible: visible == true ? true : false }}>
@@ -101,26 +103,22 @@ export function Sidebar({ visible = false, toogle }) {
             X
           </Button>
         </div>
-        {Usuario.Conectado ? (
+        {appData.Conectado ? (
           <>
             <div
               className="admin-user tooltip-element mt-4 mb-2"
               data-tooltip="1"
             >
               <div className="admin-profile hide">
-                <Image
-                  src={Usuario.FotoAvatar}
-                  width={50}
-                  height={50}
-                  alt="fotoPerfil"
-                />
+                <Image src={Defaul} width={50} height={50} alt="fotoPerfil" />
                 <div className="admin-info">
-                  <h3>{Usuario.Nombre}</h3>
+                  <h3 className="m-0">{Usuario.Nombre}</h3>
+                  <small style={{ color: "#c1c1c1" }}>#1</small>
                 </div>
               </div>
             </div>
-            <div className="my-3">
-              <div>
+            <div className="my-3 ">
+              <div className="">
                 <span>
                   <b>
                     <FaMoneyBillWave /> Conta{" "}
@@ -174,6 +172,22 @@ export function Sidebar({ visible = false, toogle }) {
                     </div>
                   </li>
                 ))}
+                <li
+                  className={` tooltip-element  ${
+                    pathname.toLocaleLowerCase().includes("SAIR")
+                      ? "active-tab"
+                      : ""
+                  }`}
+                  data-tooltip="0"
+                  key={"OpcaoSair_"}
+                >
+                  <div onClick={sairDoSistema} data-active="0">
+                    <div className="icon ps-4">
+                      <FaSignOutAlt />
+                    </div>
+                    <span className="link hide">SAIR</span>
+                  </div>
+                </li>
               </ul>
             </div>
           </>

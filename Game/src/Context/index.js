@@ -11,6 +11,8 @@ const ContextoApp = createContext();
 import { usePathname } from "next/navigation";
 import { reducer, DataInicialApp } from "./reducerApp";
 import useWebSocket from "react-use-websocket";
+import { LimparTudoLocalStorage, ObterItemLocalStorage } from "@/Api";
+import { CriarAlerta, TIPO_ALERTA } from "@/Components/Alertas/Alertas";
 
 let URL = "ws://localhost:8000/mesas/status-mesas/";
 let ReadyState = {
@@ -22,7 +24,6 @@ let ReadyState = {
 };
 
 export const ContextAppProvider = ({ children }) => {
-
   const [urlPadraoWs, setUrlWebSocket] = useState(URL + "0");
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
     urlPadraoWs,
@@ -36,7 +37,33 @@ export const ContextAppProvider = ({ children }) => {
   const pathName = usePathname();
   const [appData, dispatch] = useReducer(reducer, DataInicialApp);
 
+  useEffect(() => {
+    let dados = ObterItemLocalStorage("token");
+    if (dados == null || !dados.data || !dados.access_token)
+      return dispatch({ tipo: "CONECTADO", data: false });
 
+    const dataAtual = new Date();
+    const dataGeracaoToken = new Date(dados.data);
+    const diferenciaEntreDatas = dataAtual - dataGeracaoToken;
+    const horasDeDiferencia = Math.floor(
+      (diferenciaEntreDatas % 86400000) / 3600000
+    );
+
+    if (!(horasDeDiferencia > 5)) {
+      dispatch({ tipo: "CONECTADO", data: true });
+      return;
+    }
+
+    LimparTudoLocalStorage();
+    dispatch({ tipo: "CONECTADO", data: false });
+
+    CriarAlerta(
+      TIPO_ALERTA.SUCESSO,
+      null,
+      "Inicio de sessão realizado com sucesso"
+    );
+    return;
+  }, []);
 
   useEffect(() => {
     if (lastJsonMessage != null) {

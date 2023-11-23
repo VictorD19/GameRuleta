@@ -1,6 +1,8 @@
 from fastapi import Depends, HTTPException, Response
 from fastapi import APIRouter, Header
 from sqlalchemy.orm import Session
+from datetime import datetime
+from random import randint
 from sqlalchemy import select
 from Schemas.SchemaUser import (
     UserPublic,
@@ -38,8 +40,10 @@ def read_user(
 
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
+    saldo= db_user.account + db_user.ganancias
+    user= UserPublic(saldo=saldo, **db_user)
 
-    return db_user
+    return user
 
 
 @router.post("/create-user/", response_model=UserPublic, status_code=201)
@@ -58,6 +62,9 @@ def create_user(user: User, session: Session = Depends(get_session)):
         password=hashed_password,
         avatar=user.avatar if user.avatar else "Foto",
         account=0.0,
+        ganancias = 0.0,
+        dataCriacion = datetime.now(),
+        codreferencia = f"{user.username}{randint(1,299)}",
         status=True,
     )
 

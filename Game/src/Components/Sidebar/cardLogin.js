@@ -40,7 +40,7 @@ export const CardLogin = () => {
         <p className="text-center" style={{ fontSize: "0.8em", color:"#c1c1c1"}}>
           Desenvolvido com muito carinho ❤️
           <b />
-          Joge com moderação
+          Jogue com moderação
         </p>
       </CardLoginComponet>
       <LoginModal

@@ -1,24 +1,34 @@
+"use client";
 import { Button, Form, FormControl } from "react-bootstrap";
 import { ModalComponent } from "../Modal/Modal";
 import { CriarAlerta, TIPO_ALERTA } from "../Alertas/Alertas";
-const URL_PADRAO = "http://localhost:8000/user/login/";
+import { InserirRegistroLocalStorage, executarREST } from "@/Api";
+import { useDataContext } from "@/Context";
+import Profiles from "../../Assert/Profile";
+import Image from "next/image";
+import { useState } from "react";
+import { BoxImagenContainer } from "./login.style";
+
 export const LoginModal = ({ show, cerrarModal }) => {
+  const { dispatch } = useDataContext();
   const loginApp = async (event) => {
     event.preventDefault();
     let data = event.target;
-    const usuario = data["usuario"].value;
-    const senha = data["senha"].value;
+    const username = data["usuario"].value;
+    const password = data["senha"].value;
 
-    if (usuario.length <= 6 || !senha)
+    if (username.length <= 6 || !password)
       return CriarAlerta(TIPO_ALERTA.ERROR, null, "Usuario e Senha invalidos");
 
-    let retorno = fetch(URL_PADRAO, {
-      method: "POST",
-      body: {
-        
-      },
+    let { error, access_token } = await executarREST("user/login/", "POST", {
+      username,
+      password,
     });
-    console.log(usuario, senha);
+
+    if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
+
+    InserirRegistroLocalStorage("token", { access_token, data: new Date() });
+    dispatch({ tipo: "CONECTADO", data: true });
   };
   return (
     <ModalComponent titulo={"Entrar"} show={show} cerrarModal={cerrarModal}>
@@ -49,8 +59,62 @@ export const LoginModal = ({ show, cerrarModal }) => {
 };
 
 export const RegistroModal = ({ show, cerrarModal }) => {
-  const criarConta = (event) => {};
+  const [selectedImages, setSelectImage] = useState("");
 
+  const criarConta = async (event) => {
+    event.preventDefault();
+    let data = event.target;
+    const username = data["usuario"].value;
+    const password = data["senha"].value;
+    const email = data["email"].value;
+    const codReferencia = data["codReferencia"].value;
+    if (username.length <= 6 || username.includes(" "))
+      return CriarAlerta(
+        TIPO_ALERTA.ERROR,
+        null,
+        "Nome de usuario muito pequeno ou possui ' ' "
+      );
+
+    if (password == " " || password.includes(" "))
+      return CriarAlerta(
+        TIPO_ALERTA.ERROR,
+        null,
+        "Tipo de senha não valida, sua senha não pode ter espaçoes em branco"
+      );
+
+    if (email == "" || !email.includes("@"))
+      return CriarAlerta(
+        TIPO_ALERTA.ERROR,
+        null,
+        "Email inserido não é valido!"
+      );
+
+    const novoUsuario = {
+      username,
+      password,
+    };
+    let { error, access_token } = await executarREST("user/login/", "POST", {
+      username,
+      password,
+    });
+
+    if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
+
+    InserirRegistroLocalStorage("token", { access_token, data: new Date() });
+    dispatch({ tipo: "CONECTADO", data: true });
+  };
+
+  const toggleImageSelection = (imageName) => {
+    const isSelected = selectedImages == imageName;
+
+    if (isSelected) {
+      // Se a imagem já estiver selecionada, remova-a da lista
+      setSelectImage("");
+    } else {
+      // Se a imagem não estiver selecionada, adicione-a à lista
+      setSelectImage(imageName);
+    }
+  };
   return (
     <ModalComponent
       titulo={"Criar Conta"}
@@ -58,17 +122,35 @@ export const RegistroModal = ({ show, cerrarModal }) => {
       cerrarModal={cerrarModal}
     >
       <Form onSubmit={criarConta}>
-        <Form.Label htmlFor="usuario">Usuario</Form.Label>
+        <Form.Label htmlFor="usuario">Nome Usuario</Form.Label>
         <FormControl type="text" className="mb-3" id="usuario" required />
         <Form.Label htmlFor="senha">Senha</Form.Label>
         <FormControl type="password" className="mb-3" id="senha" required />
-        <Form.Label htmlFor="confirmacaoSenha">Confirmar Senha</Form.Label>
-        <FormControl
-          type="password"
-          required
-          className="mb-3"
-          id="confirmacaoSenha"
-        />
+
+        <Form.Label htmlFor="email">E-mail</Form.Label>
+        <FormControl type="email" required className="mb-3" id="email" />
+        <Form.Label htmlFor="codReferencia">Quem te indicou?</Form.Label>
+        <FormControl type="text" required className="mb-3" id="codReferencia" />
+
+        {/* USUARIO */}
+        <h5 className="ml-2">Avatar</h5>
+        <BoxImagenContainer>
+          {Object.keys(Profiles).map((imageName, index) => (
+            <div
+              key={"profile" + index}
+              className={selectedImages == imageName ? "Selecionado" : ""}
+              onClick={() => toggleImageSelection(imageName)}
+            >
+              <Image
+                src={Profiles[imageName]}
+                width={85}
+                height={85}
+                alt={"profile" + index}
+              />
+            </div>
+          ))}
+        </BoxImagenContainer>
+
         <Button className="w-100 mt-3" type="submit" variant="success">
           Criar Conta
         </Button>

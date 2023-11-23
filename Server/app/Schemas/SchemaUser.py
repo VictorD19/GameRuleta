@@ -20,8 +20,10 @@ class UserPublic(BaseModel):
     id: int
     username: str
     avatar: str
-    account: float
+    saldo: float
     status: bool = True
+    dataCriacion: datetime
+
 
 
 class Token(BaseModel):
