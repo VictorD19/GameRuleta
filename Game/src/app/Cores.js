@@ -18,4 +18,6 @@ function ObterDadosLado(idLado = 1) {
 
   return ladoSelecionado;
 }
+
+
 export { ObterDadosLado };

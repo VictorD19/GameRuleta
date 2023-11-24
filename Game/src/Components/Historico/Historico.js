@@ -23,11 +23,16 @@ export default function Historico({ historicos = [] }) {
 
 const HistoricoItem = ({ historico }) => {
   return (
-    <div className="row justify-content-center text-start">
-      <span className="col-3">{historico.id}</span>
-      <span className="col-3">{ObterDadosLado(historico.Ganador).Icon}</span>
-      <span className="col-3">{historico.Jugadores}</span>
-      <span className="col-3">R$ {historico.Total}</span>
+    <div
+      className="row justify-content-center text-start "
+      style={{ color: "#c1c1c1" }}
+    >
+      <span className="col-3">#{historico.idJogada}</span>
+      <span className="col-3 text-center">
+        {ObterDadosLado(historico.idLadoGanador).Icon}
+      </span>
+      <span className="col-3">{historico.TotalJogadores}</span>
+      <span className="col-3">R$ {historico.TotalValoApostado}</span>
     </div>
   );
 };

@@ -116,7 +116,7 @@ export function Sidebar({ visible = false, toogle }) {
                 />
                 <div className="admin-info ml-3">
                   <h3 className="m-0">{Usuario.Nombre}</h3>
-                  <small style={{ color: "#c1c1c1" }}>#1</small>
+                  <small style={{ color: "#c1c1c1" }}>#{Usuario.Id}</small>
                 </div>
               </div>
             </div>

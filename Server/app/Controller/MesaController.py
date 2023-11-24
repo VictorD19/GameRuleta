@@ -142,10 +142,22 @@ class SalasGeral:
             retornoHistorico.append(
                 HistoricoMesa(
                     idJogada=jogada.id,
-                    idLadoGanador=jogada.ladoGanador if jogada.ladoGanador != None else 0,
+                    idLadoGanador=jogada.ladoGanador
+                    if jogada.ladoGanador != None
+                    else 0,
                     TotalValoApostado=(jogada.ladoA + jogada.ladoB),
+                    TotalJogadores=self.ObterJugadoresNaoDuplicadosPorApuestas(
+                        jogada.apuestas
+                    ),
                 )
             )
         return retornoHistorico
+
+    def ObterJugadoresNaoDuplicadosPorApuestas(self, apuestas: list[ApuestaModel]):
+        jugadores = list(map(lambda a: a.usuario, apuestas))
+        if len(jugadores) == 0:
+            return 0
+
+        return len(list(set(jugadores)))
 
     # endregion

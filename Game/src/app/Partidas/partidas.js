@@ -3,9 +3,17 @@ import { Table } from "react-bootstrap";
 import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { AiFillTrophy } from "react-icons/ai";
 import { useDataContext } from "@/Context";
+import { useAuthHook } from "@/Hooks/AuthHook";
+import { useRedirectApp } from "@/Hooks/RoutesHooks";
+import { useEffect } from "react";
 
 export const Partidas = () => {
   const { appData } = useDataContext();
+  const { SessionLoginActiva } = useAuthHook();
+  const { IrPara } = useRedirectApp();
+  useEffect(() => {
+    if (!SessionLoginActiva()) return IrPara();
+  }, []);
   return (
     <Table striped variant="dark" responsive>
       <thead>

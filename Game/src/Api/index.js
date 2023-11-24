@@ -39,6 +39,8 @@ const executarREST = async (url, tipoConsulta = "GET", data = null) => {
 };
 
 const ObterItemLocalStorage = (key = "") => {
+  if (typeof window === "undefined") return "";
+  
   const data = localStorage.getItem(key);
 
   return data != null ? JSON.parse(data) : "";

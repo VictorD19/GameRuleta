@@ -19,11 +19,12 @@ class HistoricoMesa(BaseModel):
     idJogada: int
     idLadoGanador: int | int = 0
     TotalValoApostado: int
+    TotalJogadores: int | int = 0
 
 
 class MesaDetalhesCompletos(BaseModel):
     idMesa: int
-    status: bool 
+    status: bool
     jugadoresLadoA: List[DetalhesApuestaUsuario]
     jugadoresLadoB: List[DetalhesApuestaUsuario]
     totalLadoA: float

@@ -66,46 +66,8 @@ export const DataInicialApp = {
     },
   ],
   SalaAtual: {
-    JugadoresA: [
-      {
-        imagem: ProfileDefaul,
-        nombre: "nombre",
-        valor: 12.33,
-        porcentagem: 12,
-      },
-      {
-        imagem: ProfileDefaul,
-        nombre: "nombre",
-        valor: 12.33,
-        porcentagem: 12,
-      },
-      {
-        imagem: ProfileDefaul,
-        nombre: "nombre",
-        valor: 12.33,
-        porcentagem: 12,
-      },
-    ],
-    JugadoresB: [
-      {
-        imagem: ProfileDefaul,
-        nombre: "nombre",
-        valor: 12.33,
-        porcentagem: 12,
-      },
-      {
-        imagem: ProfileDefaul,
-        nombre: "nombre",
-        valor: 12.33,
-        porcentagem: 12,
-      },
-      {
-        imagem: ProfileDefaul,
-        nombre: "nombre",
-        valor: 12.33,
-        porcentagem: 12,
-      },
-    ],
+    JugadoresA: [],
+    JugadoresB: [],
     id: 1,
     TotalLadoA: 100,
     TotalLadoB: 140,

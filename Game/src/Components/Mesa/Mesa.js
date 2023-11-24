@@ -10,21 +10,6 @@ import Azul from "../../Assert/fichaAzul.svg";
 import Rojo from "../../Assert/fichaRojo.svg";
 import { useDataContext } from "@/Context";
 
-function iniciarContador() {
-  const clock = document.getElementsByClassName("clock")[0];
-  var segundos = 30;
-
-  var intervalo = setInterval(function () {
-    segundos--;
-
-    clock.innerHTML = segundos;
-
-    if (segundos <= 0) {
-      clearInterval(intervalo);
-    }
-  }, 1000);
-}
-
 const RuletaComponente = styled.div`
   position: relative;
   width: 100%;
@@ -51,7 +36,9 @@ const numbersArray = Array.from({ length: 100 }, (_, index) => index + 1);
 export function Mesa() {
   const [ruletaItems, setItemRuleta] = useState([]);
   const ruletaRef = useRef(null);
-  const { appData: { SalaAtual } } = useDataContext()
+  const {
+    appData: { SalaAtual },
+  } = useDataContext();
   function RodarRuleta() {
     for (let i = 0; i < numbersArray.length; i++) {
       const element = numbersArray[i];
@@ -63,12 +50,17 @@ export function Mesa() {
     setTimeout(spinRoulette, 1000);
   }
   useEffect(() => {
-    if (SalaAtual.RuletaGenerada != null && SalaAtual.RuletaGenerada.length > 0) {
-      setItemRuleta(SalaAtual.RuletaGenerada)
-      setTimeout(() => { spinRoulette(SalaAtual.PosicaoSelecionada) }, 1500);
+    if (
+      SalaAtual.RuletaGenerada != null &&
+      SalaAtual.RuletaGenerada.length > 0
+    ) {
+      setItemRuleta(SalaAtual.RuletaGenerada);
+      setTimeout(() => {
+        spinRoulette(SalaAtual.PosicaoSelecionada);
+      }, 1500);
     }
+  }, [SalaAtual.RuletaActiva]);
 
-  }, [SalaAtual.RuletaActiva])
   function spinRoulette(numeroRandom) {
     const rotation = numeroRandom * -50;
     ruletaRef.current.style.transform = `translateX(${rotation}px)`;
@@ -86,9 +78,13 @@ export function Mesa() {
                 ))}
               </RuletaItems>
             </RuletaComponente>
-          ) :
-            (
-              <> <div className="d-flex justify-content-between mx-3 mb-3 align-items-center ">
+          ) : SalaAtual.JugadoresA.length == 0 &&
+            SalaAtual.JugadoresB.length == 0 ? (
+            <></>
+          ) : (
+            <>
+              {" "}
+              <div className="d-flex justify-content-between mx-3 mb-3 align-items-center ">
                 <Image src={Relogio} alt="loading" width={100} height={100} />
                 <div className="text-center text-white">
                   <span>
@@ -97,29 +93,26 @@ export function Mesa() {
                   <h1>R$ {SalaAtual.TotalApostado}</h1>
                 </div>
               </div>
-
-                <ProgressBar style={{ height: "2rem" }}>
-                  <ProgressBar
-                    animated
-                    striped
-                    variant="primary"
-                    now={SalaAtual.PorcentagemA}
-                    label={`${SalaAtual.PorcentagemA}%`}
-                    key={1}
-                  />
-                  <ProgressBar
-                    animated
-                    striped
-                    variant="danger"
-                    now={SalaAtual.PorcentagemB}
-                    label={`${SalaAtual.PorcentagemB}%`}
-                    key={2}
-                  />
-                </ProgressBar></>
-            )}
-
-
-
+              <ProgressBar style={{ height: "2rem" }}>
+                <ProgressBar
+                  animated
+                  striped
+                  variant="primary"
+                  now={SalaAtual.PorcentagemA}
+                  label={`${SalaAtual.PorcentagemA}%`}
+                  key={1}
+                />
+                <ProgressBar
+                  animated
+                  striped
+                  variant="danger"
+                  now={SalaAtual.PorcentagemB}
+                  label={`${SalaAtual.PorcentagemB}%`}
+                  key={2}
+                />
+              </ProgressBar>
+            </>
+          )}
         </div>
       </div>
     </div>

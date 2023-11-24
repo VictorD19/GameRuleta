@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { executarREST } from "@/Api";
 import { useDataContext } from "@/Context";
 import { useAuthHook } from "@/Hooks/AuthHook";
@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Table } from "react-bootstrap";
 import { FaArrowCircleDown, FaArrowCircleUp } from "react-icons/fa";
 
-export const Transaciones = async () => {
+export const Transaciones = () => {
   const { ObterIdUsuariPorToken, SessionLoginActiva } = useAuthHook();
   const {
     appData: { Usuario },
@@ -14,23 +14,24 @@ export const Transaciones = async () => {
   } = useDataContext();
 
   useEffect(() => {
-    if (!SessionLoginActiva())
-      return dispatch({ tipo: "CONECTADO", data: false })(async () => {
-        const { error, ...data } = await executarREST(
-          `user/transac/${ObterIdUsuariPorToken()}`
-        );
+    if (!SessionLoginActiva()) return;
 
-        if (error != null)
-          return dispatch({
-            tipo: "DADOS_USUARIO",
-            data: { HistoricoTransiones: [] },
-          });
+    (async () => {
+      const { error, ...data } = await executarREST(
+        `user/transac/${ObterIdUsuariPorToken()}`
+      );
 
-        dispatch({
+      if (error != null)
+        return dispatch({
           tipo: "DADOS_USUARIO",
-          data: { HistoricoTransiones: data.ListTransacciones },
+          data: { HistoricoTransiones: [] },
         });
-      })();
+
+      dispatch({
+        tipo: "DADOS_USUARIO",
+        data: { HistoricoTransiones: data.ListTransacciones },
+      });
+    })();
   }, []);
 
   return (

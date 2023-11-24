@@ -8,7 +8,7 @@ export const Jugadas = () => {
   const {
     appData: { SalaAtual },
   } = useDataContext();
-
+console.log(SalaAtual.HistoricoPartidas)
   useEffect(() => { }, [SalaAtual.JugadoresA, SalaAtual.JugadoresB])
   return (
     <div className="row semMarginRow">

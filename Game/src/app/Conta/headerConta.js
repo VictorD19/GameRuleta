@@ -5,6 +5,9 @@ import Image from "next/image";
 import Profiles from "../../Assert/Profile";
 import { useDataContext } from "@/Context";
 import { BoxImagenContainer } from "@/Components/LoginRegistro/login.style";
+import { useEffect } from "react";
+import { useAuthHook } from "@/Hooks/AuthHook";
+import { useRedirectApp } from "@/Hooks/RoutesHooks";
 const style = {
   borderRadius: "10%",
 };
@@ -12,6 +15,11 @@ export const HeaderConta = () => {
   const {
     appData: { Usuario },
   } = useDataContext();
+  const { SessionLoginActiva } = useAuthHook();
+  const { IrPara } = useRedirectApp();
+  useEffect(() => {
+    if (!SessionLoginActiva()) return IrPara();
+  }, []);
   return (
     <div className="row align-items-center justify-content-center">
       <div className="col-12 col-md-2 text-center">
@@ -60,7 +68,7 @@ export const HeaderConta = () => {
             <Form.Control
               id="DataCreacion"
               disabled
-              placeholder={Usuario.DataCreacion}
+              placeholder={new Date(Usuario.DataCreacion).toLocaleString()}
               aria-describedby="basic-addon1"
             />
           </div>
@@ -68,18 +76,21 @@ export const HeaderConta = () => {
           <div className="col-12 ">
             <h5 className="mt-2">Avatar</h5>
             <div className="d-flex gap-2 flex-wrap">
-              {Object.keys(Profiles).map((imageName, index) => (
-                Usuario.FotoAvatar != imageName ?
-                <div key={"profile" + index} className="rounded">
-                  <Image
-                    className="rounded"
-                    src={Profiles[imageName]}
-                    width={70}
-                    height={70}
-                    alt={"profile" + index}
-                  />
-                </div> : <></>
-              ))}
+              {Object.keys(Profiles).map((imageName, index) =>
+                Usuario.FotoAvatar != imageName ? (
+                  <div key={"profile" + index} className="rounded">
+                    <Image
+                      className="rounded"
+                      src={Profiles[imageName]}
+                      width={70}
+                      height={70}
+                      alt={"profile" + index}
+                    />
+                  </div>
+                ) : (
+                  <></>
+                )
+              )}
             </div>
           </div>
         </form>

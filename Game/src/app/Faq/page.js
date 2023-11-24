@@ -1,4 +1,7 @@
 "use client";
+import { useAuthHook } from "@/Hooks/AuthHook";
+import { useRedirectApp } from "@/Hooks/RoutesHooks";
+import { useEffect } from "react";
 import Accordion from "react-bootstrap/Accordion";
 
 const PERGUNTAS_REPOSTA = [
@@ -38,6 +41,11 @@ const PERGUNTAS_REPOSTA = [
 ];
 
 export default function Page() {
+  const { SessionLoginActiva } = useAuthHook();
+  const { IrPara } = useRedirectApp();
+  useEffect(() => {
+    if (!SessionLoginActiva()) return IrPara();
+  }, []);
   return (
     <div className="px-2">
       <div className="card bg-dark text-white">
