@@ -42,8 +42,14 @@ def read_user(
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     saldo = db_user.account + db_user.ganancias
-    user = UserPublic(saldo=saldo, **db_user)
-
+    user = UserPublic(
+        saldo=saldo,
+        username=db_user.username,
+        avatar=db_user.avatar,
+        id=db_user.id,
+        dataCriacion=db_user.dataCriacion,
+        status=True,
+    )
     return user
 
 

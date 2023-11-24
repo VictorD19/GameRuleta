@@ -1,12 +1,38 @@
 "use client";
+import { executarREST } from "@/Api";
 import { useDataContext } from "@/Context";
+import { useAuthHook } from "@/Hooks/AuthHook";
+import { useEffect } from "react";
 import { Table } from "react-bootstrap";
 import { FaArrowCircleDown, FaArrowCircleUp } from "react-icons/fa";
 
-export const Transaciones = () => {
+export const Transaciones = async () => {
+  const { ObterIdUsuariPorToken, SessionLoginActiva } = useAuthHook();
   const {
     appData: { Usuario },
+    dispatch,
   } = useDataContext();
+
+  useEffect(() => {
+    if (!SessionLoginActiva())
+      return dispatch({ tipo: "CONECTADO", data: false })(async () => {
+        const { error, ...data } = await executarREST(
+          `user/transac/${ObterIdUsuariPorToken()}`
+        );
+
+        if (error != null)
+          return dispatch({
+            tipo: "DADOS_USUARIO",
+            data: { HistoricoTransiones: [] },
+          });
+
+        dispatch({
+          tipo: "DADOS_USUARIO",
+          data: { HistoricoTransiones: data.ListTransacciones },
+        });
+      })();
+  }, []);
+
   return (
     <Table striped variant="dark" responsive>
       <thead>

@@ -11,8 +11,13 @@ const ContextoApp = createContext();
 import { usePathname } from "next/navigation";
 import { reducer, DataInicialApp } from "./reducerApp";
 import useWebSocket from "react-use-websocket";
-import { LimparTudoLocalStorage, ObterItemLocalStorage } from "@/Api";
+import {
+  LimparTudoLocalStorage,
+  ObterItemLocalStorage,
+  executarREST,
+} from "@/Api";
 import { CriarAlerta, TIPO_ALERTA } from "@/Components/Alertas/Alertas";
+import { useAuthHook } from "@/Hooks/AuthHook";
 
 let URL = "ws://localhost:8000/mesas/status-mesas/";
 let ReadyState = {
@@ -36,34 +41,41 @@ export const ContextAppProvider = ({ children }) => {
 
   const pathName = usePathname();
   const [appData, dispatch] = useReducer(reducer, DataInicialApp);
-
+  const { SessionLoginActiva, ObterIdUsuariPorToken } = useAuthHook();
   useEffect(() => {
-    let dados = ObterItemLocalStorage("token");
-    if (dados == null || !dados.data || !dados.access_token)
+    if (!SessionLoginActiva()) {
       return dispatch({ tipo: "CONECTADO", data: false });
-
-    const dataAtual = new Date();
-    const dataGeracaoToken = new Date(dados.data);
-    const diferenciaEntreDatas = dataAtual - dataGeracaoToken;
-    const horasDeDiferencia = Math.floor(
-      (diferenciaEntreDatas % 86400000) / 3600000
-    );
-
-    if (!(horasDeDiferencia > 5)) {
-      dispatch({ tipo: "CONECTADO", data: true });
-      return;
     }
 
-    LimparTudoLocalStorage();
-    dispatch({ tipo: "CONECTADO", data: false });
+    (async () => {
+      let { error, ...data } = await executarREST(
+        `user/get/${ObterIdUsuariPorToken()}`,
+        "GET"
+      );
+      if (error != null) {
+        LimparTudoLocalStorage();
+        dispatch({ tipo: "CONECTADO", data: false });
+        CriarAlerta(
+          TIPO_ALERTA.ERROR,
+          null,
+          "Por favor inicie sessão novamente"
+        );
+        return;
+      }
 
-    CriarAlerta(
-      TIPO_ALERTA.SUCESSO,
-      null,
-      "Inicio de sessão realizado com sucesso"
-    );
-    return;
-  }, []);
+      const atualizarDados = {
+        Id: data.id,
+        Saldo: data.saldo,
+        FotoAvatar: data.avatar,
+        DataCreacion: data.dataCriacion,
+        Nombre: data.username,
+        Status: data.status,
+      };
+
+      dispatch({ tipo: "CONECTADO", data: true });
+      dispatch({ tipo: "DADOS_USUARIO", data: atualizarDados });
+    })();
+  }, [appData.Conectado]);
 
   useEffect(() => {
     if (lastJsonMessage != null) {

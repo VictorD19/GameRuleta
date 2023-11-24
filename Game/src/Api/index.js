@@ -15,12 +15,13 @@ const URL_PADRAO = "http://localhost:8000/";
 
 const executarREST = async (url, tipoConsulta = "GET", data = null) => {
   try {
-    debugger;
     const consulta = await fetch(URL_PADRAO + url, {
       method: tipoConsulta,
       body: data != null ? JSON.stringify(data) : null,
       headers: {
         "Content-Type": "application/json",
+        Authorization:
+          ObterTokenAuth() != null ? "Bearer " + ObterTokenAuth() : "",
       },
     });
     const retorno = await consulta.json();
@@ -37,21 +38,35 @@ const executarREST = async (url, tipoConsulta = "GET", data = null) => {
   }
 };
 
-
-const ObterItemLocalStorage = (key = "")=>{
+const ObterItemLocalStorage = (key = "") => {
   const data = localStorage.getItem(key);
-  return JSON.parse(data)
-}
 
-const InserirRegistroLocalStorage = (key= "",data= {})=>{
-  localStorage.setItem(key, JSON.stringify(data));
-}
+  return data != null ? JSON.parse(data) : "";
+};
 
-const RemoverItemLocalStorage = (key)=>{
-  localStorage.removeItem(key);
-}
-const LimparTudoLocalStorage = ()=>{
-  localStorage.clear();
-}
+const InserirRegistroLocalStorage = (key = "", data = {}) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+};
 
-export { executarREST, ObterItemLocalStorage,InserirRegistroLocalStorage,RemoverItemLocalStorage,LimparTudoLocalStorage};
+const RemoverItemLocalStorage = (key) => {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(key);
+  }
+};
+const LimparTudoLocalStorage = () => {
+  if (typeof window !== "undefined") localStorage.clear();
+};
+const ObterTokenAuth = () => {
+  let { access_token } = ObterItemLocalStorage("token");
+  return access_token;
+};
+
+export {
+  executarREST,
+  ObterItemLocalStorage,
+  InserirRegistroLocalStorage,
+  RemoverItemLocalStorage,
+  LimparTudoLocalStorage,
+};

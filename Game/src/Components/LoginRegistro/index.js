@@ -8,11 +8,12 @@ import Profiles from "../../Assert/Profile";
 import Image from "next/image";
 import { useState } from "react";
 import { BoxImagenContainer } from "./login.style";
-import { useRouter } from "next/router";
+import { useRedirectApp } from "@/Hooks/RoutesHooks";
 
 export const LoginModal = ({ show, cerrarModal }) => {
   const { dispatch } = useDataContext();
-  const router = useRouter();
+  const { IrPara } = useRedirectApp();
+
   const loginApp = async (event) => {
     event.preventDefault();
     let data = event.target;
@@ -31,8 +32,9 @@ export const LoginModal = ({ show, cerrarModal }) => {
 
     InserirRegistroLocalStorage("token", { access_token, data: new Date() });
     dispatch({ tipo: "CONECTADO", data: true });
-    router.push(`/Salas`);
+    IrPara(`/Salas`);
   };
+
   return (
     <ModalComponent titulo={"Entrar"} show={show} cerrarModal={cerrarModal}>
       <Form onSubmit={loginApp}>
@@ -63,8 +65,9 @@ export const LoginModal = ({ show, cerrarModal }) => {
 
 export const RegistroModal = ({ show, cerrarModal }) => {
   const [selectedImages, setSelectImage] = useState("");
-  const { dispatch } = useDataContext()
-  const router = useRouter();
+  const { dispatch } = useDataContext();
+  const { IrPara } = useRedirectApp();
+
   const criarConta = async (event) => {
     event.preventDefault();
     let data = event.target;
@@ -102,8 +105,13 @@ export const RegistroModal = ({ show, cerrarModal }) => {
       codReferencia,
     };
 
-    let dataCriacionUsuario = await executarREST("user/create-user/", "POST", novoUsuario);
-    if (dataCriacionUsuario.error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, dataCriacionUsuario.error);
+    let dataCriacionUsuario = await executarREST(
+      "user/create-user/",
+      "POST",
+      novoUsuario
+    );
+    if (dataCriacionUsuario.error != null)
+      return CriarAlerta(TIPO_ALERTA.ERROR, null, dataCriacionUsuario.error);
 
     let { error, access_token } = await executarREST("user/login/", "POST", {
       username,
@@ -117,13 +125,13 @@ export const RegistroModal = ({ show, cerrarModal }) => {
       FotoAvatar: selectedImages,
       Nombre: username,
       DataCreacion: dataCriacionUsuario.dataCriacion,
-      Id: dataCriacionUsuario.id
-    }
+      Id: dataCriacionUsuario.id,
+    };
 
     InserirRegistroLocalStorage("token", { access_token, data: new Date() });
     dispatch({ tipo: "CONECTADO", data: true });
     dispatch({ tipo: "DADOS_USUARIO", data: dataUsuario });
-    router.push(`/Salas`);
+    IrPara(`/Salas`);
   };
 
   const toggleImageSelection = (imageName) => {
@@ -152,7 +160,7 @@ export const RegistroModal = ({ show, cerrarModal }) => {
         <Form.Label htmlFor="email">E-mail</Form.Label>
         <FormControl type="email" required className="mb-3" id="email" />
         <Form.Label htmlFor="codReferencia">Quem te indicou?</Form.Label>
-        <FormControl type="text" required className="mb-3" id="codReferencia" />
+        <FormControl type="text" className="mb-3" id="codReferencia" />
 
         {/* USUARIO */}
         <h5 className="ml-2">Avatar</h5>
