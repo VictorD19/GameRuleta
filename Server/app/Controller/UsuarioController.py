@@ -3,9 +3,12 @@ from fastapi import Depends, WebSocket, HTTPException
 from sqlalchemy import or_, and_
 from sqlalchemy.orm import joinedload
 from dotenv import load_dotenv
-
+from random import choice
 # from Models.Apuesta import Apuesta
 from Service.APIAsaasService import NewCobropix, NewTransferenciaPIX
+from Service.send_mail import Send_Mail
+from Service import templates_mail
+from Service.securtity import get_password_hash
 from Schemas.Exection import ControllerException
 from Schemas.SchemaUser import UserPublic, TransaccionesBanco, RetiroFondos
 from Models.model import (
@@ -18,22 +21,59 @@ from Models.model import (
 from datetime import datetime
 
 
+load_dotenv()
+
 class Usuario:
-    def __init__(self, webSocket: WebSocket):
-        self.WebSocket = webSocket
+    def __init__(self, session:Session):
+        self.session = session
 
-    def ObterApuestaUsuario(self):
-        apuestaUsuario = Apuesta
-        print(self)
-        # apuestaUsuario.IdUsuario = self.WebSocket.query_params["IdUsuario"]
-        # apuestaUsuario.IdLadoApostado = self.WebSocket.query_params["IdLadoApostado"]
-        # apuestaUsuario.ValorApostado = self.WebSocket.query_params["ValorApostado"]
-        return apuestaUsuario
+    def genSenha(self):
+        return "".join([choice("ABCDEFGHJKLMNPQRSTUWXYZ123456789") for _ in range(6)])
 
-    async def HacerApuesta(self):
-        apuestaUsuario = self.ObterApuestaUsuario()
-        return json.dumps({"Apuesta": "qasas"})
+    def recuperaSenha(self, usuario:UserModel):
+        try:
+            senha_aleatoria = self.genSenha()
+            mensaje = templates_mail.mensaje_recuperacion_senha(
+                nombreCliente=usuario.username,
+                nombreSite=os.getenv("NOMBRE_SITE"),
+                clave= senha_aleatoria )
+            
+            if not (Send_Mail(
+                destino=usuario.email,
+                asunto="Recuperação de senha.",
+                adj=False,
+                mensaje=mensaje 
+            ).send()):
+                raise ControllerException("_")
+                
+            usuario.password = get_password_hash(senha_aleatoria)
+            self.session.commit()
+            self.session.refresh(usuario)
+        
+        except ControllerException as ex:
+            self.session.rollback()
+            return False
 
+        except Exception as ex:
+            self.session.rollback()            
+            return False
+
+
+
+            
+
+    # def ObterApuestaUsuario(self):
+    #     apuestaUsuario = Apuesta
+    #     print(self)
+    #     # apuestaUsuario.IdUsuario = self.WebSocket.query_params["IdUsuario"]
+    #     # apuestaUsuario.IdLadoApostado = self.WebSocket.query_params["IdLadoApostado"]
+    #     # apuestaUsuario.ValorApostado = self.WebSocket.query_params["ValorApostado"]
+    #     return apuestaUsuario
+
+    # async def HacerApuesta(self):
+    #     apuestaUsuario = self.ObterApuestaUsuario()
+    #     return json.dumps({"Apuesta": "qasas"})
+    
 
 class Banco:
     def __init__(

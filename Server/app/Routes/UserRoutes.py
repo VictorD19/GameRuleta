@@ -12,6 +12,7 @@ from Schemas.SchemaUser import (
     QrPix,
     ListTransaccionesBanco,
     RetiroFondos,
+    UserEmail,
 )
 from Schemas.SchemaWebhooks import PaymentEvent
 from Models.model import get_session, UserModel
@@ -21,7 +22,7 @@ from Service.securtity import (
     create_access_token,
     get_current_user,
 )
-from Controller.UsuarioController import Banco
+from Controller.UsuarioController import Banco, Usuario
 import os
 
 router = APIRouter()
@@ -198,3 +199,19 @@ def retiroDeFondos(
     Banco(session=session, user=current_user).retiroFondos(retiro)
 
     return Response(status_code=200)
+
+
+@router.post("/recuperar-senha/", status_code=200)
+def recuperarSenha(
+    userEmail=UserEmail,
+    session: Session = Depends(get_session)    
+):
+    if not (emailDB :=  session.query(UserModel).filter(UserModel.email == userEmail.email).first()):
+        raise HTTPException(status_code=400, detail="Usuário não presente no banco de dados")
+
+    if not (Usuario(session=session).recuperaSenha(emailDB)):
+        raise HTTPException(status_code=400, detail="Não foi possível enviar o Email")
+    
+    return Response(status_code=200)
+    
+
