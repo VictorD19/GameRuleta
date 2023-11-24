@@ -7,9 +7,9 @@ class User(BaseModel):
     id: int | None = None
     username: str
     password: str
-    avatar: str
-    codReferencia: str
-    email: str
+    avatar: str | None = None
+    codReferencia: str | None = None
+    email: str | None = None
 
 
 class UserUpdate(BaseModel):
@@ -70,5 +70,5 @@ class RetiroFondos(BaseModel):
     chaveTipo: str
 
 
-class UserEmail(BaseModel):    
-    email : str
+class UserEmail(BaseModel):
+    email: str

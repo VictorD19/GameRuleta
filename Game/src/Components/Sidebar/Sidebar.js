@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import { useDataContext } from "@/Context";
 import { CardLogin } from "./cardLogin";
 import { LimparTudoLocalStorage } from "@/Api";
-
+import Profiles from '../../Assert/Profile'
 const NavComponent = styled.nav`
   @media only screen and (max-width: 767px) {
     position: absolute;
@@ -79,8 +79,8 @@ export function Sidebar({ visible = false, toogle }) {
   const cerrarModalSaque = () => setModalSaque(false);
   const abrirModalSaque = () => setModalSaque(true);
 
-  const onSubmitSaque = (e) => {};
-  const onSubmitDeposito = (e) => {};
+  const onSubmitSaque = (e) => { };
+  const onSubmitDeposito = (e) => { };
 
   const itParaLaPagina = (pagina) => {
     router.push(`${pagina}`);
@@ -106,12 +106,12 @@ export function Sidebar({ visible = false, toogle }) {
         {appData.Conectado ? (
           <>
             <div
-              className="admin-user tooltip-element mt-4 mb-2"
+              className="tooltip-element mt-4 mb-2"
               data-tooltip="1"
             >
-              <div className="admin-profile hide">
-                <Image src={Defaul} width={50} height={50} alt="fotoPerfil" />
-                <div className="admin-info">
+              <div className="admin-profile hide gap-2" >
+                <Image src={Profiles[Usuario.FotoAvatar]} width={80} height={80} alt="fotoPerfil" style={{ borderRadius: "10%" }} />
+                <div className="admin-info ml-3">
                   <h3 className="m-0">{Usuario.Nombre}</h3>
                   <small style={{ color: "#c1c1c1" }}>#1</small>
                 </div>
@@ -152,13 +152,12 @@ export function Sidebar({ visible = false, toogle }) {
               <ul className="p-0">
                 {MENUS.map((x, i) => (
                   <li
-                    className={` tooltip-element  ${
-                      pathname
-                        .toLocaleLowerCase()
-                        .includes(x.Titulo.toLocaleLowerCase())
-                        ? "active-tab"
-                        : ""
-                    }`}
+                    className={` tooltip-element  ${pathname
+                      .toLocaleLowerCase()
+                      .includes(x.Titulo.toLocaleLowerCase())
+                      ? "active-tab"
+                      : ""
+                      }`}
                     data-tooltip="0"
                     key={x.Titulo + i}
                   >
@@ -173,11 +172,10 @@ export function Sidebar({ visible = false, toogle }) {
                   </li>
                 ))}
                 <li
-                  className={` tooltip-element  ${
-                    pathname.toLocaleLowerCase().includes("SAIR")
-                      ? "active-tab"
-                      : ""
-                  }`}
+                  className={` tooltip-element  ${pathname.toLocaleLowerCase().includes("SAIR")
+                    ? "active-tab"
+                    : ""
+                    }`}
                   data-tooltip="0"
                   key={"OpcaoSair_"}
                 >

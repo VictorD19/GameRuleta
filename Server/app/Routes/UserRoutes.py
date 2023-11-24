@@ -70,12 +70,19 @@ def create_user(user: User, session: Session = Depends(get_session)):
         email=user.email,
         status=True,
     )
-
     session.add(db_user)
     session.commit()
     session.refresh(db_user)
+    user = UserPublic(
+        saldo=0.0,
+        username=user.username,
+        avatar=user.avatar,
+        id=db_user.id,
+        dataCriacion=db_user.dataCriacion,
+        status=True,
+    )
 
-    return db_user
+    return user
 
 
 @router.patch("/update/{user_id}", response_model=UserPublic)
@@ -202,16 +209,17 @@ def retiroDeFondos(
 
 
 @router.post("/recuperar-senha/", status_code=200)
-def recuperarSenha(
-    userEmail=UserEmail,
-    session: Session = Depends(get_session)    
-):
-    if not (emailDB :=  session.query(UserModel).filter(UserModel.email == userEmail.email).first()):
-        raise HTTPException(status_code=400, detail="Usuário não presente no banco de dados")
+def recuperarSenha(userEmail=UserEmail, session: Session = Depends(get_session)):
+    if not (
+        emailDB := session.query(UserModel)
+        .filter(UserModel.email == userEmail.email)
+        .first()
+    ):
+        raise HTTPException(
+            status_code=400, detail="Usuário não presente no banco de dados"
+        )
 
     if not (Usuario(session=session).recuperaSenha(emailDB)):
         raise HTTPException(status_code=400, detail="Não foi possível enviar o Email")
-    
-    return Response(status_code=200)
-    
 
+    return Response(status_code=200)

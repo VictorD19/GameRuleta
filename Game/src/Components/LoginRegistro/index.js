@@ -8,9 +8,11 @@ import Profiles from "../../Assert/Profile";
 import Image from "next/image";
 import { useState } from "react";
 import { BoxImagenContainer } from "./login.style";
+import { useRouter } from "next/router";
 
 export const LoginModal = ({ show, cerrarModal }) => {
   const { dispatch } = useDataContext();
+  const router = useRouter();
   const loginApp = async (event) => {
     event.preventDefault();
     let data = event.target;
@@ -29,6 +31,7 @@ export const LoginModal = ({ show, cerrarModal }) => {
 
     InserirRegistroLocalStorage("token", { access_token, data: new Date() });
     dispatch({ tipo: "CONECTADO", data: true });
+    router.push(`/Salas`);
   };
   return (
     <ModalComponent titulo={"Entrar"} show={show} cerrarModal={cerrarModal}>
@@ -60,7 +63,8 @@ export const LoginModal = ({ show, cerrarModal }) => {
 
 export const RegistroModal = ({ show, cerrarModal }) => {
   const [selectedImages, setSelectImage] = useState("");
-
+  const { dispatch } = useDataContext()
+  const router = useRouter();
   const criarConta = async (event) => {
     event.preventDefault();
     let data = event.target;
@@ -97,17 +101,29 @@ export const RegistroModal = ({ show, cerrarModal }) => {
       avatar: selectedImages,
       codReferencia,
     };
-    console.log(novoUsuario);
-    // };
-    // let { error, access_token } = await executarREST("user/login/", "POST", {
-    //   username,
-    //   password,
-    // });
 
-    // if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
+    let dataCriacionUsuario = await executarREST("user/create-user/", "POST", novoUsuario);
+    if (dataCriacionUsuario.error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, dataCriacionUsuario.error);
 
-    // InserirRegistroLocalStorage("token", { access_token, data: new Date() });
-    // dispatch({ tipo: "CONECTADO", data: true });
+    let { error, access_token } = await executarREST("user/login/", "POST", {
+      username,
+      password,
+    });
+
+    if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
+
+    const dataUsuario = {
+      Saldo: dataCriacionUsuario.saldo,
+      FotoAvatar: selectedImages,
+      Nombre: username,
+      DataCreacion: dataCriacionUsuario.dataCriacion,
+      Id: dataCriacionUsuario.id
+    }
+
+    InserirRegistroLocalStorage("token", { access_token, data: new Date() });
+    dispatch({ tipo: "CONECTADO", data: true });
+    dispatch({ tipo: "DADOS_USUARIO", data: dataUsuario });
+    router.push(`/Salas`);
   };
 
   const toggleImageSelection = (imageName) => {

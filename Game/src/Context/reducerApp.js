@@ -1,6 +1,6 @@
 import ProfileDefaul from "../Assert/profile_defaul.png"
-const LADO_A = "❤️";
-const LADO_B = "🩵";
+import Profiles from "../Assert/Profile"
+
 export const DataInicialApp = {
   Conectado: false,
   SalasGerais: [
@@ -27,45 +27,39 @@ export const DataInicialApp = {
     },
   ],
   Usuario: {
+    Id: 0,
     Saldo: 0.00,
-    FotoAvatar: ProfileDefaul,
-    Nombre: "Juansito",
-    DataCreacion: "12/12/2023",
+    FotoAvatar: Profiles["Profile1"],
+    Nombre: "",
+    DataCreacion: "",
     HistoricoTransiones: [
-      {
-        id: 1,
-        metodo: "Pix",
-        valor: 100,
-        data: "10/12/2023",
-        entrada: true,
-      },
-      {
-        id: 2,
-        metodo: "Cartão",
-        valor: 130,
-        data: "10/12/2023",
-        entrada: false,
-      },
+      // {
+      //   id: 1,
+      //   metodo: "Pix",
+      //   valor: 100,
+      //   data: "10/12/2023",
+      //   entrada: true,
+      // },
     ],
   },
   Partidas: [
     {
       id: 1,
-      lado: LADO_A,
+      lado: "",
       valor: 100,
       porcentagem: 12,
       gano: true,
     },
     {
       id: 2,
-      lado: LADO_B,
+      lado: "",
       valor: 150,
       porcentagem: 52,
       gano: true,
     },
     {
       id: 4,
-      lado: LADO_A,
+      lado: "",
       valor: 130,
       porcentagem: 22,
       gano: false,
@@ -183,6 +177,10 @@ export const reducer = (state, action) => {
     case "CONECTADO":
       return {
         ...state, Conectado: action.data
+      }
+    case "DADOS_USUARIO":
+      return {
+        ...state, Usuario: { ...state.Usuario, ...action.data }
       }
     default:
       break;
