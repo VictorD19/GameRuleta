@@ -4,8 +4,8 @@ import { Jugadas } from "./jugadas";
 export default function Page() {
   return (
     <div className="">
-      <MesaComponent />
-      <Jugadas/>
+      <MesaComponent idMesa={1} />
+      <Jugadas />
     </div>
   );
 }

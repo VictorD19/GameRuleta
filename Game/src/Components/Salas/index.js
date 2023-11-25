@@ -23,6 +23,7 @@ export default function SalasCard() {
           <div
             className={`col-sm-12 col-md-4 ${index > 0 ? "mt-4 mt-md-0" : ""}`}
             key={"mesa" + mesa.numero}
+            style={{ cursor: "pointer" }}
           >
             <div className="card bg-dark" onClick={() => irParaSala(index + 1)}>
               <div className="inner p-3 card-body  d-flex justify-content-between text-white">

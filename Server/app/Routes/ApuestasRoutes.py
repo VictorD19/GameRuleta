@@ -16,7 +16,7 @@ async def hacer_apuesta(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ):
-    return await ApuestaController(session).HacerApuesta(novaApuesta)
+    return await ApuestaController(session, current_user).HacerApuesta(novaApuesta)
 
 
 @router.post("/GenerarPartida", status_code=200)

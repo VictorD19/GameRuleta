@@ -9,13 +9,28 @@ import json
 
 
 class ApuestaController:
-    
-    def __init__(self, session: Session) -> None:
+    def __init__(self, session: Session, user: UserModel) -> None:
         self.__session = session
         self.__MesaService = MesaService(session)
+        self.__user: UserModel = user
 
     async def HacerApuesta(self, apuesta: Apuesta):
         try:
+            saldoAtualSemGanancias = self.__user.account
+            saldoAtualGanancias = (
+                self.__user.ganancias if self.__user.ganancias != None else 0
+            )
+
+            if saldoAtualSemGanancias == 0 and saldoAtualGanancias == 0:
+                raise ControllerException(
+                    "seu saldo disponivel é R$ 0,00, Recarregue e começe a JOGAR AGORA!"
+                )
+
+            if (saldoAtualSemGanancias + saldoAtualGanancias) < apuesta.ValorApostado:
+                raise ControllerException(
+                    "Você não pode apostar um valor maior que o seu saldo disponivel"
+                )
+
             existeJogadaAtiva = await self.__MesaService.ObterJogadaPorNumeroMesa(
                 apuesta.IdMesa
             )
@@ -55,7 +70,7 @@ class ApuestaController:
             await servicoRuleta.GenerarRuleta()
             ganador = servicoRuleta.ObterGanador()
             self.__MesaService.PagarJugadoresGanador(existeJogadaAtiva, ganador.idLado)
-            
+
             return ResponseRequest().CrearRespuestaSucesso({"Status": "ok"})
         except ControllerException as ex:
             self.__session.rollback()

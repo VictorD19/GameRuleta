@@ -8,13 +8,13 @@ import { Button, Form, FormControl } from "react-bootstrap";
 import { CriarAlerta, TIPO_ALERTA } from "../Alertas/Alertas";
 
 export const CuadroAposta = ({ idMesa }) => {
-  const [valor, setValor] = useState(null);
+  const [valor, setValor] = useState(0);
   const { SessionLoginActiva } = useAuthHook();
   const { appData } = useDataContext();
   const { Usuario } = appData;
 
   const obterValorInserido = (e) => {
-    if (e.target.value == "") return setValor(null);
+    if (e.target.value == "") return setValor(0);
     let valor = Number(e.target.value) * 1;
     setValor((aux) => valor);
   };

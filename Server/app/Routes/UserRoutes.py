@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, Response
 from fastapi import APIRouter, Header
 from sqlalchemy.orm import Session
@@ -15,7 +16,7 @@ from Schemas.SchemaUser import (
     UserEmail,
 )
 from Schemas.SchemaWebhooks import PaymentEvent
-from Models.model import get_session, UserModel
+from Models.model import get_session, UserModel, TransacEntradaModel
 from Service.securtity import (
     get_password_hash,
     verify_password,
@@ -25,6 +26,7 @@ from Service.securtity import (
 from Controller.UsuarioController import Banco, Usuario
 import os
 
+load_dotenv()
 router = APIRouter()
 
 
@@ -61,6 +63,24 @@ def create_user(user: User, session: Session = Depends(get_session)):
 
     if db_user:
         raise HTTPException(status_code=400, detail="Nome de usuario ja esta em uso")
+
+    usuarioQueIndicou = session.scalar(
+        select(UserModel).where(UserModel.codIndicacion == user.codReferencia)
+    )
+    ##Indicação Precisa ser visto de nuevo
+    if usuarioQueIndicou != None:
+        valorBonus = os.getenv("QUANTIDADE_BONUS")
+        if valorBonus != None and valorBonus > 0:
+            usuarioQueIndicou.ganancias += valorBonus
+            novaTransacion = TransacEntradaModel(
+                usuario=usuarioQueIndicou.id,
+                monto=valorBonus,
+                status=True,
+                fechaCreado=datetime.now(),
+                fechaPagado=datetime.now(),
+            )
+            session.add(novaTransacion)
+            session.commit()
 
     hashed_password = get_password_hash(user.password)
 
