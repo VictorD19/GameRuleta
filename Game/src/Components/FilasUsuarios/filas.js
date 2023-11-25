@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { CardJogador } from "./style.styled";
-import DefaulJugador from '../../Assert/profile_defaul.png'
+import Profiles from '../../Assert/Profile'
 export default function Fila({
   Jugadores = [],
   color = "primary",
@@ -37,9 +37,9 @@ const Jugador = ({ jugador }) => {
   return (
     <CardJogador className="row my-2 align-items-center">
       <span className="col-7">
-        <div className="row align-items-center">
+        <div className="row align-items-center gap-2">
           <div className="col-3">
-            <Image src={DefaulJugador} width={50} height={50} alt="Img_hy" />
+            <Image src={Profiles[jugador.imagen]} width={50} height={50} alt="Img_hy" />
           </div>
           <div className="col-6">{jugador.nombre}</div>
         </div>

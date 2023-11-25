@@ -32,6 +32,7 @@ const executarREST = async (url, tipoConsulta = "GET", data = null) => {
 
     return retorno;
   } catch (error) {
+    debugger;
     return {
       error: "Ocorreu uma falha ao tentar conectar",
     };

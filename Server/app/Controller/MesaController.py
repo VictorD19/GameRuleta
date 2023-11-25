@@ -101,6 +101,8 @@ class SalasGeral:
             porcentagemLadoB=Porcentagem(
                 valorLadoA + valorLadoB
             ).CalcularPorcentagemAReceberPorValor(valorLadoB),
+            IndiceGanador=0,
+            SegundoRestantes= (jogadaActivaMesa.inicio - datetime.now()).total_seconds() if  (jogadaActivaMesa!= None and jogadaActivaMesa.inicio != None) else 0
         )
         return detallesMesa
 

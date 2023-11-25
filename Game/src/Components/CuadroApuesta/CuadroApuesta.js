@@ -34,9 +34,10 @@ export const CuadroAposta = ({ idMesa }) => {
     };
 
     const { error, ...data } = await executarREST(
-      "apuestas/HacerApuesta",
+      "apuestas/HacerApuesta","POST",
       novaAposta
     );
+    debugger;
     if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
 
     CriarAlerta(TIPO_ALERTA.SUCESSO, null, "Apuesta Realizada com sucesso!");
@@ -54,13 +55,14 @@ export const CuadroAposta = ({ idMesa }) => {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,
       IdLadoApostado: 2,
-      IdMesa: idMesa, // Azul
+      IdMesa: idMesa, // Rojo
     };
 
     const { error, ...data } = await executarREST(
-      "apuestas/HacerApuesta",
+      "apuestas/HacerApuesta","POST",
       novaAposta
     );
+    debugger;
     if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
 
     CriarAlerta(TIPO_ALERTA.SUCESSO, null, "Apuesta Realizada com sucesso!");
@@ -129,7 +131,7 @@ export const CuadroAposta = ({ idMesa }) => {
             <div className="row w-100 ">
               <div className="col-6  p-0  mt-md-0">
                 <Button
-                  onClick={ApostarLadoB}
+                  onClick={ ApostarLadoA}
                   className="p-2"
                   style={{ width: "99%", fontSize: "0.8em" }}
                 >
@@ -141,7 +143,7 @@ export const CuadroAposta = ({ idMesa }) => {
                   variant="danger"
                   className="p-2"
                   style={{ width: "99%", fontSize: "0.8em" }}
-                  onClick={ApostarLadoA}
+                  onClick={ApostarLadoB}
                 >
                   VERMELHO
                 </Button>

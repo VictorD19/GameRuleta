@@ -25,6 +25,7 @@ class HistoricoMesa(BaseModel):
 class MesaDetalhesCompletos(BaseModel):
     idMesa: int
     status: bool
+    SegundoRestantes:int
     jugadoresLadoA: List[DetalhesApuestaUsuario]
     jugadoresLadoB: List[DetalhesApuestaUsuario]
     totalLadoA: float
@@ -33,3 +34,4 @@ class MesaDetalhesCompletos(BaseModel):
     historicoMesa: List[HistoricoMesa]
     porcentagemLadoA: float
     porcentagemLadoB: float
+    IndiceGanador: int

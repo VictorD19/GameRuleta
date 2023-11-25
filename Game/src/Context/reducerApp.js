@@ -7,14 +7,14 @@ export const DataInicialApp = {
     {
       numero: 1,
       minimo: 1,
-      maximo: 200,
+      maximo: 1000,
       jugadores: 0,
       totalApostado: 0,
     },
     {
       numero: 2,
-      minimo: 10,
-      maximo: 500,
+      minimo: 20,
+      maximo: 5000,
       jugadores: 0,
       totalApostado: 0,
     },
@@ -32,84 +32,23 @@ export const DataInicialApp = {
     FotoAvatar: Profiles["Profile1"],
     Nombre: "",
     DataCreacion: "",
-    HistoricoTransiones: [
-      // {
-      //   id: 1,
-      //   metodo: "Pix",
-      //   valor: 100,
-      //   data: "10/12/2023",
-      //   entrada: true,
-      // },
-    ],
+    HistoricoTransiones: [],
   },
-  Partidas: [
-    {
-      id: 1,
-      lado: "",
-      valor: 100,
-      porcentagem: 12,
-      gano: true,
-    },
-    {
-      id: 2,
-      lado: "",
-      valor: 150,
-      porcentagem: 52,
-      gano: true,
-    },
-    {
-      id: 4,
-      lado: "",
-      valor: 130,
-      porcentagem: 22,
-      gano: false,
-    },
-  ],
+  Partidas: [],
   SalaAtual: {
     JugadoresA: [],
     JugadoresB: [],
     id: 1,
     TotalLadoA: 100,
     TotalLadoB: 140,
+    StatusMesa: false,
     PorcentagemA: 40,
     PorcentagemB: 60,
     TotalApostado: 100,
-    RuletaActiva: true,
-    RuletaGenerada: [],
-    PosicaoSelecionada: 1,
     IndiceGanador: 0,
-    HistoricoPartidas: [
-      {
-        id: 1,
-        Ganador: 1, //lado
-        Jugadores: 3,
-        Total: 100,
-      },
-      {
-        id: 2,
-        Ganador: 2, //lado
-        Jugadores: 7,
-        Total: 140,
-      },
-      {
-        id: 3,
-        Ganador: 1, //lado
-        Jugadores: 3,
-        Total: 100,
-      },
-      {
-        id: 4,
-        Ganador: 2, //lado
-        Jugadores: 6,
-        Total: 100,
-      },
-      {
-        id: 5,
-        Ganador: 2, //lado
-        Jugadores: 13,
-        Total: 10,
-      },
-    ],
+    SegundosRestantes: 0,
+    HistoricoPartidas: [],
+    RuletaGenerada: []
   },
 };
 

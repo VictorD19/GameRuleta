@@ -1,4 +1,5 @@
 from Service.MesaServicio import *
+from fastapi import HTTPException
 from Models.model import Session
 from Schemas.Apuesta import Apuesta
 from Schemas.Response import ResponseRequest
@@ -23,13 +24,15 @@ class ApuestaController:
 
             if saldoAtualSemGanancias == 0 and saldoAtualGanancias == 0:
                 raise ControllerException(
-                    "seu saldo disponivel é R$ 0,00, Recarregue e começe a JOGAR AGORA!"
+                    "Seu saldo disponivel é R$ 0,00, Recarregue e começe a JOGAR AGORA!"
                 )
 
             if (saldoAtualSemGanancias + saldoAtualGanancias) < apuesta.ValorApostado:
                 raise ControllerException(
                     "Você não pode apostar um valor maior que o seu saldo disponivel"
                 )
+
+        ##Mitter Fazer aqui validação saldo acount e ganancias  Dejar passar
 
             existeJogadaAtiva = await self.__MesaService.ObterJogadaPorNumeroMesa(
                 apuesta.IdMesa
@@ -51,7 +54,8 @@ class ApuestaController:
 
         except ControllerException as ex:
             self.__session.rollback()
-            return ResponseRequest().CrearRespuestaError(str(ex))
+            raise HTTPException(status_code=400, detail=str(ex))
+            #return ResponseRequest().CrearRespuestaError(str(ex))
         except Exception as ex:
             self.__session.rollback()
             return ResponseRequest().CrearRespuestaError(
