@@ -8,6 +8,7 @@ from datetime import datetime
 from Schemas.Ruleta import Lados
 from fastapi import HTTPException
 
+
 class Mesa:
     def __init__(self, session: Session) -> None:
         self.session = session
@@ -26,10 +27,10 @@ class Mesa:
             return 0
 
         jugadasActivas = list(filter(lambda j: j.fin == None, jugadas))
-        
-        if(len(jugadasActivas)==0):
+
+        if len(jugadasActivas) == 0:
             return 0
-        
+
         apuestasJugadores = list(map(lambda a: a.usuario, jugadasActivas[0].apuestas))
 
         return len(list(set(apuestasJugadores)))
@@ -63,7 +64,7 @@ class Mesa:
             .filter(and_(JugadaModel.mesa == idMesa, JugadaModel.fin == None))
             .first()
         )
-    
+
     async def ObterUltimasJogadaPorMesa(self, idMesa: int):
         return (
             self.session.query(JugadaModel)
@@ -74,7 +75,6 @@ class Mesa:
 
     def CriarNovaJogada(self, apuesta: Apuesta):
         try:
-
             novaJogada = JugadaModel(mesa=apuesta.IdMesa, creacion=datetime.now())
 
             if apuesta.IdLadoApostado == 1:
@@ -88,12 +88,14 @@ class Mesa:
             self.session.commit()
             self.session.refresh(novaJogada)
             return novaJogada
-        
+
         except Exception as ex:
             self.session.rollback()
-            raise HTTPException(status_code=400, detail="Error al intentar crear nueva jugada")
+            raise HTTPException(
+                status_code=400, detail="Error al intentar crear nueva jugada"
+            )
 
-    async def CriarApuestaJugador(self, apuesta: Apuesta, jugada: JugadaModel):
+    def CriarApuestaJugador(self, apuesta: Apuesta, jugada: JugadaModel):
         valorTotalLado = jugada.ladoA if (apuesta.IdLadoApostado == 1) else jugada.ladoB
 
         if valorTotalLado == None or valorTotalLado == 0:
@@ -111,7 +113,7 @@ class Mesa:
             porcentaje=porcentagemJugada,
             fecha=datetime.now(),
         )
-        self.session.add(nuevaApuesta)        
+        self.session.add(nuevaApuesta)
         return nuevaApuesta
 
     async def ObterDetallesMesas(self):
@@ -188,25 +190,14 @@ class Mesa:
             valorTotalPagado -= valorAReceber
             self.session.commit()
 
-    def validadLadosConApuesta(self, jugada:JugadaModel, apuesta: Apuesta):
-        
+    def validadLadosConApuesta(self, jugada: JugadaModel, apuesta: Apuesta):
         if jugada.ladoA > 0 and apuesta.IdLadoApostado == 2:
             return True
-        
+
         if jugada.ladoB > 0 and apuesta.IdLadoApostado == 1:
             return True
-        
+
         return False
-
-    
-
-
-
-
-
-
-
-
 
 
 # endregion
