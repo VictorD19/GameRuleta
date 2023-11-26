@@ -97,7 +97,7 @@ class ApuestaController:
                     )
 
                 if not (
-    ,                nuevaApuesta := self.mesaServicio.CriarApuestaJugador(
+                    nuevaApuesta := self.mesaServicio.CriarApuestaJugador(
                         apuesta=self.apuesta, jugada=jugadaActiva
                     )
                 ):
