@@ -6,11 +6,11 @@ from Service.Porcentagem import Porcentagem
 from Schemas.Exection import ServicoException
 from datetime import datetime
 from Schemas.Ruleta import Lados
-
+from fastapi import HTTPException
 
 class Mesa:
     def __init__(self, session: Session) -> None:
-        self.__session = session
+        self.session = session
 
     # region Metodos Auxiliares
     def ObterNovoValorTotalDoLadoApostado(
@@ -52,39 +52,46 @@ class Mesa:
     # region Metodos Principales
     async def ObterJogadaPorNumeroMesa(self, idNumeroMesa: int):
         return (
-            self.__session.query(JugadaModel)
+            self.session.query(JugadaModel)
             .filter(and_(JugadaModel.mesa == idNumeroMesa, JugadaModel.fin == None))
             .first()
         )
 
-    async def ObterJogadaActivaPorMesa(self, idMesa: int):
+    def ObterJogadaActivaPorMesa(self, idMesa: int):
         return (
-            self.__session.query(JugadaModel)
-            .filter(and_(JugadaModel.mesa == idMesa, JugadaModel.fin != None))
+            self.session.query(JugadaModel)
+            .filter(and_(JugadaModel.mesa == idMesa, JugadaModel.fin == None))
             .first()
         )
     
     async def ObterUltimasJogadaPorMesa(self, idMesa: int):
         return (
-            self.__session.query(JugadaModel)
+            self.session.query(JugadaModel)
             .filter(and_(JugadaModel.mesa == idMesa, JugadaModel.fin != None))
             .limit(15)
             .all()
         )
 
-    async def CriarNovaJogada(self, apuesta: Apuesta):
-        novaJogada = JugadaModel(mesa=apuesta.IdMesa, creacion=datetime.now())
+    def CriarNovaJogada(self, apuesta: Apuesta):
+        try:
 
-        if apuesta.IdLadoApostado == 1:
-            novaJogada.ladoA = apuesta.ValorApostado
-            novaJogada.ladoB = 0
-        else:
-            novaJogada.ladoB = apuesta.ValorApostado
-            novaJogada.ladoA = 0
+            novaJogada = JugadaModel(mesa=apuesta.IdMesa, creacion=datetime.now())
 
-        self.__session.add(novaJogada)
-        self.__session.commit()
-        return novaJogada
+            if apuesta.IdLadoApostado == 1:
+                novaJogada.ladoA = apuesta.ValorApostado
+                novaJogada.ladoB = 0
+            else:
+                novaJogada.ladoB = apuesta.ValorApostado
+                novaJogada.ladoA = 0
+
+            self.session.add(novaJogada)
+            self.session.commit()
+            self.session.refresh(novaJogada)
+            return novaJogada
+        
+        except Exception as ex:
+            self.session.rollback()
+            raise HTTPException(status_code=400, detail="Error al intentar crear nueva jugada")
 
     async def CriarApuestaJugador(self, apuesta: Apuesta, jugada: JugadaModel):
         valorTotalLado = jugada.ladoA if (apuesta.IdLadoApostado == 1) else jugada.ladoB
@@ -95,6 +102,7 @@ class Mesa:
         porcentagemJugada = Porcentagem(
             valorTotalLado
         ).CalcularPorcentagemAReceberPorValor(apuesta.ValorApostado)
+
         nuevaApuesta = ApuestaModel(
             usuario=apuesta.IdUsuario,
             monto=apuesta.ValorApostado,
@@ -103,12 +111,12 @@ class Mesa:
             porcentaje=porcentagemJugada,
             fecha=datetime.now(),
         )
-        self.__session.add(nuevaApuesta)
+        self.session.add(nuevaApuesta)        
         return nuevaApuesta
 
     async def ObterDetallesMesas(self):
         mesas = (
-            self.__session.query(MesaModel)
+            self.session.query(MesaModel)
             .options(joinedload(MesaModel.jugada).joinedload(JugadaModel.apuestas))
             .all()
         )
@@ -126,7 +134,7 @@ class Mesa:
 
     async def ObterMesaPorId(self, idMesa: int):
         existeMesa = (
-            self.__session.query(MesaModel).filter(MesaModel.id == idMesa).first()
+            self.session.query(MesaModel).filter(MesaModel.id == idMesa).first()
         )
 
         if not existeMesa:
@@ -178,7 +186,27 @@ class Mesa:
 
             jugador.account += valorAReceber
             valorTotalPagado -= valorAReceber
-            self.__session.commit()
+            self.session.commit()
+
+    def validadLadosConApuesta(self, jugada:JugadaModel, apuesta: Apuesta):
+        
+        if jugada.ladoA > 0 and apuesta.IdLadoApostado == 2:
+            return True
+        
+        if jugada.ladoB > 0 and apuesta.IdLadoApostado == 1:
+            return True
+        
+        return False
+
+    
+
+
+
+
+
+
+
+
 
 
 # endregion

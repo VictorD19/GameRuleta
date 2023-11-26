@@ -9,7 +9,7 @@ class Porcentagem:
 
     def CalcularPorcentagemAReceberPorValor(self, valorInserido: float):
         if self.__valorTotal == 0:
-            return 50
+            return 50.00
 
         porcentagem = (valorInserido * 100) / self.__valorTotal
         return float(f"{porcentagem:.2f}")

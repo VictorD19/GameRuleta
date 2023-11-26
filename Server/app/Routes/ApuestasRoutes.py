@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import HTTPException, Depends
 from fastapi import APIRouter
 from Schemas.Apuesta import Apuesta
 from Models.model import get_session
@@ -10,15 +10,13 @@ from Schemas.SchemaUser import User
 router = APIRouter()
 
 
-@router.post("/HacerApuesta", status_code=200)
-async def hacer_apuesta(
+@router.post("/hacer-apuesta/", status_code=200)
+def hacer_apuesta(
     novaApuesta: Apuesta,
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ):
-    return await ApuestaController(session, current_user).HacerApuesta(novaApuesta)
+    if current_user.id != novaApuesta.IdUsuario:
+        raise HTTPException(status_code=401, detail="Usuario não autorizado.")
 
-
-@router.post("/GenerarPartida", status_code=200)
-async def hacer_apuesta(session: Session = Depends(get_session)):
-    return await ApuestaController(session).GenerarPartida()
+    return ApuestaController(session, current_user, apuesta=novaApuesta).hacerApuesta()

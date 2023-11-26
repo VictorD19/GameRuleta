@@ -2,28 +2,23 @@ from Models.model import JugadaModel
 from Schemas.Ruleta import DadosParaGenerarRuleta, Lados, ItemRuleta
 from Service.Porcentagem import Porcentagem
 import random
-import math
 
 
 class Ruleta:
     def __init__(self, jugada: JugadaModel) -> None:
         self.__jugada = jugada
-        self.__ruletaGenerada: list[ItemRuleta] = []
+        self.__ruletaGenerada = []
 
     def GenerarRuleta(self):
         dadoGerarRuleta = self.__ObterDatosParaGenerarRuleta()
         for numerador in range(1, 101):
             self.__ruletaGenerada.append(
-                ItemRuleta(
-                    idLado=dadoGerarRuleta.IdLadoMaior
-                    if dadoGerarRuleta.PorcentagemLadoMaior <= numerador
-                    else dadoGerarRuleta.IdLadoMenor,
-                    posicaoInicial=numerador,
-                )
+                dadoGerarRuleta.IdLadoMaior
+                if dadoGerarRuleta.PorcentagemLadoMaior <= numerador
+                else dadoGerarRuleta.IdLadoMenor,
             )
-
         self.__DesordenarRuleta()
-        self.__SelecionarAlGanador()
+        return self.__ruletaGenerada
 
     # region Metodos auxiliare
     def __ObterDatosParaGenerarRuleta(self) -> DadosParaGenerarRuleta:
@@ -51,22 +46,22 @@ class Ruleta:
                 self.__ruletaGenerada[i],
             )
 
-    def __SelecionarAlGanador(self):
-        min = 0
-        max = 0
+    # def __SelecionarAlGanador(self):
+    #     min = 0
+    #     max = 0
 
-        if self.__jugada.ladoA > self.__jugada.ladoB:
-            max = self.__jugada.ladoA
-            min = self.__jugada.ladoB
-        else:
-            max = self.__jugada.ladoB
-            min = self.__jugada.ladoA
-        numeroAleatorio = math.floor(random() * (max - min) + min)
-        ganador = self.__ruletaGenerada[numeroAleatorio]
-        ganador.PosicaoInicial = numeroAleatorio
-        self.Ganador = ganador
+    #     if self.__jugada.ladoA > self.__jugada.ladoB:
+    #         max = self.__jugada.ladoA
+    #         min = self.__jugada.ladoB
+    #     else:
+    #         max = self.__jugada.ladoB
+    #         min = self.__jugada.ladoA
+    #     numeroAleatorio = math.floor(random() * (max - min) + min)
+    #     ganador = self.__ruletaGenerada[numeroAleatorio]
+    #     ganador.PosicaoInicial = numeroAleatorio
+    #     self.Ganador = ganador
 
-    def ObterGanador(self):
-        return self.Ganador
+    # def ObterGanador(self):
+    #     return self.Ganador
 
     # endregion

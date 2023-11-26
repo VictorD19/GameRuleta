@@ -73,6 +73,7 @@ class JugadaModel(Base):
     creacion: Mapped[datetime]
     inicio: Mapped[datetime] = mapped_column(nullable=True)
     fin: Mapped[datetime] = mapped_column(nullable=True)
+    ruleta: Mapped[str] = mapped_column(nullable=True)
     apuestas: Mapped[List["ApuestaModel"]] = relationship(
         back_populates="apuestaRelacion"
     )

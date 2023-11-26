@@ -10,6 +10,7 @@ class DadosParaGenerarRuleta(BaseModel):
 
 
 class ItemRuleta:
+    
     def __init__(self, idLado: int, posicaoInicial: int):
         self.idLado = idLado
         self.PosicaoInicial = posicaoInicial
