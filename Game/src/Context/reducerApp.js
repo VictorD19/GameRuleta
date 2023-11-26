@@ -1,5 +1,5 @@
-import ProfileDefaul from "../Assert/profile_defaul.png"
-import Profiles from "../Assert/Profile"
+import ProfileDefaul from "../Assert/profile_defaul.png";
+import Profiles from "../Assert/Profile";
 
 export const DataInicialApp = {
   Conectado: false,
@@ -28,7 +28,7 @@ export const DataInicialApp = {
   ],
   Usuario: {
     Id: 0,
-    Saldo: 0.00,
+    Saldo: 0.0,
     FotoAvatar: Profiles["Profile1"],
     Nombre: "",
     DataCreacion: "",
@@ -39,16 +39,16 @@ export const DataInicialApp = {
     JugadoresA: [],
     JugadoresB: [],
     id: 1,
-    TotalLadoA: 100,
-    TotalLadoB: 140,
+    TotalLadoA: 0,
+    TotalLadoB: 0,
     StatusMesa: false,
-    PorcentagemA: 40,
-    PorcentagemB: 60,
-    TotalApostado: 100,
+    PorcentagemA: 100,
+    PorcentagemB: 100,
+    TotalApostado: 0,
     IndiceGanador: 0,
     SegundosRestantes: 0,
     HistoricoPartidas: [],
-    RuletaGenerada: []
+    RuletaGenerada: [],
   },
 };
 
@@ -56,35 +56,41 @@ export const reducer = (state, action) => {
   switch (action.tipo) {
     case "DATOS_GENERAL_SALA":
       return {
-        ...state, SalasGerais: action.data
+        ...state,
+        SalasGerais: action.data,
       };
     case "SALA_ATUAL":
-
-      let salaAtual = state.SalaAtual
-      let dadosSalaAtual = action.data
-      salaAtual.id = dadosSalaAtual.idMesa
-      salaAtual.JugadoresA = dadosSalaAtual.jugadoresLadoA.sort((a, b) => b.porcentagem - a.porcentagem)
-      salaAtual.JugadoresB = dadosSalaAtual.jugadoresLadoB.sort((a, b) => b.porcentagem - a.porcentagem)
-      salaAtual.TotalLadoA = dadosSalaAtual.totalLadoA
-      salaAtual.TotalLadoB = dadosSalaAtual.totalLadoB
-      salaAtual.PorcentagemA = dadosSalaAtual.porcentagemLadoA
-      salaAtual.PorcentagemB = dadosSalaAtual.porcentagemLadoB
-      salaAtual.RuletaActiva = dadosSalaAtual.ruletaActiva
-      salaAtual.TotalApostado = dadosSalaAtual.totalApostado
-      salaAtual.HistoricoPartidas = dadosSalaAtual.historicoMesa
+      let salaAtual = state.SalaAtual;
+      let dadosSalaAtual = action.data;
+      salaAtual.id = dadosSalaAtual.idMesa;
+      salaAtual.JugadoresA = dadosSalaAtual.jugadoresLadoA.sort(
+        (a, b) => b.porcentagem - a.porcentagem
+      );
+      salaAtual.JugadoresB = dadosSalaAtual.jugadoresLadoB.sort(
+        (a, b) => b.porcentagem - a.porcentagem
+      );
+      salaAtual.TotalLadoA = dadosSalaAtual.totalLadoA;
+      salaAtual.TotalLadoB = dadosSalaAtual.totalLadoB;
+      salaAtual.PorcentagemA = dadosSalaAtual.porcentagemLadoA;
+      salaAtual.PorcentagemB = dadosSalaAtual.porcentagemLadoB;
+      salaAtual.RuletaActiva = dadosSalaAtual.ruletaActiva;
+      salaAtual.TotalApostado = dadosSalaAtual.totalApostado;
+      salaAtual.HistoricoPartidas = dadosSalaAtual.historicoMesa;
       return {
-        ...state, SalaAtual: salaAtual
-      }
+        ...state,
+        SalaAtual: salaAtual,
+      };
     case "CONECTADO":
       return {
-        ...state, Conectado: action.data
-      }
+        ...state,
+        Conectado: action.data,
+      };
     case "DADOS_USUARIO":
       return {
-        ...state, Usuario: { ...state.Usuario, ...action.data }
-      }
+        ...state,
+        Usuario: { ...state.Usuario, ...action.data },
+      };
     default:
       break;
   }
-
 };

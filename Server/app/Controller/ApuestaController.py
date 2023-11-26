@@ -75,7 +75,7 @@ class ApuestaController:
                 "Não foi possível entrar nessa jogada, tente novamente.",
             )
 
-    def hacerApuesta(self):
+    async def hacerApuesta(self):
         # Metodo que crea la apuesta dentro de la mesa
         try:
             # validamos si el cliente tiene saldo y si la mesa donde quiere apostar existe
@@ -97,7 +97,7 @@ class ApuestaController:
                     )
 
                 if not (
-                    nuevaApuesta := self.mesaServicio.CriarApuestaJugador(
+                    nuevaApuesta := await self.mesaServicio.CriarApuestaJugador(
                         apuesta=self.apuesta, jugada=jugadaActiva
                     )
                 ):

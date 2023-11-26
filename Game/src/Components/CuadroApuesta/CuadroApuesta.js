@@ -34,7 +34,8 @@ export const CuadroAposta = ({ idMesa }) => {
     };
 
     const { error, ...data } = await executarREST(
-      "apuestas/HacerApuesta","POST",
+      "apuestas/hacer-apuesta/",
+      "POST",
       novaAposta
     );
     debugger;
@@ -59,7 +60,8 @@ export const CuadroAposta = ({ idMesa }) => {
     };
 
     const { error, ...data } = await executarREST(
-      "apuestas/HacerApuesta","POST",
+      "apuestas/hacer-apuesta/",
+      "POST",
       novaAposta
     );
     debugger;
@@ -131,7 +133,7 @@ export const CuadroAposta = ({ idMesa }) => {
             <div className="row w-100 ">
               <div className="col-6  p-0  mt-md-0">
                 <Button
-                  onClick={ ApostarLadoA}
+                  onClick={ApostarLadoA}
                   className="p-2"
                   style={{ width: "99%", fontSize: "0.8em" }}
                 >

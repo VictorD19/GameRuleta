@@ -9,6 +9,7 @@ from sqlalchemy.orm import joinedload
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import os
+import math
 
 load_dotenv()
 
@@ -102,7 +103,11 @@ class SalasGeral:
                 valorLadoA + valorLadoB
             ).CalcularPorcentagemAReceberPorValor(valorLadoB),
             IndiceGanador=0,
-            SegundoRestantes= (jogadaActivaMesa.inicio - datetime.now()).total_seconds() if  (jogadaActivaMesa!= None and jogadaActivaMesa.inicio != None) else 0
+            SegundoRestantes=math.floor(
+                (jogadaActivaMesa.inicio - datetime.now()).total_seconds()
+            )
+            if (jogadaActivaMesa != None and jogadaActivaMesa.inicio != None)
+            else 0,
         )
         return detallesMesa
 
