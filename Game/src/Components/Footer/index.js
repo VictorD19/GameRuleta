@@ -1,0 +1,34 @@
+import Image from "next/image";
+import Logo from "../../Assert/logo.svg";
+import Link from "next/link";
+
+export const Footer = () => {
+  return (
+    <footer className="">
+      <div className="card bg-dark">
+        <div className="card-body row align-items-center">
+          <div className="col-12 col-md-9">
+            <div className="d-flex flex-column">
+              <Image src={Logo} height={40} alt="logo" />
+              <small style={{ color: "#c1c1c1" }} className="mt-2">
+                {new Date().getFullYear()} © FunCombat games. All right
+                reserved.
+              </small>
+            </div>
+          </div>
+          <div className="col-12 col-md-3 d-flex gap-5">
+            <div>
+              <Link href="/">Politica de Privacidad</Link>
+            </div>
+            <div>
+              <Link href="/">Regras do Jogo</Link>
+            </div>
+            <div className="">
+              <Link href="/">Contato</Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};

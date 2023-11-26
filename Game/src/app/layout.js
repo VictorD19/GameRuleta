@@ -6,6 +6,7 @@ import { Menu } from "@/Components/Menu/Menu";
 import SalasCard from "@/Components/Salas";
 const inter = Archivo({ subsets: ["latin"] });
 import { Providers } from "@/Providers";
+import { Footer } from "@/Components/Footer";
 
 export const metadata = {
   title: "Create Next App",
@@ -29,6 +30,7 @@ export default async function RootLayout({ children }) {
             {children}
           </div>
         </Providers>
+        <Footer />
       </body>
     </html>
   );

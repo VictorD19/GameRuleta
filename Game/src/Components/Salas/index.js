@@ -3,32 +3,48 @@ import Image from "next/image";
 import "./style.css";
 import Loading from "../../Assert/loading-animated.svg";
 import Relogio from "../../Assert/border-relogio.svg";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDataContext } from "@/Context";
 
 export default function SalasCard() {
+  const [salaActiva, setSalaActiva] = useState(0)
   const route = useRouter();
   const { appData } = useDataContext();
+  const path = usePathname()
+
   useEffect(() => { }, [appData.SalasGerais]);
 
   const irParaSala = (sala) => {
     route.push(`/Salas${sala == 1 ? "" : `/Sala${sala}`}`);
   };
 
+  useEffect(() => {
+
+    if (!path.toLocaleLowerCase().includes("salas"))
+      return setSalaActiva(0)
+
+    let tempPath = path.replace("/", "");
+    let sala = tempPath.includes("/")
+      ? tempPath.charAt(tempPath.length - 1)
+      : 1;
+    setSalaActiva(sala)
+
+    return () => setSalaActiva(0)
+  }, [path])
   return (
     <div className="row my-3 semMarginRow">
       {appData.SalasGerais.map((mesa, index) => {
         return (
           <div
-            className={`col-sm-12 col-md-4 ${index > 0 ? "mt-4 mt-md-0" : ""}`}
+            className={`col-sm-12 col-md-4 ${index > 0 ? "mt-4 mt-md-0" : ""} `}
             key={"mesa" + mesa.numero}
             style={{ cursor: "pointer" }}
           >
-            <div className="card bg-dark" onClick={() => irParaSala(index + 1)}>
+            <div className={`card  ${salaActiva == mesa.numero ? "SalaActiva" : "bg-dark SalaInativa"}`} onClick={() => irParaSala(index + 1)}>
               <div className="inner p-3 card-body  d-flex justify-content-between text-white">
                 <div className="mt-2">
-                  <h4 className="TituloSala">Sala Nº {mesa.numero}</h4>
+                  <h4>Sala Nº {mesa.numero}</h4>
                   {mesa.jugadores > 0 ? (
                     <>
                       <div>Jugadores: {mesa.jugadores}</div>
