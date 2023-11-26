@@ -15,12 +15,12 @@ class Mesa:
 
     # region Metodos Auxiliares
     def ObterNovoValorTotalDoLadoApostado(
-        self, valorApostado: float, jugada: JugadaModel, idLado: int
-    ):
-        if idLado == 1:
-            jugada.ladoA += valorApostado
+        self, apuesta: Apuesta, jugada: JugadaModel):
+
+        if apuesta.IdLadoApostado == 1:
+            jugada.ladoA += apuesta.ValorApostado
         else:
-            jugada.ladoB += valorApostado
+            jugada.ladoB += apuesta.ValorApostado
 
     def obtenerTotalJugadores(self, jugadas: list[JugadaModel]) -> int:
         if len(jugadas) == 0:
