@@ -1,32 +1,33 @@
-"use client";
-import { useAuthHook } from "@/Hooks/AuthHook";
-import { useRedirectApp } from "@/Hooks/RoutesHooks";
-import { useEffect } from "react";
+'use client'
 import Accordion from "react-bootstrap/Accordion";
 
 const PERGUNTAS_REPOSTA = [
   {
-    TITULO: "O que é NomeSite?",
+    TITULO: "Como jogar, qual é o objetivo?",
     DESCRICION:
-      "É um novo serviço de loteria rápida,. O princípio deste serviço é extremamente simples e compreensível — escolher uma cor e ganhar dinheiro.",
+      " A conclusão é que uma variedade de participantes façam suas apostas no campo do azul ou do vermelho. Após a conclusão do sorteio, a totalidade do montante é direcionada aos jogadores do lado triunfante.",
   },
   {
-    TITULO: "Salas",
-    DESCRICION: `Oferecemos 3 salas com diferentes quantidades de taxas máximas e mínimas: de 1 a 200 rublos
-    de 10 a 2000 rublos
-    de 100 a 20.000 rublos
-    Você podera visualizar e apostar em cada uma delas se desejar.
+    TITULO: "Quais são as características do site FUNCOMBAT?",
+    DESCRICION: `Nossa distinção em relação às loterias convencionais reside na total honestidade e transparência. É possível visualizar a quantidade e detalhes das apostas realizadas, o montante total do prêmio, assim como avaliar os riscos e as chances de sucesso. Esta abordagem inovadora proporciona uma clareza sem precedentes em comparação com os métodos tradicionais.
+    `,
+  },
+
+  {
+    TITULO: "Como é selecionado o ganhador?",
+    DESCRICION: `Quando o cronômetro do jogo atinge 0, o sorteio começa. As chances de cada lado ganhar são calculadas como a proporção da quantidade de dinheiro que é colocada deste lado para o banco comum. 
+    Por exemplo:
+    Eles colocam R$ 100,00  no lado vermelho, R$ 300,00 no lado azul. Isso significa que o lado azul tem 3 vezes mais chances de ganhar do que o vermelho. Ou seja, neste exemplo, a probabilidade de que o lado vermelho ganhe é de 25%, a probabilidade de que o lado azul ganhe é de 75%.
+    Assim, a parte vencedora é determinada, preste atenção ao fato de que não é a parte que tem mais probabilidade de ganhar, mas o lado aleatório, levando em conta suas chances.
     `,
   },
   {
-    TITULO: "Como Funciona o Jogo?",
-    DESCRICION: `Você precisa entrar em uma das salas e apostar em qualquer valor (dentro desta sala) em vermelho ou azul. Quando pelo menos 2 jogadores fazem suas apostas, o jogo começa automaticamente. Em seguida, o gerador seleciona aleatoriamente uma das duas cores, e o jogador que apostar nele leva uma vitória .
-    Importante: quanto mais dinheiro do seu lado, maior a chance de ganhar. E quanto mais sua participação na equipe (se várias pessoas colocarem uma cor), maior será a quantidade de ganhos.
-    `,
+    TITULO: "Posso jogar se não tiver 18 anos?",
+    DESCRICION: `Não! Nosso serviço é destinado apenas para pessoas que atingiram a idade adulta. Se você não tem 18 anos, por favor, deixe o nosso site`,
   },
   {
-    TITULO: "Qual é o valor minimo de retirada?",
-    DESCRICION: `O valor mínimo para retirada é de apenas R$ 50.
+    TITULO: "Ganhei uma boa quantia e quero fazer um saque! quanto tempo leva para processar o pagamento?",
+    DESCRICION: `Após solicitado o saque seu pagamento será processado em até 24hrs
     `,
   },
   {
@@ -35,31 +36,38 @@ const PERGUNTAS_REPOSTA = [
     `,
   },
   {
-    TITULO: "Como funciona a Recarga?",
-    DESCRICION: `Para recarregar é simples, ir até opção no menu inserir o valor que deseja recarregar e selecionar o metodo de pagamento, apoós a confirmação do seu pagamento os credito serão adicionados a sua conta.`,
+    TITULO: "Quais são o metodos de pagamento que você possuim ?",
+    DESCRICION: `No momento vamos trabalhar apenas com pix, mas iremos ir acrescentando outras formas assim que possível.`,
+  },
+  {
+    TITULO: "Se eu convidar outro jogadores ira ganhar uma comissão?",
+    DESCRICION: `Teremos momento que iremos oferecer bônus por indicação, então esteja atento a nossos anúncios.`,
+  },
+  {
+    TITULO: "Qual é a aposta minima?",
+    DESCRICION: `Dependendo da sala você tera uma aposta minima indo de R$ 1,00 na Sala Nº1 até R$ 100,00 na Sala Nº3`,
   },
 ];
 
 export default function Page() {
-  const { SessionLoginActiva } = useAuthHook();
-  const { IrPara } = useRedirectApp();
-  useEffect(() => {
-    if (!SessionLoginActiva()) return IrPara();
-  }, []);
+
   return (
     <div className="px-2">
+      <h2 className="mt-3">Respostas a perguntas frequentes</h2>
+      <h6 className="mb-4" style={{ color: "#c1c1c1" }}>Respostas a perguntas frequentes de nossos usuários</h6>
+
       <div className="card bg-dark text-white">
         <div className="card-body">
-          <h2 className="mb-3">Perguntas Frecuentes</h2>
 
-          <Accordion defaultActiveKey="0" flush>
-            {PERGUNTAS_REPOSTA.map((item, i) => (
-              <Accordion.Item eventKey={i} key={"pergunta" + i}>
-                <Accordion.Header>{item.TITULO}</Accordion.Header>
-                <Accordion.Body>{item.DESCRICION}</Accordion.Body>
-              </Accordion.Item>
-            ))}
-          </Accordion>
+
+          {PERGUNTAS_REPOSTA.map((item, i) => (
+
+            <div key={"pergunta" + i}>
+              <h4 style={{ color: "#f29a0b" }}>{item.TITULO}</h4>
+              <p>{item.DESCRICION}</p>
+            </div>
+
+          ))}
         </div>
       </div>
     </div>
