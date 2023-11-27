@@ -1,9 +1,16 @@
 import asyncio
+import json
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, WebSocketException
 from fastapi import Depends, HTTPException
 from Controller.MesaController import SalasGeral
-from Models.model import Session, get_session
-import json
+from Models.model import (
+    Session,
+    get_session,
+    UserModel,
+    TransacSalidaModel,
+    JugadaModel,
+)
+from Schemas.Mesas import EstadisticaJuego
 
 router = APIRouter()
 # prefix='/mesas'apuesta
@@ -66,28 +73,22 @@ async def websocket_endpoint_status_salas(
         )
 
 
-"""
-@router.websocket("/status-mesas")
-async def websocket_endpoint_status_salas(
-    websocket: WebSocket, session: Session = Depends(get_session)
-):
-    await websocket.accept()
-    while True:
-        statusMesas = await SalasGeral(session).DadosGeraisSalas()
-        await websocket.send_json(statusMesas)
-        await asyncio.sleep(5)
+@router.get(path="/estadisticas/", status_code=200, response_model=EstadisticaJuego)
+def estadisticas(session: Session = Depends(get_session)):
+    jugadoresActivos = len(conexiones_activas.keys())
+    totalJugadores = session.query(UserModel).count()
+    totalPagado = sum(
+        [
+            tranSalida.monto if tranSalida else 0
+            for tranSalida in session.query(TransacSalidaModel).all()
+        ]
+    )
 
+    totalJuegosRealizados = session.query(JugadaModel).count()
 
-# WebSocket endpoint para sala1
-@router.websocket("/{idMesa}")
-async def websocket_endpoint_sala1(
-    websocket: WebSocket, session: Session = Depends(get_session)
-):
-    await websocket.accept()
-    while True:
-        await websocket.send_text(
-            await SalasGeral(session).ObterDadosMesaPorId(
-                int(websocket.path_params["idMesa"])
-            )
-        )
-"""
+    return {
+        "jugadoresActivos": jugadoresActivos,
+        "totalJugadores": totalJugadores,
+        "totalPagado": totalPagado,
+        "totalJuegosRealizados": totalJuegosRealizados,
+    }

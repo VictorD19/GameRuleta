@@ -35,3 +35,10 @@ class MesaDetalhesCompletos(BaseModel):
     porcentagemLadoA: float
     porcentagemLadoB: float
     IndiceGanador: int
+
+
+class EstadisticaJuego(BaseModel):
+    jugadoresActivos: int
+    totalJugadores: int
+    totalPagado: int
+    totalJuegosRealizados: int
