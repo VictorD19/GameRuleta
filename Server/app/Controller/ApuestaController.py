@@ -95,6 +95,10 @@ class ApuestaController:
                         status_code=400,
                         detail="Não foi possível entrar nessa jogada, tente novamente.",
                     )
+                # Actualizamos los valores de la jugada de cada lado 
+                self.mesaServicio.ObterNovoValorTotalDoLadoApostado(
+                    apuesta=self.apuesta, jugada=jugadaActiva
+                )
 
                 if not (
                     nuevaApuesta := self.mesaServicio.CriarApuestaJugador(
@@ -138,6 +142,10 @@ class ApuestaController:
                     return
 
                 else:
+                    # Actualizamos los valores de la jugada de cada lado 
+                    self.mesaServicio.ObterNovoValorTotalDoLadoApostado(
+                        apuesta=self.apuesta, jugada=jugadaActiva
+                    )
                     # Si la mesa esta cerrada y no tiene jugada activa entra en este flujo
                     if not self.mesaServicio.validadLadosConApuesta(
                         jugada=jugadaActiva, apuesta=self.apuesta
