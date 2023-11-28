@@ -1,7 +1,8 @@
-'use client';
+"use client";
 import { executarREST } from "@/Api";
 import { useDataContext } from "@/Context";
 import { useAuthHook } from "@/Hooks/AuthHook";
+import { useRedirectApp } from "@/Hooks/RoutesHooks";
 import { useEffect } from "react";
 import { Table } from "react-bootstrap";
 import { FaArrowCircleDown, FaArrowCircleUp } from "react-icons/fa";
@@ -12,9 +13,9 @@ export const Transaciones = () => {
     appData: { Usuario },
     dispatch,
   } = useDataContext();
-
+  const { IrPara } = useRedirectApp();
   useEffect(() => {
-    if (!SessionLoginActiva()) return;
+    if (!SessionLoginActiva()) return IrPara();
 
     (async () => {
       const { error, ...data } = await executarREST(

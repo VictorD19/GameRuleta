@@ -173,12 +173,15 @@ def refresh_access_token(user: User = Depends(get_current_user)):
 
 @router.get("/new-cobro-pix/{user_id}/{monto}/", response_model=QrPix)
 def newCobroPix(
-    user_id: int, monto: float, current_user: User = Depends(get_current_user)
+    user_id: int,
+    monto: float,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     if current_user.id != user_id:
         raise HTTPException(status_code=400, detail="Permissões insuficientes")
 
-    return Banco(monto=monto, user=current_user).getQR()
+    return Banco(session, monto=monto, user=current_user).getQR()
 
 
 @router.post("/webhook-asaas/", status_code=200)

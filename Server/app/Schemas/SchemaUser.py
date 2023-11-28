@@ -20,11 +20,11 @@ class UserUpdate(BaseModel):
 
 class UserPublic(BaseModel):
     id: int
-    username: str
-    avatar: str
-    saldo: float
+    username: str | None = None
+    avatar: str | None = None
+    saldo: float | None = None
     status: bool = True
-    dataCriacion: datetime
+    dataCriacion: datetime | None = None
 
 
 class Token(BaseModel):

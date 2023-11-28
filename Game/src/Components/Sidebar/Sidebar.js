@@ -4,7 +4,7 @@ import "./style.css";
 import Image from "next/image";
 import Logo from "../../Assert/logo.svg";
 import Defaul from "../../Assert/Profile/profile_1.webp";
-import { Button } from "react-bootstrap";
+import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
 import {
   FaBars,
   FaHistory,
@@ -20,6 +20,8 @@ import { useDataContext } from "@/Context";
 import { CardLogin } from "./cardLogin";
 import { LimparTudoLocalStorage } from "@/Api";
 import Profiles from "../../Assert/Profile";
+import { ModalSaque } from "./Saque";
+import { DepositoModal } from "./Deposito";
 const NavComponent = styled.nav`
   @media only screen and (max-width: 767px) {
     position: absolute;
@@ -80,7 +82,6 @@ export function Sidebar({ visible = false, toogle }) {
   const abrirModalSaque = () => setModalSaque(true);
 
   const onSubmitSaque = (e) => {};
-  const onSubmitDeposito = (e) => {};
 
   const itParaLaPagina = (pagina) => {
     router.push(`${pagina}`);
@@ -198,98 +199,11 @@ export function Sidebar({ visible = false, toogle }) {
           <CardLogin />
         )}
       </NavComponent>
-
-      <ModalComponent
-        show={modalDeposito}
-        cerrarModal={cerrarModalDeposito}
-        titulo={"Deposito"}
-      >
-        <form onSubmit={onSubmitDeposito}>
-          <div>
-            <label for="labelDeposito" className="mb-2">
-              Digite o valor
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name="name"
-              id="labelDeposito"
-            />
-          </div>
-          <div className=" my-3">
-            <label for="metodoPagamento">Método de Deposito</label>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="flexRadioDefault"
-                id="Pix"
-              />
-              <label className="form-check-label" for="Pix">
-                Pix
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="flexRadioDefault"
-                id="CartaoCredito"
-              />
-              <label className="form-check-label" for="CartaoCredito" disabled>
-                Cartão de Credito
-              </label>
-            </div>
-          </div>
-
-          <div className="my-3 d-flex justify-content-end">
-            <Button type="submit" variant="success">
-              Depositar
-            </Button>
-          </div>
-        </form>
-      </ModalComponent>
-
-      <ModalComponent
-        show={modalSaque}
-        cerrarModal={cerrarModalSaque}
-        titulo={"Saque"}
-      >
-        <form onSubmit={onSubmitSaque}>
-          <div>
-            <label for="valorSaque" className="mb-2">
-              Valor do saque
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name="name"
-              id="valorSaque"
-            />
-          </div>
-
-          <div className="mt-3">
-            <label for="chavePix" className="mb-2">
-              Informe sua chave Pix
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name="chavePix"
-              id="chavePix"
-            />
-          </div>
-          <p className=" mt-3" style={{ color: "#c1c1c1", fontSize: "0.8em" }}>
-            Taxa de saque de 5%. Transferência do valor solicitado em até 24
-            horas.
-          </p>
-          <div className="my-3 d-flex justify-content-end">
-            <Button type="submit" variant="success">
-              Sacar
-            </Button>
-          </div>
-        </form>
-      </ModalComponent>
+      <ModalSaque show={modalSaque} close={cerrarModalSaque} />
+      <DepositoModal
+        modalDeposito={modalDeposito}
+        cerrarModalDeposito={cerrarModalDeposito}
+      />
     </>
   );
 }
