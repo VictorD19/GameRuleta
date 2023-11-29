@@ -1,6 +1,7 @@
 from Models.model import JugadaModel
-from Schemas.Ruleta import DadosParaGenerarRuleta, Lados, ItemRuleta
+from Schemas.Ruleta import DadosParaGenerarRuleta, Lados
 from Service.Porcentagem import Porcentagem
+from datetime import datetime
 import random
 
 
@@ -46,22 +47,12 @@ class Ruleta:
                 self.__ruletaGenerada[i],
             )
 
-    # def __SelecionarAlGanador(self):
-    #     min = 0
-    #     max = 0
+    def selecionar_ganador(self, ruleta : str):
+        time = datetime.now()        
+        random.seed(a=time.second, version=2)
+        ruleta = ruleta.replace("]","").replace("[","").replace(' ','')
+        ruleta = ruleta.split(',')
+        return random.choice(ruleta)
 
-    #     if self.__jugada.ladoA > self.__jugada.ladoB:
-    #         max = self.__jugada.ladoA
-    #         min = self.__jugada.ladoB
-    #     else:
-    #         max = self.__jugada.ladoB
-    #         min = self.__jugada.ladoA
-    #     numeroAleatorio = math.floor(random() * (max - min) + min)
-    #     ganador = self.__ruletaGenerada[numeroAleatorio]
-    #     ganador.PosicaoInicial = numeroAleatorio
-    #     self.Ganador = ganador
-
-    # def ObterGanador(self):
-    #     return self.Ganador
-
+    
     # endregion

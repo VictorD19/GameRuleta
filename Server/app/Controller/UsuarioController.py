@@ -98,6 +98,7 @@ class Banco:
             self.guardaTransaccionInicial(idTransac=datos["id"])
 
             return {
+                "idQr":datos["id"],
                 "encodedImage": datos["encodedImage"],
                 "payload": datos["payload"],
                 "expirationDate": datos["expirationDate"],

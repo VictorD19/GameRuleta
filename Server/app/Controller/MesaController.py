@@ -4,6 +4,7 @@ from Schemas.Mesas import MesaDetalhesCompletos, HistoricoMesa
 from Schemas.SchemaUser import DetalhesApuestaUsuario
 from Models.model import ApuestaModel, JugadaModel, Session, MesaModel
 from Service.Porcentagem import Porcentagem
+from Service.Ruleta import Ruleta
 from sqlalchemy import and_
 from sqlalchemy.orm import joinedload
 from datetime import datetime, timedelta
@@ -41,9 +42,10 @@ class SalasGeral:
             jugada = jugada[0]
 
             if not jugada.inicio:
-                jugada.inicio = datetime.now()
-                self.__session.commit()
-                self.__session.refresh(jugada)
+                return
+            #     jugada.inicio = datetime.now()
+            #     self.__session.commit()
+            #     self.__session.refresh(jugada)
 
             tiempoJugada = jugada.inicio + timedelta(
                 seconds=int(os.getenv("TIME_RULETA"))
@@ -51,8 +53,8 @@ class SalasGeral:
             if datetime.now() >= tiempoJugada:
                 jugada.fin = datetime.now()
                 mesa.status = False
+                jugada.ladoGanador = int(Ruleta(jugada=jugada).selecionar_ganador(ruleta=jugada.ruleta)) 
                 self.__session.commit()
-
             return
         except Exception as ex:
             self.__session.rollback()

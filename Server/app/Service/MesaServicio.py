@@ -138,57 +138,55 @@ class Mesa:
         existeMesa = (
             self.session.query(MesaModel).filter(MesaModel.id == idMesa).first()
         )
-
         if not existeMesa:
             raise ServicoException("Registro da mesa não encontrado")
-
         return existeMesa
 
-    async def PagarJugadoresGanador(self, jugada: JugadaModel, ladoGanador: Lados):
-        apuestasRelacionada = list(jugada.apuestas)
-        apuestasDelLadoGanador = list(
-            filter(lambda a: a.lado == ladoGanador, apuestasRelacionada)
-        )
-        idsUsuariosApostas = list(
-            set(list(map(lambda a: a.usuario, apuestasDelLadoGanador)))
-        )  # selecionamos los id de los usuarios que devemos pagar. para agrupar e pagarConforme aposta
-        totalValorJugada = jugada.ladoA + jugada.ladoB
-        totalLadoGanador = jugada.ladoA if ladoGanador == Lados.AZUL else jugada.ladoB
-        valorTotalPagado = totalValorJugada
-        for index in range(1, len(idsUsuariosApostas)):
-            idUsuario = idsUsuariosApostas[index]
-            apuestasPorUsuario = list(
-                filter(lambda a: a.usuario == idUsuario), apuestasDelLadoGanador
-            )
-            jugador: UserModel = apuestasPorUsuario[0].usuarioRelacion
+    # async def PagarJugadoresGanador(self, jugada: JugadaModel, ladoGanador: Lados):
+    #     apuestasRelacionada = list(jugada.apuestas)
+    #     apuestasDelLadoGanador = list(
+    #         filter(lambda a: a.lado == ladoGanador, apuestasRelacionada)
+    #     )
+    #     idsUsuariosApostas = list(
+    #         set(list(map(lambda a: a.usuario, apuestasDelLadoGanador)))
+    #     )  # selecionamos los id de los usuarios que devemos pagar. para agrupar e pagarConforme aposta
+    #     totalValorJugada = jugada.ladoA + jugada.ladoB
+    #     totalLadoGanador = jugada.ladoA if ladoGanador == Lados.AZUL else jugada.ladoB
+    #     valorTotalPagado = totalValorJugada
+    #     for index in range(1, len(idsUsuariosApostas)):
+    #         idUsuario = idsUsuariosApostas[index]
+    #         apuestasPorUsuario = list(
+    #             filter(lambda a: a.usuario == idUsuario), apuestasDelLadoGanador
+    #         )
+    #         jugador: UserModel = apuestasPorUsuario[0].usuarioRelacion
 
-            if index == (len(idsUsuariosApostas) - 1):
-                jugador.account += valorTotalPagado
-                break
+    #         if index == (len(idsUsuariosApostas) - 1):
+    #             jugador.account += valorTotalPagado
+    #             break
 
-            totalValorApostadoJugador = sum(
-                list(map(lambda a: a.monto, apuestasPorUsuario))
-            )
+    #         totalValorApostadoJugador = sum(
+    #             list(map(lambda a: a.monto, apuestasPorUsuario))
+    #         )
 
-            porcentagemAReceber = Porcentagem(
-                totalLadoGanador
-            ).CalcularPorcentagemAReceberPorValor(totalValorApostadoJugador)
-            valorAReceber = Porcentagem(
-                totalValorJugada
-            ).CalcularValorPagarPorPorcentagem(porcentagemAReceber)
+    #         porcentagemAReceber = Porcentagem(
+    #             totalLadoGanador
+    #         ).CalcularPorcentagemAReceberPorValor(totalValorApostadoJugador)
+    #         valorAReceber = Porcentagem(
+    #             totalValorJugada
+    #         ).CalcularValorPagarPorPorcentagem(porcentagemAReceber)
 
-            for apuestaUser in apuestasPorUsuario:
-                porcentagemApuesta = Porcentagem(
-                    totalLadoGanador
-                ).CalcularPorcentagemAReceberPorValor(apuestaUser.monto)
-                apuestaUser.montoResultado = Porcentagem(
-                    totalLadoGanador
-                ).CalcularValorPagarPorPorcentagem(porcentagemApuesta)
-                apuestaUser.resultado = True
+    #         for apuestaUser in apuestasPorUsuario:
+    #             porcentagemApuesta = Porcentagem(
+    #                 totalLadoGanador
+    #             ).CalcularPorcentagemAReceberPorValor(apuestaUser.monto)
+    #             apuestaUser.montoResultado = Porcentagem(
+    #                 totalLadoGanador
+    #             ).CalcularValorPagarPorPorcentagem(porcentagemApuesta)
+    #             apuestaUser.resultado = True
 
-            jugador.account += valorAReceber
-            valorTotalPagado -= valorAReceber
-            self.session.commit()
+    #         jugador.account += valorAReceber
+    #         valorTotalPagado -= valorAReceber
+    #         self.session.commit()
 
     def validadLadosConApuesta(self, jugada: JugadaModel, apuesta: Apuesta):
         if jugada.ladoA > 0 and apuesta.IdLadoApostado == 2:
