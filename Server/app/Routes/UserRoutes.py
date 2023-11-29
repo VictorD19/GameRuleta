@@ -223,7 +223,7 @@ def obterTransacciones(
     )
 
 
-@router.post("/retiros/", status_code=200)
+@router.post("/retiro/", status_code=200)
 def retiroDeFondos(
     retiro: RetiroFondos,
     session: Session = Depends(get_session),
