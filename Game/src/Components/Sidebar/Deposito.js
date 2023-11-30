@@ -13,6 +13,7 @@ import {
 } from "@/Api";
 import { useDataContext } from "@/Context";
 import { useAuthHook } from "@/Hooks/AuthHook";
+import { useRedirectApp } from "@/Hooks/RoutesHooks";
 const objetoPadrao = {
   Image64: "",
   CopiaPega: "",
@@ -24,6 +25,7 @@ export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
   const { appData, dispatch } = useDataContext();
   const { Usuario } = appData;
   const { SessionLoginActiva } = useAuthHook();
+  const { IrPara } = useRedirectApp();
   const textArea = useRef(null);
   const onSubmitDeposito = async (e) => {
     e.preventDefault();
@@ -65,7 +67,7 @@ export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
   };
 
   useEffect(() => {
-    if (!SessionLoginActiva()) return;
+    if (!SessionLoginActiva()) return IrPara("/");
 
     const pixGeradoAnteriorMente = ObterItemLocalStorage("PixGerado");
     if (!pixGeradoAnteriorMente) {

@@ -33,7 +33,7 @@ export const ModalSaque = ({ show, close }) => {
   useEffect(() => {
     if (!SessionLoginActiva()) {
       close();
-      IrPara();
+      IrPara("/");
       return;
     }
   }, []);
