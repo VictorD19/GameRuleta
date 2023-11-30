@@ -23,7 +23,7 @@ import Profiles from "../../Assert/Profile";
 import { ModalSaque } from "./Saque";
 import { DepositoModal } from "./Deposito";
 const NavComponent = styled.nav`
-  @media only screen and (max-width: 767px) {
+  @media only screen and (max-width: 863px) {
     position: absolute;
     z-index: 2;
     transition: 0.5s all ease;
@@ -39,6 +39,7 @@ const NavComponent = styled.nav`
   @media only screen and (min-width: 768px) {
     display: block;
     height: 100vh;
+    height: 100dvh;
     .botonClose {
       display: none;
     }

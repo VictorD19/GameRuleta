@@ -14,12 +14,12 @@ import useWebSocket from "react-use-websocket";
 import {
   LimparTudoLocalStorage,
   ObterItemLocalStorage,
+  URL_PADRAO_SOCKET,
   executarREST,
 } from "@/Api";
 import { CriarAlerta, TIPO_ALERTA } from "@/Components/Alertas/Alertas";
 import { useAuthHook } from "@/Hooks/AuthHook";
 
-let URL = "ws://localhost:8000/mesas/status-mesas/";
 let ReadyState = {
   UNINSTANTIATED: -1,
   CONNECTING: 0,
@@ -29,7 +29,9 @@ let ReadyState = {
 };
 
 export const ContextAppProvider = ({ children }) => {
-  const [urlPadraoWs, setUrlWebSocket] = useState(URL + "0");
+  const [urlPadraoWs, setUrlWebSocket] = useState(
+    URL_PADRAO_SOCKET + "/mesas/status-mesas/0"
+  );
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
     urlPadraoWs,
     {
@@ -42,10 +44,16 @@ export const ContextAppProvider = ({ children }) => {
   const pathName = usePathname();
   const [appData, dispatch] = useReducer(reducer, DataInicialApp);
   const { SessionLoginActiva, ObterIdUsuariPorToken } = useAuthHook();
+
+  const atualizarUrlSala = (sala = 0) =>
+    setUrlWebSocket(URL_PADRAO_SOCKET + "/mesas/status-mesas/" + sala);
+
   useEffect(() => {
     if (!SessionLoginActiva()) {
       return dispatch({ tipo: "CONECTADO", data: false });
     }
+    if (appData.Usuario.Id > 0)
+      return dispatch({ tipo: "CONECTADO", data: true });
 
     (async () => {
       let { error, ...data } = await executarREST(
@@ -91,7 +99,7 @@ export const ContextAppProvider = ({ children }) => {
           data: lastJsonMessage.statusMesas,
         });
     }
-  }, [lastJsonMessage]);
+  }, [lastJsonMessage, pathName]);
 
   useEffect(() => {
     if (pathName.toLocaleLowerCase().includes("salas")) {
@@ -99,15 +107,15 @@ export const ContextAppProvider = ({ children }) => {
     } else setUrlWebSocket(URL + "0");
   }, [pathName]);
   return (
-    <ContextoApp.Provider value={{ appData, dispatch }}>
+    <ContextoApp.Provider value={{ appData, dispatch, atualizarUrlSala }}>
       {children}
     </ContextoApp.Provider>
   );
 };
 
 export const useDataContext = () => {
-  const { appData, dispatch } = useContext(ContextoApp);
-  return { appData, dispatch };
+  const { appData, atualizarUrlSala, dispatch } = useContext(ContextoApp);
+  return { appData, atualizarUrlSala, dispatch };
 };
 
 function ObterUrl(caminho) {

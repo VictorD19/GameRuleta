@@ -11,8 +11,8 @@ import { io } from "socket.io-client";
 
 const socket = null;
 export { socket };
-const URL_PADRAO = "http://localhost:8000/";
-
+export const URL_PADRAO = "http://localhost:8000/";
+export const URL_PADRAO_SOCKET = "ws://localhost:8000";
 const executarREST = async (url, tipoConsulta = "GET", data = null) => {
   try {
     const consulta = await fetch(URL_PADRAO + url, {
@@ -41,7 +41,7 @@ const executarREST = async (url, tipoConsulta = "GET", data = null) => {
 
 const ObterItemLocalStorage = (key = "") => {
   if (typeof window === "undefined") return "";
-  
+
   const data = localStorage.getItem(key);
 
   return data != null ? JSON.parse(data) : "";
