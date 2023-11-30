@@ -55,7 +55,7 @@ async def websocket_endpoint_status_salas(
 
     except WebSocketDisconnect as ex:
         print(
-            f"El usuario:{user_id} se ha desconectado de manera inesperada durante el envío, Erro -> {ex}"
+            f"..El usuario:{user_id} se ha desconectado de manera inesperada durante el envío, Erro -> {ex}"
         )
     except WebSocketException as ex:
         print(
@@ -63,7 +63,7 @@ async def websocket_endpoint_status_salas(
         )
     except Exception as ex:
         print(
-            f"El usuario:{user_id} se ha desconectado de manera inesperada durante el envío, Erro -> {ex}"
+            f".El usuario:{user_id} se ha desconectado de manera inesperada durante el envío, Erro -> {ex}"
         )
 
     finally:
