@@ -14,6 +14,7 @@ from Schemas.SchemaUser import (
     ListTransaccionesBanco,
     RetiroFondos,
     UserEmail,
+    StatusPix
 )
 from Schemas.SchemaWebhooks import PaymentEvent
 from Models.model import get_session, UserModel, TransacEntradaModel
@@ -171,7 +172,7 @@ def refresh_access_token(user: User = Depends(get_current_user)):
     return {"access_token": new_access_token, "token_type": "bearer"}
 
 
-@router.get("/new-cobro-pix/{user_id}/{monto}/", response_model=QrPix)
+@router.get("/new-cobro-pix/{user_id}/{monto}", response_model=QrPix)
 def newCobroPix(
     user_id: int,
     monto: float,
@@ -207,7 +208,7 @@ def webhookAsaas(
 
 
 @router.get(
-    "/transac/{user_id}/", status_code=200, response_model=ListTransaccionesBanco
+    "/transac/{user_id}", status_code=200, response_model=ListTransaccionesBanco
 )
 def obterTransacciones(
     user_id: int,
@@ -252,3 +253,11 @@ def recuperarSenha(userEmail=UserEmail, session: Session = Depends(get_session))
         raise HTTPException(status_code=400, detail="Não foi possível enviar o Email")
 
     return Response(status_code=200)
+
+
+@router.get("/status-pix/{id_pix}", status_code=200, response_model=StatusPix)
+def status_pix(id_pix:str, session: Session = Depends(get_session), current_user : User = Depends(get_current_user)):
+
+    if current_user:
+        return Banco(session=session, user=current_user).get_status_pix(idPix = id_pix)
+

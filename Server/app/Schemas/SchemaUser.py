@@ -44,6 +44,12 @@ class QrPix(BaseModel):
     error: str | None = None
 
 
+class StatusPix(BaseModel):
+    idQr: str | None = None
+    status: bool | None = None
+    error: str | None = None
+
+
 class DetalhesApuestaUsuario(BaseModel):
     nombre: str
     imagen: str

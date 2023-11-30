@@ -1,16 +1,17 @@
 import os
 from fastapi import Depends, WebSocket, HTTPException
-from sqlalchemy import or_, and_
+from sqlalchemy import select, or_, and_
 from sqlalchemy.orm import joinedload
 from dotenv import load_dotenv
 from random import choice
+
 # from Models.Apuesta import Apuesta
 from Service.APIAsaasService import NewCobropix, NewTransferenciaPIX
 from Service.send_mail import Send_Mail
 from Service import templates_mail
 from Service.securtity import get_password_hash
 from Schemas.Exection import ControllerException
-from Schemas.SchemaUser import UserPublic, TransaccionesBanco, RetiroFondos
+from Schemas.SchemaUser import UserPublic, TransaccionesBanco, RetiroFondos, StatusPix
 from Models.model import (
     Session,
     get_session,
@@ -23,44 +24,44 @@ from datetime import datetime
 
 load_dotenv()
 
+
 class Usuario:
-    def __init__(self, session:Session):
+    def __init__(self, session: Session):
         self.session = session
 
     def genSenha(self):
         return "".join([choice("ABCDEFGHJKLMNPQRSTUWXYZ123456789") for _ in range(6)])
 
-    def recuperaSenha(self, usuario:UserModel):
+    def recuperaSenha(self, usuario: UserModel):
         try:
             senha_aleatoria = self.genSenha()
             mensaje = templates_mail.mensaje_recuperacion_senha(
                 nombreCliente=usuario.username,
                 nombreSite=os.getenv("NOMBRE_SITE"),
-                clave= senha_aleatoria )
-            
-            if not (Send_Mail(
-                destino=usuario.email,
-                asunto="Recuperação de senha.",
-                adj=False,
-                mensaje=mensaje 
-            ).send()):
+                clave=senha_aleatoria,
+            )
+
+            if not (
+                Send_Mail(
+                    destino=usuario.email,
+                    asunto="Recuperação de senha.",
+                    adj=False,
+                    mensaje=mensaje,
+                ).send()
+            ):
                 raise ControllerException("_")
-                
+
             usuario.password = get_password_hash(senha_aleatoria)
             self.session.commit()
             self.session.refresh(usuario)
-        
+
         except ControllerException as ex:
             self.session.rollback()
             return False
 
         except Exception as ex:
-            self.session.rollback()            
+            self.session.rollback()
             return False
-
-
-
-            
 
     # def ObterApuestaUsuario(self):
     #     apuestaUsuario = Apuesta
@@ -73,7 +74,7 @@ class Usuario:
     # async def HacerApuesta(self):
     #     apuestaUsuario = self.ObterApuestaUsuario()
     #     return json.dumps({"Apuesta": "qasas"})
-    
+
 
 class Banco:
     def __init__(
@@ -98,7 +99,7 @@ class Banco:
             self.guardaTransaccionInicial(idTransac=datos["id"])
 
             return {
-                "idQr":datos["id"],
+                "idQr": datos["id"],
                 "encodedImage": datos["encodedImage"],
                 "payload": datos["payload"],
                 "expirationDate": datos["expirationDate"],
@@ -263,3 +264,17 @@ class Banco:
             raise HTTPException(status_code=400, detail=f"Error en retiroFondos {ex}")
         finally:
             self.session.close()
+
+    def get_status_pix(self, idPix:str):
+        if not (
+            statusPix := self.session.scalar(
+                select(TransacEntradaModel).where(
+                    TransacEntradaModel.idExterno == idPix
+                )
+            )
+        ):
+            raise HTTPException(
+                status_code=400, detail=StatusPix(error="transação pix não encontrada").model_dump()
+            )
+        return StatusPix(idQr=statusPix.idExterno, status=statusPix.status).model_dump()
+    
