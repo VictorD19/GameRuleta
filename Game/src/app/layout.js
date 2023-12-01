@@ -25,7 +25,7 @@ export default async function RootLayout({ children }) {
           <div className="col-12 col-md-2">
             <Menu />
           </div>
-          <div className="col-12  col-lg-10 me-sm-0 semMarginRow">
+          <div className="col-12  col-lg-10 me-sm-0 semMarginRow ">
             <SalasCard />
             {children}
           </div>

@@ -112,7 +112,9 @@ input[type=number] {
   margin-right: 0;
   padding-right: 0;
 }
-
+.permiteRolar{
+  
+}
 /* Color Ver Despues */
 .bg-dark {
   background: #1e2632 !important;

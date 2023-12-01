@@ -15,7 +15,7 @@ const CardLoginComponet = styled.div`
     letter-spacing: 0.1rem;
   }
 `;
-export const CardLogin = () => {
+export const CardLogin = ({toogle}) => {
   const { modalLoginVisibilidade, modalRegistroVisibilidade, loginsMethod } =
     useDataContext();
   const { IrPara } = useRedirectApp();
@@ -38,7 +38,10 @@ export const CardLogin = () => {
         <hr />
 
         <div
-          onClick={() => IrPara("/Faq")}
+          onClick={() => {
+            IrPara("/Faq")
+            toogle()
+          }}
           className="d-flex"
           data-active="0"
           style={{ fontSize: "0.8em", cursor: "pointer" }}

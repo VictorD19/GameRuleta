@@ -15,7 +15,7 @@ import {
 } from "react-icons/fa";
 import { usePathname, useRouter } from "next/navigation";
 import { ModalComponent } from "../Modal/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDataContext } from "@/Context";
 import { CardLogin } from "./cardLogin";
 import { LimparTudoLocalStorage } from "@/Api";
@@ -23,15 +23,22 @@ import Profiles from "../../Assert/Profile";
 import { ModalSaque } from "./Saque";
 import { DepositoModal } from "./Deposito";
 const NavComponent = styled.nav`
+  display: none;
+
   @media only screen and (max-width: 863px) {
-    position: absolute;
+    position: fixed;
     z-index: 999;
     transition: 0.5s all ease;
     display: ${(prop) => (prop.$visible.visible ? "block" : "none")};
     width: 100%;
+    height: 100vh;
+    height: 100dvh;
 
     .botonClose {
       display: block;
+    }
+    .permiteRolar {
+      overflow: hidden;
     }
   }
 
@@ -64,7 +71,12 @@ const MENUS = [
   },
 ];
 
-export function Sidebar({ visible = false, toogle }) {
+export function Sidebar({
+  naoMostrarSidebar,
+  MostrarSidebar,
+  visible = false,
+  toogle,
+}) {
   const { appData, dispatch } = useDataContext();
   const { Usuario } = appData;
   const [modalDeposito, setModalDeposito] = useState(false);
@@ -77,6 +89,7 @@ export function Sidebar({ visible = false, toogle }) {
     dispatch({ tipo: "CONECTADO", data: false });
     router.push(`/Salas?room=1`);
   };
+
   const cerrarModalDeposito = () => setModalDeposito(false);
   const abrirModalDeposito = () => setModalDeposito(true);
 
@@ -198,7 +211,7 @@ export function Sidebar({ visible = false, toogle }) {
             </div>
           </>
         ) : (
-          <CardLogin />
+          <CardLogin toogle={toogle}/>
         )}
       </NavComponent>
       <ModalSaque show={modalSaque} close={cerrarModalSaque} />

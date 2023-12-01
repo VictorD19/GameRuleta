@@ -127,8 +127,9 @@ export const ContextAppProvider = ({ children }) => {
         loading,
       }}
     >
+            {isLoading ? <LoadingComponet /> : <></>}
       {children}
-      {isLoading ? <LoadingComponet /> : <></>}
+
     </ContextoApp.Provider>
   );
 };

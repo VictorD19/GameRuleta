@@ -44,6 +44,8 @@ export default function Page() {
       else setPage(data);
     })();
   }, []);
+
+
   return (
     <div className="px-3">
       <HeadPaginaPrincialStyle>

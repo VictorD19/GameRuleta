@@ -143,7 +143,7 @@ const RuletaItem = ({ lado, key }) => {
       <Image
         src={lado == 1 ? Azul : Rojo}
         alt="lado hg"
-        width={90}
+        width={70}
         height={70}
         style={{ backgroundImage: "content" }}
       />
