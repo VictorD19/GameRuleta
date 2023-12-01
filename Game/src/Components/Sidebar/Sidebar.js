@@ -74,7 +74,7 @@ export function Sidebar({ visible = false, toogle }) {
   const sairDoSistema = () => {
     LimparTudoLocalStorage();
     dispatch({ tipo: "CONECTADO", data: false });
-    router.push(`/Salas`);
+    router.push(`/Salas?room=1`);
   };
   const cerrarModalDeposito = () => setModalDeposito(false);
   const abrirModalDeposito = () => setModalDeposito(true);

@@ -21,8 +21,8 @@ const LoadingContainer = styled.div`
 `;
 export const LoadingComponet = () => {
   return (
-    <LoadingContainer class="loading-container">
-      <div class="loading-content">
+    <LoadingContainer className="loading-container">
+      <div className="loading-content">
         <Image src={Loading} alt="loading" />
       </div>
     </LoadingContainer>

@@ -15,14 +15,16 @@ import { useState } from "react";
 import { executarREST } from "@/Api";
 import { useAuthHook } from "@/Hooks/AuthHook";
 import { useRedirectApp } from "@/Hooks/RoutesHooks";
+import { useDataContext } from "@/Context";
 export default function Page() {
   const { SessionLoginActiva } = useAuthHook();
+  const { loginsMethod } = useDataContext();
   const { IrPara } = useRedirectApp();
   const [dataPage, setPage] = useState({
-    jugadoresActivos: 0,
-    totalJugadores: 0,
-    totalPagado: 0,
-    totalJuegosRealizados: 0,
+    jugadoresActivos: 90,
+    totalJugadores: 100,
+    totalPagado: 2000,
+    totalJuegosRealizados: 1200,
   });
   useEffect(() => {
     if (SessionLoginActiva()) return IrPara("/Salas?room=1");
@@ -50,7 +52,11 @@ export default function Page() {
           Escolha uma cor, ganhe dinheiro! Sua sorte está na roleta. Qual cor
           você vai apostar?
         </h5>
-        <Button variant="primary" className=" mt-2 px-5 py-2">
+        <Button
+          variant="primary"
+          className=" mt-2 px-5 py-2"
+          onClick={loginsMethod.abrirModalRegistro}
+        >
           COMEÇE AGORA
         </Button>
       </HeadPaginaPrincialStyle>

@@ -32,7 +32,7 @@ export const LoginModal = ({ show, cerrarModal }) => {
 
     InserirRegistroLocalStorage("token", { access_token, data: new Date() });
     dispatch({ tipo: "CONECTADO", data: true });
-    IrPara(`/Salas`);
+    IrPara(`/Salas?room=1`);
   };
 
   return (
@@ -131,7 +131,7 @@ export const RegistroModal = ({ show, cerrarModal }) => {
     InserirRegistroLocalStorage("token", { access_token, data: new Date() });
     dispatch({ tipo: "CONECTADO", data: true });
     dispatch({ tipo: "DADOS_USUARIO", data: dataUsuario });
-    IrPara(`/Salas`);
+    IrPara(`/Salas?room=1`);
   };
 
   const toggleImageSelection = (imageName) => {

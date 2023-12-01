@@ -6,12 +6,15 @@ import { useAuthHook } from "@/Hooks/AuthHook";
 import { useState } from "react";
 import { Button, Form, FormControl } from "react-bootstrap";
 import { CriarAlerta, TIPO_ALERTA } from "../Alertas/Alertas";
+import { useSearchParams } from "next/navigation";
 
 export const CuadroAposta = ({ idMesa }) => {
   const [valor, setValor] = useState(0);
   const { SessionLoginActiva } = useAuthHook();
-  const { appData } = useDataContext();
+  const { appData, loginsMethod } = useDataContext();
   const { Usuario } = appData;
+  const params = useSearchParams();
+  const roomAtual = params.get("room");
 
   const obterValorInserido = (e) => {
     if (e.target.value == "") return setValor(0);
@@ -20,17 +23,20 @@ export const CuadroAposta = ({ idMesa }) => {
   };
 
   const ApostarLadoA = async () => {
-    if (!SessionLoginActiva())
-      return CriarAlerta(
+    if (!SessionLoginActiva()) {
+      CriarAlerta(
         TIPO_ALERTA.ATENCAO,
         null,
         "Entre na sua conta e começe a JOGAR AGORA!"
       );
+      loginsMethod.abrirModalLogin();
+      return;
+    }
     const novaAposta = {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,
       IdLadoApostado: 1,
-      IdMesa: idMesa, // Azul
+      IdMesa: roomAtual, // Azul
     };
 
     const { error, ...data } = await executarREST(
@@ -38,7 +44,6 @@ export const CuadroAposta = ({ idMesa }) => {
       "POST",
       novaAposta
     );
-    debugger;
     if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
 
     CriarAlerta(TIPO_ALERTA.SUCESSO, null, "Apuesta Realizada com sucesso!");
@@ -46,17 +51,21 @@ export const CuadroAposta = ({ idMesa }) => {
   };
 
   const ApostarLadoB = async () => {
-    if (!SessionLoginActiva())
-      return CriarAlerta(
+    if (!SessionLoginActiva()) {
+      CriarAlerta(
         TIPO_ALERTA.ATENCAO,
         null,
         "Entre na sua conta e começe a JOGAR AGORA!"
       );
+      loginsMethod.abrirModalLogin();
+      return;
+    }
+
     const novaAposta = {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,
       IdLadoApostado: 2,
-      IdMesa: idMesa, // Rojo
+      IdMesa: roomAtual, // Rojo
     };
 
     const { error, ...data } = await executarREST(
@@ -64,7 +73,6 @@ export const CuadroAposta = ({ idMesa }) => {
       "POST",
       novaAposta
     );
-    debugger;
     if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
 
     CriarAlerta(TIPO_ALERTA.SUCESSO, null, "Apuesta Realizada com sucesso!");

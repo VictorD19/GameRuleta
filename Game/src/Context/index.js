@@ -43,6 +43,22 @@ export const ContextAppProvider = ({ children }) => {
 
   const pathName = usePathname();
   const [appData, dispatch] = useReducer(reducer, DataInicialApp);
+  const [modalRegistroVisibilidade, setVisibilidadeModalRegistro] =
+    useState(false);
+  const [modalLoginVisibilidade, setVisibilidadeModalLogin] = useState(false);
+
+  const cerrarModalLogin = () => setVisibilidadeModalLogin(false);
+  const abrirModalLogin = () => setVisibilidadeModalLogin(true);
+
+  const cerrarModalRegistro = () => setVisibilidadeModalRegistro(false);
+  const abrirModalRegistro = () => setVisibilidadeModalRegistro(true);
+
+  const loginsMethod = {
+    cerrarModalRegistro,
+    abrirModalRegistro,
+    cerrarModalLogin,
+    abrirModalLogin,
+  };
   const { SessionLoginActiva, ObterIdUsuariPorToken } = useAuthHook();
 
   const atualizarUrlSala = (sala = 0) =>
@@ -85,21 +101,7 @@ export const ContextAppProvider = ({ children }) => {
     })();
   }, [appData.Conectado]);
 
-  useEffect(() => {
-    if (lastJsonMessage != null) {
-      if (lastJsonMessage.estatusGeral != null)
-        dispatch({
-          tipo: "DATOS_GENERAL_SALA",
-          data: lastJsonMessage.estatusGeral,
-        });
-
-      if (lastJsonMessage.statusMesas != null)
-        dispatch({
-          tipo: "SALA_ATUAL",
-          data: lastJsonMessage.statusMesas,
-        });
-    }
-  }, [lastJsonMessage, pathName]);
+ 
 
   useEffect(() => {
     if (pathName.toLocaleLowerCase().includes("salas")) {
@@ -107,15 +109,15 @@ export const ContextAppProvider = ({ children }) => {
     } else setUrlWebSocket(URL + "0");
   }, [pathName]);
   return (
-    <ContextoApp.Provider value={{ appData, dispatch, atualizarUrlSala }}>
+    <ContextoApp.Provider value={{ appData, dispatch,webservice: {lastJsonMessage, readyState }, atualizarUrlSala,modalRegistroVisibilidade,modalLoginVisibilidade,loginsMethod}}>
       {children}
     </ContextoApp.Provider>
   );
 };
 
 export const useDataContext = () => {
-  const { appData, atualizarUrlSala, dispatch } = useContext(ContextoApp);
-  return { appData, atualizarUrlSala, dispatch };
+  const { appData, atualizarUrlSala,webservice, dispatch,modalRegistroVisibilidade,modalLoginVisibilidade,loginsMethod } = useContext(ContextoApp);
+  return { appData, atualizarUrlSala, webservice,dispatch,modalRegistroVisibilidade,modalLoginVisibilidade,loginsMethod };
 };
 
 function ObterUrl(caminho) {
