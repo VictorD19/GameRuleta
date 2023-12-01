@@ -25,7 +25,7 @@ import { DepositoModal } from "./Deposito";
 const NavComponent = styled.nav`
   @media only screen and (max-width: 863px) {
     position: absolute;
-    z-index: 2;
+    z-index: 999;
     transition: 0.5s all ease;
     display: ${(prop) => (prop.$visible.visible ? "block" : "none")};
     width: 100%;

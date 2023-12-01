@@ -17,7 +17,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${inter.className} row`}
+        className={`${inter.className} row mx-0`}
         style={{ background: paleta.NEGRO, color: paleta.BLANCO }}
       >
         {/* Provider   */}

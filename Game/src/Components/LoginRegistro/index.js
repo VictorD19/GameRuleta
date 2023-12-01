@@ -11,7 +11,7 @@ import { BoxImagenContainer } from "./login.style";
 import { useRedirectApp } from "@/Hooks/RoutesHooks";
 
 export const LoginModal = ({ show, cerrarModal }) => {
-  const { dispatch, loading } = useDataContext();
+  const { dispatch, loading, loginsMethod } = useDataContext();
   const { IrPara } = useRedirectApp();
 
   const loginApp = async (event) => {
@@ -43,9 +43,10 @@ export const LoginModal = ({ show, cerrarModal }) => {
         <FormControl type="text" id="usuario" className="mb-3" required />
         <Form.Label htmlFor="senha">Senha</Form.Label>
         <FormControl type="password" className="mb-2" required id="senha" />
-        <div className="links">
-          <a
-            href="#"
+        <div className="d-flex justify-content-between">
+          <Button
+            className=" px-0"
+            variant="text"
             style={{
               textDecoration: "underline",
               color: "#c1c1c1",
@@ -53,7 +54,22 @@ export const LoginModal = ({ show, cerrarModal }) => {
             }}
           >
             Esqueceu a senha?
-          </a>
+          </Button>
+          <Button
+            className="px-0"
+            onClick={() => {
+              loginsMethod.cerrarModalLogin();
+              loginsMethod.abrirModalRegistro();
+            }}
+            style={{
+              textDecoration: "underline",
+              color: "#c1c1c1",
+              fontSize: "0.8em",
+            }}
+            variant="text"
+          >
+            Não tem Conta?
+          </Button>
         </div>
 
         <Button className="w-100 mt-3" type="submit" variant="success">
