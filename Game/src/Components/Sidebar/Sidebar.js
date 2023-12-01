@@ -40,6 +40,7 @@ const NavComponent = styled.nav`
     display: block;
     height: 100vh;
     height: 100dvh;
+    margin-left: -10px;
     .botonClose {
       display: none;
     }

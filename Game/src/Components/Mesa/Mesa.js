@@ -63,6 +63,7 @@ export function Mesa() {
 
   function spinRoulette(numeroRandom) {
     const rotation = numeroRandom * -55;
+    if (!ruletaRef || !ruletaRef.current) return;
     ruletaRef.current.style.transform = `translateX(${rotation}px)`;
   }
 

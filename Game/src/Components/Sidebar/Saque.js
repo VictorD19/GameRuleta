@@ -27,12 +27,16 @@ export const ModalSaque = ({ show, close }) => {
     loading.desativarLoading();
     if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
     let novoSaldo = {
-      Saldo: Usuario.Saldo - valor,
+      Saldo: (Usuario.Saldo - valor).toFixed(2),
     };
     loading.ativarLoading();
     dispatch({ tipo: "DADOS_USUARIO", data: novoSaldo });
     CriarAlerta(TIPO_ALERTA.SUCESSO, null, "Saque solicitado com sucesso");
     loading.desativarLoading();
+
+    data["valorSaque"].value = 0;
+    data["chavePix"].value = "";
+    close();
   };
 
   useEffect(() => {

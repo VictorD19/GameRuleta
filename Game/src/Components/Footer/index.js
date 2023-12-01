@@ -18,13 +18,13 @@ export const Footer = () => {
           </div>
           <div className="col-12 col-md-3 d-flex gap-5">
             <div>
-              <Link href="/">Politica de Privacidad</Link>
+              <Link href="/PoliticaPrivacidade">Politica de Privacidad</Link>
             </div>
             <div>
-              <Link href="/">Regras do Jogo</Link>
+              <Link href="/Faq">Regras do Jogo</Link>
             </div>
             <div className="">
-              <Link href="/">Contato</Link>
+              <Link href="/Contato">Contato</Link>
             </div>
           </div>
         </div>

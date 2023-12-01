@@ -32,6 +32,13 @@ export const CuadroAposta = ({ idMesa }) => {
       loginsMethod.abrirModalLogin();
       return;
     }
+
+    if (valor <= 0)
+      return CriarAlerta(
+        TIPO_ALERTA.ATENCAO,
+        null,
+        "Insira um valor maior que 0"
+      );
     const novaAposta = {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,
@@ -46,7 +53,10 @@ export const CuadroAposta = ({ idMesa }) => {
     );
     loading.desativarLoading();
     if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
-    dispatch({ tipo: "DADOS_USUARIO", data: { Saldo: Usuario.Saldo - valor } });
+    dispatch({
+      tipo: "DADOS_USUARIO",
+      data: { Saldo: (Usuario.Saldo - valor).toFixed(2) },
+    });
     CriarAlerta(TIPO_ALERTA.SUCESSO, null, "Apuesta Realizada com sucesso!");
     setValor(0);
   };
@@ -61,7 +71,12 @@ export const CuadroAposta = ({ idMesa }) => {
       loginsMethod.abrirModalLogin();
       return;
     }
-
+    if (valor <= 0)
+      return CriarAlerta(
+        TIPO_ALERTA.ATENCAO,
+        null,
+        "Insira um valor maior que 0"
+      );
     const novaAposta = {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,
@@ -76,7 +91,10 @@ export const CuadroAposta = ({ idMesa }) => {
     );
     loading.desativarLoading();
     if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
-    dispatch({ tipo: "DADOS_USUARIO", data: { Saldo: Usuario.Saldo - valor } });
+    dispatch({
+      tipo: "DADOS_USUARIO",
+      data: { Saldo: (Usuario.Saldo - valor).toFixed(2) },
+    });
     CriarAlerta(TIPO_ALERTA.SUCESSO, null, "Apuesta Realizada com sucesso!");
     setValor(0);
   };

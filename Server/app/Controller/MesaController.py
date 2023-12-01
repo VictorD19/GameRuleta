@@ -123,7 +123,9 @@ class SalasGeral:
             )
             if (jogadaActivaMesa != None and jogadaActivaMesa.inicio != None)
             else 0,
-            RuletaGenerada=jogadaActivaMesa.ruleta,
+            RuletaGenerada=jogadaActivaMesa.ruleta
+            if jogadaActivaMesa != None and jogadaActivaMesa.ruleta != None
+            else "[]",
         )
         return detallesMesa
 
