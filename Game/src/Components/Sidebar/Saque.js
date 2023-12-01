@@ -8,7 +8,7 @@ import { useRedirectApp } from "@/Hooks/RoutesHooks";
 import { CriarAlerta, TIPO_ALERTA } from "../Alertas/Alertas";
 
 export const ModalSaque = ({ show, close }) => {
-  const { appData, dispatch } = useDataContext();
+  const { appData, dispatch, loading } = useDataContext();
   const { Usuario } = appData;
   const { SessionLoginActiva } = useAuthHook();
   const { IrPara } = useRedirectApp();
@@ -17,17 +17,22 @@ export const ModalSaque = ({ show, close }) => {
     let data = e.target;
     const valor = data["valorSaque"].value;
     const chavePix = data["chavePix"].value;
+
+    loading.ativarLoading();
     const { error, ...dataResponse } = executarREST("user/retiro/", "POST", {
       userId: Usuario.Id,
       monto: valor,
       chavePix: chavePix,
     });
+    loading.desativarLoading();
     if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
     let novoSaldo = {
       Saldo: Usuario.Saldo - valor,
     };
+    loading.ativarLoading();
     dispatch({ tipo: "DADOS_USUARIO", data: novoSaldo });
     CriarAlerta(TIPO_ALERTA.SUCESSO, null, "Saque solicitado com sucesso");
+    loading.desativarLoading();
   };
 
   useEffect(() => {

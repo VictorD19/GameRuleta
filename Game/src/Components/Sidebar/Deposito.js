@@ -22,7 +22,7 @@ const objetoPadrao = {
 };
 export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
   const [dadosPix, setDadosPix] = useState(objetoPadrao);
-  const { appData, dispatch } = useDataContext();
+  const { appData, dispatch, loading } = useDataContext();
   const { Usuario } = appData;
   const { SessionLoginActiva } = useAuthHook();
   const { IrPara } = useRedirectApp();
@@ -34,10 +34,11 @@ export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
 
     if (valorDeposito == 0)
       return CriarAlerta(TIPO_ALERTA.ERROR, null, "Insira um valor valido!");
-
+    loading.ativarLoading();
     const { error, ...dataResponse } = await executarREST(
       `user/new-cobro-pix/${Usuario.Id}/${valorDeposito}`
     );
+    loading.desativarLoading();
     if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
 
     const novoPagamento = {
@@ -45,6 +46,7 @@ export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
       CopiaPega: dataResponse.payload,
       DataExpiracion: dataResponse.expirationDate,
       Valor: valorDeposito,
+      ID: dataResponse.idQr,
     };
     setDadosPix(novoPagamento);
     InserirRegistroLocalStorage("PixGerado", novoPagamento);
@@ -85,12 +87,29 @@ export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
       return;
     }
 
-    setDadosPix(pixGeradoAnteriorMente);
+    (async () => {
+      loading.ativarLoading();
+      const { error, status } = executarREST(
+        "user/status-pix/" + pixGeradoAnteriorMente.ID,
+        "GET"
+      );
+      loading.desativarLoading();
+      if (error) {
+        RemoverItemLocalStorage("PixGerado");
+        setDadosPix(objetoPadrao);
+        return;
+      }
+      if (!status) setDadosPix(pixGeradoAnteriorMente);
+      else {
+        RemoverItemLocalStorage("PixGerado");
+        setDadosPix(objetoPadrao);
+      }
+    })();
 
     return () => {
       setDadosPix(objetoPadrao);
     };
-  }, [dadosPix]);
+  }, [modalDeposito]);
 
   return (
     <ModalComponent

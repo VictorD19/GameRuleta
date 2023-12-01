@@ -7,6 +7,7 @@ from Schemas.Exection import ServicoException
 from datetime import datetime
 from Schemas.Ruleta import Lados
 from fastapi import HTTPException
+import math
 
 
 class Mesa:
@@ -114,6 +115,19 @@ class Mesa:
         self.session.add(nuevaApuesta)
         return nuevaApuesta
 
+    def ObterSegundosRestantesJugada(self, jugadas: list[JugadaModel]):
+        if len(jugadas) == 0:
+            return 0
+
+        jugadasActivas = list(filter(lambda j: j.fin == None, jugadas))
+
+        if len(jugadasActivas) == 0:
+            return 0
+
+        jugada = jugadasActivas[0]
+
+        return math.floor((jugada.inicio - datetime.now()).total_seconds())
+
     async def ObterDetallesMesas(self):
         mesas = (
             self.session.query(MesaModel)
@@ -128,6 +142,7 @@ class Mesa:
                 "minimo": mesa.minimo if mesa.minimo else 0,
                 "totalApostado": self.obterTotalApostado(mesa.jugada),
                 "numero": mesa.numero,
+                "SegundosRestantes": self.ObterSegundosRestantesJugada(mesa.jugada),
             }
             for mesa in mesas
         ]
@@ -171,7 +186,7 @@ class Mesa:
                 jugador = self.session.scalars(
                     select(UserModel).where(UserModel.id == idUser)
                 ).one()
-                cuenta_actual =  jugador.ganancias
+                cuenta_actual = jugador.ganancias
 
                 totalValorApostadoJugador = sum(
                     list(map(lambda a: a.monto, apuestasPorUsuario))
@@ -197,9 +212,10 @@ class Mesa:
                     jugador.ganancias += valorAReceber
 
                 self.session.commit()
-            return True        
+            return True
         except Exception as ex:
             self.session.rollback()
             raise HTTPException(status_code=400, detail=str(ex))
+
 
 # endregion

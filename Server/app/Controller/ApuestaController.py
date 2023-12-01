@@ -7,7 +7,6 @@ from Service.MesaServicio import Mesa as MesaService
 from Service.Ruleta import Ruleta
 
 
-
 class ApuestaController:
     def __init__(self, session: Session, user: UserModel, apuesta: Apuesta) -> None:
         self.session = session
@@ -94,7 +93,7 @@ class ApuestaController:
                         status_code=400,
                         detail="Não foi possível entrar nessa jogada, tente novamente.",
                     )
-                # Actualizamos los valores de la jugada de cada lado 
+                # Actualizamos los valores de la jugada de cada lado
                 self.mesaServicio.ObterNovoValorTotalDoLadoApostado(
                     apuesta=self.apuesta, jugada=jugadaActiva
                 )
@@ -110,6 +109,12 @@ class ApuestaController:
                     )
 
                 jugadaActiva.ruleta = str(Ruleta(jugada=jugadaActiva).GenerarRuleta())
+                if (
+                    jugadaActiva.inicio == None
+                    and jugadaActiva.ladoA > 0
+                    and jugadaActiva.ladoB > 0
+                ):
+                    jugadaActiva.inicio = datetime.now()
                 self.session.commit()
                 self.session.refresh(jugadaActiva)
                 self.descontarSaldo()
@@ -141,7 +146,7 @@ class ApuestaController:
                     return
 
                 else:
-                    # Actualizamos los valores de la jugada de cada lado 
+                    # Actualizamos los valores de la jugada de cada lado
                     self.mesaServicio.ObterNovoValorTotalDoLadoApostado(
                         apuesta=self.apuesta, jugada=jugadaActiva
                     )
@@ -208,4 +213,3 @@ class ApuestaController:
 
         finally:
             self.session.close()
-    

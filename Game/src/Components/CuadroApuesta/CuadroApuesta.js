@@ -11,7 +11,7 @@ import { useSearchParams } from "next/navigation";
 export const CuadroAposta = ({ idMesa }) => {
   const [valor, setValor] = useState(0);
   const { SessionLoginActiva } = useAuthHook();
-  const { appData, loginsMethod } = useDataContext();
+  const { appData, loginsMethod, dispatch, loading } = useDataContext();
   const { Usuario } = appData;
   const params = useSearchParams();
   const roomAtual = params.get("room");
@@ -38,16 +38,17 @@ export const CuadroAposta = ({ idMesa }) => {
       IdLadoApostado: 1,
       IdMesa: roomAtual, // Azul
     };
-
+    loading.ativarLoading();
     const { error, ...data } = await executarREST(
       "apuestas/hacer-apuesta/",
       "POST",
       novaAposta
     );
+    loading.desativarLoading();
     if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
-
+    dispatch({ tipo: "DADOS_USUARIO", data: { Saldo: Usuario.Saldo - valor } });
     CriarAlerta(TIPO_ALERTA.SUCESSO, null, "Apuesta Realizada com sucesso!");
-    setValor(null);
+    setValor(0);
   };
 
   const ApostarLadoB = async () => {
@@ -65,18 +66,19 @@ export const CuadroAposta = ({ idMesa }) => {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,
       IdLadoApostado: 2,
-      IdMesa: roomAtual, // Rojo
+      IdMesa: roomAtual,
     };
-
+    loading.ativarLoading();
     const { error, ...data } = await executarREST(
       "apuestas/hacer-apuesta/",
       "POST",
       novaAposta
     );
+    loading.desativarLoading();
     if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
-
+    dispatch({ tipo: "DADOS_USUARIO", data: { Saldo: Usuario.Saldo - valor } });
     CriarAlerta(TIPO_ALERTA.SUCESSO, null, "Apuesta Realizada com sucesso!");
-    setValor(null);
+    setValor(0);
   };
 
   const aumentar = (valorAumentar) => {

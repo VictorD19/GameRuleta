@@ -35,6 +35,7 @@ class MesaDetalhesCompletos(BaseModel):
     porcentagemLadoA: float
     porcentagemLadoB: float
     IndiceGanador: int
+    RuletaGenerada: str
 
 
 class EstadisticaJuego(BaseModel):

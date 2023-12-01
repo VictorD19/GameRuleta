@@ -13,7 +13,7 @@ const LoadingContainer = styled.div`
   height: 100%;
   background-color: rgb(40, 55, 71, 0.7);
   color: white;
-  z-index: 999;
+  z-index: 9990000;
 
   .loading-content {
     text-align: center;

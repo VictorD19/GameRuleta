@@ -13,6 +13,7 @@ const socket = null;
 export { socket };
 export const URL_PADRAO = "http://localhost:8000/";
 export const URL_PADRAO_SOCKET = "ws://localhost:8000";
+
 const executarREST = async (url, tipoConsulta = "GET", data = null) => {
   try {
     const consulta = await fetch(URL_PADRAO + url, {
@@ -32,7 +33,6 @@ const executarREST = async (url, tipoConsulta = "GET", data = null) => {
 
     return retorno;
   } catch (error) {
-    debugger;
     return {
       error: "Ocorreu uma falha ao tentar conectar",
     };

@@ -9,6 +9,7 @@ export const DataInicialApp = {
       minimo: 1,
       maximo: 1000,
       jugadores: 0,
+      SegundosRestantes: 0,
       totalApostado: 0,
     },
     {
@@ -16,6 +17,7 @@ export const DataInicialApp = {
       minimo: 20,
       maximo: 5000,
       jugadores: 0,
+      SegundosRestantes: 0,
       totalApostado: 0,
     },
     {
@@ -23,6 +25,7 @@ export const DataInicialApp = {
       minimo: 100,
       maximo: 10000,
       jugadores: 0,
+      SegundosRestantes: 0,
       totalApostado: 0,
     },
   ],
@@ -76,6 +79,9 @@ export const reducer = (state, action) => {
       salaAtual.RuletaActiva = dadosSalaAtual.ruletaActiva;
       salaAtual.TotalApostado = dadosSalaAtual.totalApostado;
       salaAtual.HistoricoPartidas = dadosSalaAtual.historicoMesa;
+      salaAtual.SegundosRestantes = dadosSalaAtual.SegundoRestantes;
+      salaAtual.RuletaGenerada = JSON.parse(dadosSalaAtual.RuletaGenerada);
+      salaAtual.IndiceGanador = dadosSalaAtual.IndiceGanador;
       return {
         ...state,
         SalaAtual: salaAtual,

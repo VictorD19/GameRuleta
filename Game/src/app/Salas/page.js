@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useRedirectApp } from "@/Hooks/RoutesHooks";
 
 export default function Page() {
-  const { dispatch, atualizarUrlSala, webservice} = useDataContext();
+  const { dispatch, atualizarUrlSala, webservice, loading } = useDataContext();
   const params = useSearchParams();
   const roomAtual = params.get("room");
   const { IrPara } = useRedirectApp();
@@ -19,7 +19,6 @@ export default function Page() {
       atualizarUrlSala(0);
     }
   }, [roomAtual]);
-console.log(webservice)
   useEffect(() => {
     if (webservice.lastJsonMessage != null) {
       if (webservice.lastJsonMessage.estatusGeral != null)

@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from fastapi import HTTPException
 import os
 import math
+import json
 
 load_dotenv()
 
@@ -34,7 +35,7 @@ class SalasGeral:
                         .join(MesaModel.jugada)
                         .where(MesaModel.id == idMesa)
                         .where(MesaModel.status == True)
-                    ).one() 
+                    ).one()
                 )
             ):
                 return
@@ -56,9 +57,11 @@ class SalasGeral:
                 jugada.ladoGanador = int(
                     Ruleta(jugada=jugada).selecionar_ganador(ruleta=jugada.ruleta)
                 )
-                if not (Mesa(session=self.session).PagarJugadoresGanador(jugada=jugada)):
+                if not (
+                    Mesa(session=self.session).PagarJugadoresGanador(jugada=jugada)
+                ):
                     raise ControllerException("Error no pagamento.")
-                    
+
                 self.session.commit()
             return
 
@@ -71,11 +74,11 @@ class SalasGeral:
             raise HTTPException(status_code=400, detail=str(ex))
 
     async def ObterDadosMesaPorId(self, idMesa: int):
-        # Instanciamos la clase mesa
         servicoMesa = Mesa(self.session)
-        # Obetenemos los distintos valores de la mesa
         existeMesa = await servicoMesa.ObterMesaPorId(idMesa)
-        jogadaActivaMesa = await servicoMesa.ObterJogadaPorNumeroMesa(idMesa)
+        jogadaActivaMesa: JugadaModel = await servicoMesa.ObterJogadaPorNumeroMesa(
+            idMesa
+        )
         ultimasJogadas = await servicoMesa.ObterUltimasJogadaPorMesa(idMesa)
 
         apuestas = (
@@ -120,6 +123,7 @@ class SalasGeral:
             )
             if (jogadaActivaMesa != None and jogadaActivaMesa.inicio != None)
             else 0,
+            RuletaGenerada=jogadaActivaMesa.ruleta,
         )
         return detallesMesa
 

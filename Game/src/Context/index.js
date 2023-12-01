@@ -19,6 +19,7 @@ import {
 } from "@/Api";
 import { CriarAlerta, TIPO_ALERTA } from "@/Components/Alertas/Alertas";
 import { useAuthHook } from "@/Hooks/AuthHook";
+import { LoadingComponet } from "@/Components/Loading";
 
 let ReadyState = {
   UNINSTANTIATED: -1,
@@ -46,13 +47,20 @@ export const ContextAppProvider = ({ children }) => {
   const [modalRegistroVisibilidade, setVisibilidadeModalRegistro] =
     useState(false);
   const [modalLoginVisibilidade, setVisibilidadeModalLogin] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const cerrarModalLogin = () => setVisibilidadeModalLogin(false);
   const abrirModalLogin = () => setVisibilidadeModalLogin(true);
 
   const cerrarModalRegistro = () => setVisibilidadeModalRegistro(false);
   const abrirModalRegistro = () => setVisibilidadeModalRegistro(true);
+  const ativarLoading = () => setIsLoading(true);
+  const desativarLoading = () => setIsLoading(false);
 
+  const loading = {
+    ativarLoading,
+    desativarLoading,
+  };
   const loginsMethod = {
     cerrarModalRegistro,
     abrirModalRegistro,
@@ -65,59 +73,87 @@ export const ContextAppProvider = ({ children }) => {
     setUrlWebSocket(URL_PADRAO_SOCKET + "/mesas/status-mesas/" + sala);
 
   useEffect(() => {
-    if (!SessionLoginActiva()) {
-      return dispatch({ tipo: "CONECTADO", data: false });
-    }
-    if (appData.Usuario.Id > 0)
-      return dispatch({ tipo: "CONECTADO", data: true });
-
-    (async () => {
-      let { error, ...data } = await executarREST(
-        `user/get/${ObterIdUsuariPorToken()}`,
-        "GET"
-      );
-      if (error != null) {
-        LimparTudoLocalStorage();
-        dispatch({ tipo: "CONECTADO", data: false });
-        CriarAlerta(
-          TIPO_ALERTA.ERROR,
-          null,
-          "Por favor inicie sessão novamente"
-        );
-        return;
+    try {
+      ativarLoading();
+      if (!SessionLoginActiva()) {
+        return dispatch({ tipo: "CONECTADO", data: false });
       }
+      if (appData.Usuario.Id > 0)
+        return dispatch({ tipo: "CONECTADO", data: true });
 
-      const atualizarDados = {
-        Id: data.id,
-        Saldo: data.saldo,
-        FotoAvatar: data.avatar,
-        DataCreacion: data.dataCriacion,
-        Nombre: data.username,
-        Status: data.status,
-      };
+      (async () => {
+        let { error, ...data } = await executarREST(
+          `user/get/${ObterIdUsuariPorToken()}`,
+          "GET"
+        );
+        if (error != null) {
+          LimparTudoLocalStorage();
+          dispatch({ tipo: "CONECTADO", data: false });
+          CriarAlerta(
+            TIPO_ALERTA.ERROR,
+            null,
+            "Por favor inicie sessão novamente"
+          );
+          return;
+        }
 
-      dispatch({ tipo: "CONECTADO", data: true });
-      dispatch({ tipo: "DADOS_USUARIO", data: atualizarDados });
-    })();
+        const atualizarDados = {
+          Id: data.id,
+          Saldo: data.saldo,
+          FotoAvatar: data.avatar,
+          DataCreacion: data.dataCriacion,
+          Nombre: data.username,
+          Status: data.status,
+        };
+
+        dispatch({ tipo: "CONECTADO", data: true });
+        dispatch({ tipo: "DADOS_USUARIO", data: atualizarDados });
+      })();
+    } finally {
+      desativarLoading();
+    }
   }, [appData.Conectado]);
 
- 
-
-  useEffect(() => {
-    if (pathName.toLocaleLowerCase().includes("salas")) {
-      setUrlWebSocket(ObterUrl(pathName));
-    } else setUrlWebSocket(URL + "0");
-  }, [pathName]);
   return (
-    <ContextoApp.Provider value={{ appData, dispatch,webservice: {lastJsonMessage, readyState }, atualizarUrlSala,modalRegistroVisibilidade,modalLoginVisibilidade,loginsMethod}}>
+    <ContextoApp.Provider
+      value={{
+        appData,
+        dispatch,
+        webservice: { lastJsonMessage, readyState },
+        atualizarUrlSala,
+        modalRegistroVisibilidade,
+        modalLoginVisibilidade,
+        loginsMethod,
+        loading,
+      }}
+    >
       {children}
+      {isLoading ? <LoadingComponet /> : <></>}
     </ContextoApp.Provider>
   );
 };
 
 export const useDataContext = () => {
-  const { appData, atualizarUrlSala,webservice, dispatch,modalRegistroVisibilidade,modalLoginVisibilidade,loginsMethod } = useContext(ContextoApp);
-  return { appData, atualizarUrlSala, webservice,dispatch,modalRegistroVisibilidade,modalLoginVisibilidade,loginsMethod };
+  const {
+    appData,
+    atualizarUrlSala,
+    webservice,
+    dispatch,
+    modalRegistroVisibilidade,
+    modalLoginVisibilidade,
+    loginsMethod,
+    loading,
+  } = useContext(ContextoApp);
+  return {
+    appData,
+    atualizarUrlSala,
+    webservice,
+    dispatch,
+    loading,
+    modalRegistroVisibilidade,
+    modalLoginVisibilidade,
+    loginsMethod,
+  };
 };
 
 function ObterUrl(caminho) {

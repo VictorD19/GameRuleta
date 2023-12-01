@@ -9,18 +9,30 @@ import { useEffect, useRef, useState } from "react";
 import Azul from "../../Assert/fichaAzul.svg";
 import Rojo from "../../Assert/fichaRojo.svg";
 import { useDataContext } from "@/Context";
-import LoadingRelogion from '../../Assert/loadinEspera.svg'
+import LoadingRelogion from "../../Assert/loadinEspera.svg";
 const RuletaComponente = styled.div`
   position: relative;
   width: 100%;
   height: 10rem;
   overflow: hidden;
+  .indicador {
+    position: absolute;
+    left: 50%;
+    z-index: 99;
+    width: 2px;
+    background: #fff;
+    height: 100%;
+  }
 `;
 const RuletaItems = styled.div`
   display: flex;
   transition: transform 3s ease-out;
+  align-items: center;
+  height: 100%;
 
   .ladoItem {
+    border: 1px solid #c1c1c1;
+    border-radius: 10px;
     width: 50px;
     height: 50px;
     display: flex;
@@ -39,30 +51,18 @@ export function Mesa() {
   const {
     appData: { SalaAtual },
   } = useDataContext();
-  // function RodarRuleta() {
-  //   for (let i = 0; i < numbersArray.length; i++) {
-  //     const element = numbersArray[i];
-  //     setItemRuleta((x) => {
-  //       let atuais = x;
-  //       return [...atuais, { element }];
-  //     });
-  //   }
-  //   setTimeout(spinRoulette, 1000);
-  // }
+
   useEffect(() => {
-    if (
-      SalaAtual.RuletaGenerada != null &&
-      SalaAtual.RuletaGenerada.length > 0
-    ) {
+    if (SalaAtual.SegundosRestantes < 0) {
       setItemRuleta(SalaAtual.RuletaGenerada);
       setTimeout(() => {
-        spinRoulette(SalaAtual.PosicaoSelecionada);
+        spinRoulette(80);
       }, 1500);
     }
-  }, [SalaAtual.RuletaActiva]);
+  }, [SalaAtual.SegundosRestantes]);
 
   function spinRoulette(numeroRandom) {
-    const rotation = numeroRandom * -50;
+    const rotation = numeroRandom * -55;
     ruletaRef.current.style.transform = `translateX(${rotation}px)`;
   }
 
@@ -70,24 +70,39 @@ export function Mesa() {
     <div className="col-sm-12 col-md-8">
       <div className="card bg-dark ">
         <div className="card-body py-4  d-flex flex-column">
-          {SalaAtual.RuletaActiva ? (
+          {SalaAtual.SegundosRestantes < 0 ? (
             <RuletaComponente id="Ruleta">
+              <span className="indicador"></span>
+              <span className="indicador-end"></span>
               <RuletaItems id="ruletaItems" ref={ruletaRef}>
-                {ruletaItems.map((_, i) => (
-                  <RuletaItem lado={i % 2 == 0 ? 1 : 0} key={i} />
+                {ruletaItems.map((lado, i) => (
+                  <RuletaItem lado={lado} key={i} />
                 ))}
               </RuletaItems>
             </RuletaComponente>
           ) : SalaAtual.JugadoresA.length == 0 &&
             SalaAtual.JugadoresB.length == 0 ? (
-            <div style={{ height: "12rem" }} className="text-white d-flex justify-content-center align-items-center">
+            <div
+              style={{ height: "12rem" }}
+              className="text-white d-flex justify-content-center align-items-center"
+            >
               <h2>Aguardandos Jogadores...</h2>
-              <Image src={LoadingRelogion} alt="loadin sala" width={85} height={85} />
+              <Image
+                src={LoadingRelogion}
+                alt="loadin sala"
+                width={85}
+                height={85}
+              />
             </div>
           ) : (
             <>
               <div className="d-flex justify-content-between mx-3 mb-3 align-items-center ">
-                <Image src={Relogio} alt="loading" width={100} height={100} />
+                <div className="position-relative">
+                  <Image src={Relogio} alt="loading" width={100} height={100} />
+                  <h2 className="position-absolute top-50 start-50 translate-middle">
+                    {SalaAtual.SegundosRestantes}
+                  </h2>
+                </div>
                 <div className="text-center text-white">
                   <span>
                     Total a Ganhar <AiFillTrophy color="gold" />
@@ -127,8 +142,8 @@ const RuletaItem = ({ lado, key }) => {
       <Image
         src={lado == 1 ? Azul : Rojo}
         alt="lado hg"
-        width={70}
-        height={50}
+        width={90}
+        height={70}
         style={{ backgroundImage: "content" }}
       />
     </div>

@@ -46,12 +46,12 @@ async def websocket_endpoint_status_salas(
             out["estatusGeral"] = await SalasGeral(session).DadosGeraisSalas()
 
             if id_mesa != 0:
-                await SalasGeral(session).CheckStatusMesa(id_mesa)
+                # await SalasGeral(session).CheckStatusMesa(id_mesa)
                 datosMesa = await SalasGeral(session).ObterDadosMesaPorId(id_mesa)
                 out["statusMesas"] = datosMesa.model_dump()
 
             await websocket.send_json(out)
-            await asyncio.sleep(1)
+            await asyncio.sleep(0.5)
 
     except WebSocketDisconnect as ex:
         print(

@@ -11,7 +11,7 @@ import { BoxImagenContainer } from "./login.style";
 import { useRedirectApp } from "@/Hooks/RoutesHooks";
 
 export const LoginModal = ({ show, cerrarModal }) => {
-  const { dispatch } = useDataContext();
+  const { dispatch, loading } = useDataContext();
   const { IrPara } = useRedirectApp();
 
   const loginApp = async (event) => {
@@ -22,17 +22,18 @@ export const LoginModal = ({ show, cerrarModal }) => {
 
     if (username.length <= 6 || !password)
       return CriarAlerta(TIPO_ALERTA.ERROR, null, "Usuario e Senha invalidos");
-
+    loading.ativarLoading();
     let { error, access_token } = await executarREST("user/login/", "POST", {
       username,
       password,
     });
-
+    loading.desativarLoading();
     if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
-
+    loading.ativarLoading();
     InserirRegistroLocalStorage("token", { access_token, data: new Date() });
     dispatch({ tipo: "CONECTADO", data: true });
     IrPara(`/Salas?room=1`);
+    loading.desativarLoading();
   };
 
   return (
@@ -65,7 +66,7 @@ export const LoginModal = ({ show, cerrarModal }) => {
 
 export const RegistroModal = ({ show, cerrarModal }) => {
   const [selectedImages, setSelectImage] = useState("");
-  const { dispatch } = useDataContext();
+  const { dispatch, loading } = useDataContext();
   const { IrPara } = useRedirectApp();
 
   const criarConta = async (event) => {
@@ -104,20 +105,21 @@ export const RegistroModal = ({ show, cerrarModal }) => {
       avatar: selectedImages,
       codReferencia,
     };
-
+    loading.ativarLoading();
     let dataCriacionUsuario = await executarREST(
       "user/create-user/",
       "POST",
       novoUsuario
     );
+    loading.desativarLoading();
     if (dataCriacionUsuario.error != null)
       return CriarAlerta(TIPO_ALERTA.ERROR, null, dataCriacionUsuario.error);
-
+    loading.ativarLoading();
     let { error, access_token } = await executarREST("user/login/", "POST", {
       username,
       password,
     });
-
+    loading.desativarLoading();
     if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
 
     const dataUsuario = {
@@ -127,11 +129,12 @@ export const RegistroModal = ({ show, cerrarModal }) => {
       DataCreacion: dataCriacionUsuario.dataCriacion,
       Id: dataCriacionUsuario.id,
     };
-
+    loading.ativarLoading();
     InserirRegistroLocalStorage("token", { access_token, data: new Date() });
     dispatch({ tipo: "CONECTADO", data: true });
     dispatch({ tipo: "DADOS_USUARIO", data: dataUsuario });
     IrPara(`/Salas?room=1`);
+    loading.desativarLoading();
   };
 
   const toggleImageSelection = (imageName) => {
