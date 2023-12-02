@@ -7,9 +7,9 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "3000:3000"
-    volumes:
-      - .:/app
+      - "3000:3000"  
+    networks:
+      - Ruleta
 
   fastapi_app:
     build:
@@ -20,6 +20,8 @@ services:
       - "8000:8000"
     depends_on:
       - game_app
+    networks:
+      - Ruleta
 
   nginx_proxy:
     image: nginx
@@ -31,3 +33,9 @@ services:
     depends_on:
       - fastapi_app
     command: nginx -g "daemon off;"
+    networks:
+      - Ruleta
+
+networks:
+  Ruleta:
+    driver: bridge

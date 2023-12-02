@@ -4,8 +4,8 @@ const nextConfig = {
     styledComponents: true,
   },
   env: {
-    URL_PADRAO: "http://localhost:8000/",
-    URL_PADRAO_SOCKET: "ws://localhost:8000",
+    URL_PADRAO: "http://localhost:8000/api/",
+    URL_PADRAO_SOCKET: "ws://localhost:8000/api",
   },
   reactStrictMode: false,
 };

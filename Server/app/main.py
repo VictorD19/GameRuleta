@@ -8,9 +8,7 @@ from fastapi import FastAPI
 app = FastAPI()
 #from socketServer import socketApp
 origins = [
-    "http://localhost",
-    "http://localhost:3000",
-    "http://localhost:3001",
+    "*"
 ]
 # Crea una instancia de FastAPI
 
@@ -22,7 +20,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.include_router(user_router, prefix="/user")
-app.include_router(mesas_router, prefix="/mesas")
-app.include_router(chat_router, prefix="/chat")
-app.include_router(apuesta_router, prefix="/apuestas")
+app.include_router(user_router, prefix="/api/user")
+app.include_router(mesas_router, prefix="/api/mesas")
+app.include_router(chat_router, prefix="/api/chat")
+app.include_router(apuesta_router, prefix="/api/apuestas")
