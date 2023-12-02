@@ -4,9 +4,9 @@ import Link from "next/link";
 
 export const Footer = () => {
   return (
-    <footer className="">
+    <footer className=" mt-3">
       <div className="card bg-dark">
-        <div className="card-body row align-items-center">
+        <div className="card-body row align-items-center gap-md-0 gap-3">
           <div className="col-12 col-md-9">
             <div className="d-flex flex-column">
               <Image src={Logo} height={40} alt="logo" />

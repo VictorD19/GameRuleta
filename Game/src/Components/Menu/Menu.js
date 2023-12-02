@@ -9,10 +9,18 @@ export function Menu() {
   const toggleMenu = () => {
     setVisibilidade((atual) => !atual);
   };
+
+  const naoMostrarSidebar = () => setVisibilidade(false);
+  const MostrarSidebar = () => setVisibilidade(true);
   return (
     <>
       <MenuCelular toogle={toggleMenu} />
-      <Sidebar visible={visibilidadeMenu} toogle={toggleMenu}/>
+      <Sidebar
+        visible={visibilidadeMenu}
+        naoMostrarSidebar={naoMostrarSidebar}
+        MostrarSidebar={MostrarSidebar}
+        toogle={toggleMenu}
+      />
     </>
   );
 }
