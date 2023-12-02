@@ -1,12 +1,12 @@
 import { Archivo } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./globals.css";
 import paleta from "../styles/paletaColores";
 import { Menu } from "@/Components/Menu/Menu";
 import SalasCard from "@/Components/Salas";
 const inter = Archivo({ subsets: ["latin"] });
 import { Providers } from "@/Providers";
 import { Footer } from "@/Components/Footer";
+import "./globals.css";
 
 export const metadata = {
   title: "Create Next App",
