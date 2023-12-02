@@ -1,21 +1,9 @@
-import { io } from "socket.io-client";
-
-// const socket = io("ws://localhost:8001", {
-//     // auth: {
-//     //     token: ObterToken(),
-//     // },
-//     autoConnect: true,
-//     path: "/ws/socket.io/",
-//     transports: ['websocket', 'polling']
-// });
-
-const socket = null;
-export { socket };
-export const URL_PADRAO = "http://localhost:8000/";
-export const URL_PADRAO_SOCKET = "ws://localhost:8000";
+export const URL_PADRAO = process.env.URL_PADRAO;
+export const URL_PADRAO_SOCKET = process.env.URL_PADRAO_SOCKET;
 
 const executarREST = async (url, tipoConsulta = "GET", data = null) => {
   try {
+    debugger;
     const consulta = await fetch(URL_PADRAO + url, {
       method: tipoConsulta,
       body: data != null ? JSON.stringify(data) : null,

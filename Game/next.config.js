@@ -4,9 +4,10 @@ const nextConfig = {
     styledComponents: true,
   },
   env: {
-    URL_SERVER: "http://localhost:8000",
+    URL_PADRAO: "http://localhost:8000/",
+    URL_PADRAO_SOCKET: "ws://localhost:8000",
   },
-  reactStrictMode: false
+  reactStrictMode: false,
 };
 
 module.exports = nextConfig;
