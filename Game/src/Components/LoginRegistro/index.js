@@ -93,18 +93,18 @@ export const RegistroModal = ({ show, cerrarModal }) => {
     const email = data["email"].value;
     const codReferencia = data["codReferencia"].value;
 
-    if (username.length <= 6 || username.includes(" "))
+    if (username.length < 6 || username.includes(" "))
       return CriarAlerta(
         TIPO_ALERTA.ERROR,
         null,
-        "Nome de usuario muito pequeno ou possui ' ' "
+        "O nome de usuário é muito pequeno, deve ter pelo menos 6 carácter e/ou contém espaços em branco"
       );
 
-    if (password == " " || password.includes(" "))
+    if (password == " " || password.includes(" ") || password.length < 4)
       return CriarAlerta(
         TIPO_ALERTA.ERROR,
         null,
-        "Tipo de senha não valida, sua senha não pode ter espaçoes em branco"
+        "Sua senha deve ter menos 4 caráter e não pode possuir espaço em branco"
       );
 
     if (email == "" || !email.includes("@"))

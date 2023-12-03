@@ -18,7 +18,7 @@ export default function Page() {
     } else {
       atualizarUrlSala(0);
     }
-  }, [roomAtual]);
+  }, [roomAtual, webservice.readyState]);
   useEffect(() => {
     if (webservice.lastJsonMessage != null) {
       if (webservice.lastJsonMessage.estatusGeral != null)

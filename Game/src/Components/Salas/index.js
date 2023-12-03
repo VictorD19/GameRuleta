@@ -25,7 +25,7 @@ export default function SalasCard() {
     setSalaActiva(roomAtual);
 
     return () => setSalaActiva(0);
-  }, [roomAtual]);
+  }, [roomAtual, webservice.readyState]);
 
   if (!webservice.readyState) return <LoadingComponet />;
   return (

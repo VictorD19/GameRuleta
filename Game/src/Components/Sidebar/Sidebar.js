@@ -22,6 +22,7 @@ import { LimparTudoLocalStorage } from "@/Api";
 import Profiles from "../../Assert/Profile";
 import { ModalSaque } from "./Saque";
 import { DepositoModal } from "./Deposito";
+import { useRedirectApp } from "@/Hooks/RoutesHooks";
 const NavComponent = styled.nav`
   display: none;
 
@@ -79,6 +80,7 @@ export function Sidebar({
 }) {
   const { appData, dispatch } = useDataContext();
   const { Usuario } = appData;
+  const { IrPara } = useRedirectApp();
   const [modalDeposito, setModalDeposito] = useState(false);
   const [modalSaque, setModalSaque] = useState(false);
   const router = useRouter();
@@ -108,7 +110,12 @@ export function Sidebar({
       <NavComponent $visible={{ visible: visible == true ? true : false }}>
         <div className="sidebar-top d-flex justify-content-between">
           <div className="">
-            <Image src={Logo} height={44} alt="logo" />
+            <Image
+              src={Logo}
+              height={44}
+              alt="logo"
+              onClick={() => IrPara("/Salas?room=1")}
+            />
           </div>
 
           <Button
@@ -211,7 +218,7 @@ export function Sidebar({
             </div>
           </>
         ) : (
-          <CardLogin toogle={toogle}/>
+          <CardLogin toogle={toogle} />
         )}
       </NavComponent>
       <ModalSaque show={modalSaque} close={cerrarModalSaque} />

@@ -13,7 +13,7 @@ export default function Page() {
           próprio interesse ou que fale em nome e no interesse de pessoa
           jurídica representada por ele. <br />
           c) Site de administração / — Sites de Internet alojados no domínio
-          rainbow-bet.um e ele subdomínios. <br />
+          funcombat.online ele e seus subdomínios. <br />
           d) Serviço — uma gama de serviços e uma licença fornecida ao
           Utilizador utilizando Plataformas. <br />
           e) Acordo — este acordo com todas as adições e alterações.
@@ -45,7 +45,7 @@ export default function Page() {
         <p>
           2.1. O uso da funcionalidade do Serviço é permitido somente após
           Registro e autorização do usuário no Site de acordo com procedimento
-          estabelecido pela Administração. 2.2. Condições técnicas,
+          estabelecido pela Administração. <br /> 2.2. Condições técnicas,
           organizacionais e comerciais para o uso do Serviço, incluindo o número
           de sua funcionalidade é trazido à atenção dos usuários por colocação
           separada no Site ou por notificação de Usuários.
