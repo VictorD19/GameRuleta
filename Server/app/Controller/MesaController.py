@@ -6,7 +6,7 @@ from Schemas.Exection import ControllerException
 from Models.model import ApuestaModel, JugadaModel, Session, MesaModel
 from Service.Porcentagem import Porcentagem
 from Service.Ruleta import Ruleta
-from sqlalchemy import select
+from sqlalchemy import select, and_
 from sqlalchemy.orm import joinedload
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -30,12 +30,16 @@ class SalasGeral:
         try:
             if not (
                 mesa := (
-                    self.session.scalars(
-                        select(MesaModel)
-                        .join(MesaModel.jugada)
-                        .where(MesaModel.id == idMesa)
-                        .where(MesaModel.status == True)
-                    ).one()
+                    # self.session.scalars(
+                    #     select(MesaModel)
+                    #     .join(MesaModel.jugada)
+                    #     .where(MesaModel.id == idMesa)
+                    #     .where(MesaModel.status == True)
+                    # ).one()]
+                    self.session.query(MesaModel)
+                    .filter(and_(MesaModel.id == idMesa, MesaModel.status == True))
+                    .options(joinedload(MesaModel.jugada))
+                    .first()
                 )
             ):
                 return
@@ -48,9 +52,10 @@ class SalasGeral:
             if not jugada.inicio:
                 return
 
-            tiempoJugada = jugada.inicio + timedelta(
-                seconds=int(os.getenv("TIME_RULETA"))
-            )
+            tiempoJugada = jugada.inicio + timedelta(seconds=30)            
+            print(type(tiempoJugada))
+            print(tiempoJugada)
+            print(datetime.now())
             if datetime.now() >= tiempoJugada:
                 jugada.fin = datetime.now()
                 mesa.status = False
@@ -73,7 +78,6 @@ class SalasGeral:
             self.session.rollback()
             raise HTTPException(status_code=400, detail=str(ex))
 
-    
     async def ObterDadosMesaPorId(self, idMesa: int):
         servicoMesa = Mesa(self.session)
         existeMesa = await servicoMesa.ObterMesaPorId(idMesa)

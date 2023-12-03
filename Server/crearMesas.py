@@ -13,4 +13,13 @@ def crearMesas():
         session.commit()
         session.refresh(mesa)
 
-crearMesas()
+# crearMesas()
+
+mesa = MesaModel(numero =2,
+                 id = 2,
+                 status = False)
+                 
+session = Session(engine)
+session.add(mesa)
+session.commit()
+session.refresh(mesa)
