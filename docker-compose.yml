@@ -32,6 +32,8 @@ services:
       - /etc/CertsFunCombat/cert.pem:/etc/CertsFunCombat/cert.pem
     ports:
       - "80:80"
+      - "443:443"
+
     depends_on:
       - fastapi_app
     command: nginx -g "daemon off;"
