@@ -4,8 +4,8 @@ const nextConfig = {
     styledComponents: true,
   },
   env: {
-    URL_PADRAO: "http://funcombat.online/api/",
-    URL_PADRAO_SOCKET: "ws://funcombat.online/api",
+    URL_PADRAO: "https://funcombat.online/api/",
+    URL_PADRAO_SOCKET: "wss://funcombat.online/api",
   },
   reactStrictMode: false,
 };
