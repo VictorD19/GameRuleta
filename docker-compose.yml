@@ -28,6 +28,8 @@ services:
     restart: always
     volumes:
       - ./Server/nginx.conf:/etc/nginx/nginx.conf
+      - /etc/CertsFunCombat/privatekey.pem:/etc/CertsFunCombat/privatekey.pem
+      - /etc/CertsFunCombat/cert.pem:/etc/CertsFunCombat/cert.pem
     ports:
       - "80:80"
     depends_on:

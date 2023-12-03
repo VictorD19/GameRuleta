@@ -75,20 +75,25 @@ async def websocket_endpoint_status_salas(
 
 @router.get(path="/estadisticas/", status_code=200, response_model=EstadisticaJuego)
 def estadisticas(session: Session = Depends(get_session)):
-    jugadoresActivos = len(conexiones_activas.keys())
-    totalJugadores = session.query(UserModel).count()
-    totalPagado = sum(
-        [
-            tranSalida.monto if tranSalida else 0
-            for tranSalida in session.query(TransacSalidaModel).all()
-        ]
-    )
+    try:
+        jugadoresActivos = len(conexiones_activas.keys())
+        totalJugadores = session.query(UserModel).count()
+        totalPagado = sum(
+            [
+                tranSalida.monto if tranSalida else 0
+                for tranSalida in session.query(TransacSalidaModel).all()
+            ]
+        )
 
-    totalJuegosRealizados = session.query(JugadaModel).count()
+        totalJuegosRealizados = session.query(JugadaModel).count()
 
-    return {
-        "jugadoresActivos": jugadoresActivos,
-        "totalJugadores": totalJugadores,
-        "totalPagado": totalPagado,
-        "totalJuegosRealizados": totalJuegosRealizados,
-    }
+        return {
+            "jugadoresActivos": jugadoresActivos,
+            "totalJugadores": totalJugadores,
+            "totalPagado": totalPagado,
+            "totalJuegosRealizados": totalJuegosRealizados,
+        }
+    except Exception as e:
+        return EstadisticaJuego(
+            jugadoresActivos=0, totalJuegosRealizados=0, totalPagado=0, totalJugadores=0
+        ).model_dump()
