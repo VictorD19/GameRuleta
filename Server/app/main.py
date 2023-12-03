@@ -12,6 +12,7 @@ origins = [
     "https://www.funcombat.online",
     "http://funcombat.online",
     "http://www.funcombat.online",
+    "http://localhost:3000"
 ]
 # Crea una instancia de FastAPI
 
