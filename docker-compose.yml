@@ -16,6 +16,9 @@ services:
       context: ./Server
       dockerfile: Dockerfile
     restart: always
+    volumes:      
+      - /etc/CertsFunCombat/privatekey.pem:/etc/CertsFunCombat/privatekey.pem
+      - /etc/CertsFunCombat/cert.pem:/etc/CertsFunCombat/cert.pem
     ports:
       - "8000:8000"
     depends_on:
