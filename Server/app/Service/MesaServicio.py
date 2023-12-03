@@ -4,7 +4,7 @@ from sqlalchemy import select, and_
 from Schemas.Apuesta import Apuesta
 from Service.Porcentagem import Porcentagem
 from Schemas.Exection import ServicoException
-from datetime import datetime
+from datetime import datetime, timedelta
 from Schemas.Ruleta import Lados
 from fastapi import HTTPException
 import math
@@ -115,18 +115,20 @@ class Mesa:
         self.session.add(nuevaApuesta)
         return nuevaApuesta
 
-    def ObterSegundosRestantesJugada(self, jugadas: list[JugadaModel]):
-        if len(jugadas) == 0:
+    def segundos_restantes(self, jugada: JugadaModel | list):
+        if type(jugada) == list and len(jugada) > 0:
+            jugada = jugada[0]
+        else: 
             return 0
-
-        jugadasActivas = list(filter(lambda j: j.fin == None, jugadas))
-
-        if len(jugadasActivas) == 0:
+        
+        if not jugada.inicio:
             return 0
-
-        jugada = jugadasActivas[0]
-
-        return math.floor((jugada.inicio - datetime.now()).total_seconds())
+        
+        limite = jugada.inicio + timedelta(seconds=30)
+        restante = limite - datetime.now()
+        return (
+            restante.seconds if restante.seconds >= 1 and restante.seconds <= 30 else 0
+        )
 
     async def ObterDetallesMesas(self):
         mesas = (
@@ -142,7 +144,9 @@ class Mesa:
                 "minimo": mesa.minimo if mesa.minimo else 0,
                 "totalApostado": self.obterTotalApostado(mesa.jugada),
                 "numero": mesa.numero,
-                "SegundosRestantes": self.ObterSegundosRestantesJugada(mesa.jugada),
+                "SegundosRestantes": self.segundos_restantes(
+                    list(filter(lambda j: j.fin == None, mesa.jugada))
+                ),
             }
             for mesa in mesas
         ]

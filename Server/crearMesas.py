@@ -7,7 +7,7 @@ def crearMesas():
     for i in range(1,4):
         mesa = MesaModel(
             numero = i,
-            status = True
+            status = False
         )
         session.add(mesa)
         session.commit()

@@ -73,12 +73,11 @@ class SalasGeral:
             self.session.rollback()
             raise HTTPException(status_code=400, detail=str(ex))
 
+    
     async def ObterDadosMesaPorId(self, idMesa: int):
         servicoMesa = Mesa(self.session)
         existeMesa = await servicoMesa.ObterMesaPorId(idMesa)
-        jogadaActivaMesa: JugadaModel = await servicoMesa.ObterJogadaPorNumeroMesa(
-            idMesa
-        )
+        jogadaActivaMesa = await servicoMesa.ObterJogadaPorNumeroMesa(idMesa)
         ultimasJogadas = await servicoMesa.ObterUltimasJogadaPorMesa(idMesa)
 
         apuestas = (
@@ -118,11 +117,7 @@ class SalasGeral:
                 valorLadoA + valorLadoB
             ).CalcularPorcentagemAReceberPorValor(valorLadoB),
             IndiceGanador=0,
-            SegundoRestantes=math.floor(
-                (jogadaActivaMesa.inicio - datetime.now()).total_seconds()
-            )
-            if (jogadaActivaMesa != None and jogadaActivaMesa.inicio != None)
-            else 0,
+            SegundoRestantes=servicoMesa.segundos_restantes(jogadaActivaMesa),
             RuletaGenerada=jogadaActivaMesa.ruleta
             if jogadaActivaMesa != None and jogadaActivaMesa.ruleta != None
             else "[]",
