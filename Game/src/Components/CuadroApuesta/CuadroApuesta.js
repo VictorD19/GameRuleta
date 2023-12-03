@@ -43,7 +43,7 @@ export const CuadroAposta = ({ idMesa }) => {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,
       IdLadoApostado: 1,
-      IdMesa: roomAtual, // Azul
+      IdMesa: Number(roomAtual), // Azul
     };
     loading.ativarLoading();
     const { error, ...data } = await executarREST(
@@ -81,7 +81,7 @@ export const CuadroAposta = ({ idMesa }) => {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,
       IdLadoApostado: 2,
-      IdMesa: roomAtual,
+      IdMesa: Number(roomAtual),
     };
     loading.ativarLoading();
     const { error, ...data } = await executarREST(
