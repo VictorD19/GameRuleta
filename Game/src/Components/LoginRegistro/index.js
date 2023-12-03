@@ -2,18 +2,23 @@
 import { Button, Form, FormControl } from "react-bootstrap";
 import { ModalComponent } from "../Modal/Modal";
 import { CriarAlerta, TIPO_ALERTA } from "../Alertas/Alertas";
-import { InserirRegistroLocalStorage, executarREST } from "@/Api";
+import {
+  InserirRegistroLocalStorage,
+  LimparTudoLocalStorage,
+  executarREST,
+} from "@/Api";
 import { useDataContext } from "@/Context";
 import Profiles from "../../Assert/Profile";
 import Image from "next/image";
 import { useState } from "react";
 import { BoxImagenContainer } from "./login.style";
 import { useRedirectApp } from "@/Hooks/RoutesHooks";
+import { useAuthHook } from "@/Hooks/AuthHook";
 
 export const LoginModal = ({ show, cerrarModal }) => {
   const { dispatch, loading, loginsMethod } = useDataContext();
   const { IrPara } = useRedirectApp();
-
+  const { ObterIdUsuariPorToken, SessionLoginActiva } = useAuthHook();
   const loginApp = async (event) => {
     event.preventDefault();
     let data = event.target;
@@ -32,9 +37,12 @@ export const LoginModal = ({ show, cerrarModal }) => {
     loading.ativarLoading();
 
     let dadoUsuario = await executarREST(
-      `user/get/${ObterIdUsuariPorToken()}`,
-      "GET"
+      `user/get/${ObterIdUsuariPorToken(access_token)}`,
+      "GET",
+      null,
+      access_token
     );
+
     if (dadoUsuario.error != null) {
       LimparTudoLocalStorage();
       dispatch({ tipo: "CONECTADO", data: false });
@@ -47,14 +55,13 @@ export const LoginModal = ({ show, cerrarModal }) => {
     }
 
     const atualizarDados = {
-      Id: data.id,
-      Saldo: data.saldo,
-      FotoAvatar: data.avatar,
-      DataCreacion: data.dataCriacion,
-      Nombre: data.username,
-      Status: data.status,
+      Id: dadoUsuario.id,
+      Saldo: dadoUsuario.saldo,
+      FotoAvatar: dadoUsuario.avatar,
+      DataCreacion: dadoUsuario.dataCriacion,
+      Nombre: dadoUsuario.username,
+      Status: dadoUsuario.status,
     };
-
     InserirRegistroLocalStorage("token", { access_token, data: new Date() });
     dispatch({ tipo: "CONECTADO", data: true });
     dispatch({ tipo: "DADOS_USUARIO", data: atualizarDados });

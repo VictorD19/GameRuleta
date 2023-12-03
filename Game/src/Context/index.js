@@ -75,6 +75,7 @@ export const ContextAppProvider = ({ children }) => {
   useEffect(() => {
     try {
       ativarLoading();
+      debugger;
       if (!SessionLoginActiva()) {
         return dispatch({ tipo: "CONECTADO", data: false });
       }
@@ -127,9 +128,8 @@ export const ContextAppProvider = ({ children }) => {
         loading,
       }}
     >
-            {isLoading ? <LoadingComponet /> : <></>}
+      {isLoading ? <LoadingComponet /> : <></>}
       {children}
-
     </ContextoApp.Provider>
   );
 };
