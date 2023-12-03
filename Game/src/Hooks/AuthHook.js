@@ -28,9 +28,10 @@ export const useAuthHook = () => {
 
   return {
     SessionLoginActiva,
-    ObterIdUsuariPorToken: () => {
-      if (!SessionLoginActiva()) return 0;
-      const { id } = jwtDecode(data.access_token);
+    ObterIdUsuariPorToken: (token = null) => {
+      if (!SessionLoginActiva() && token == null) return 0;
+      token = token != null ? token : data.access_token;
+      const { id } = jwtDecode(token);
       return id;
     },
   };

@@ -1,16 +1,25 @@
 export const URL_PADRAO = process.env.URL_PADRAO;
 export const URL_PADRAO_SOCKET = process.env.URL_PADRAO_SOCKET;
 
-const executarREST = async (url, tipoConsulta = "GET", data = null) => {
+const executarREST = async (
+  url,
+  tipoConsulta = "GET",
+  data = null,
+  token = null
+) => {
   try {
-    debugger;
+    let tokenAut =
+      token != null
+        ? "Bearer " + token
+        : ObterTokenAuth() != null
+        ? "Bearer " + ObterTokenAuth()
+        : "";
     const consulta = await fetch(URL_PADRAO + url, {
       method: tipoConsulta,
       body: data != null ? JSON.stringify(data) : null,
       headers: {
         "Content-Type": "application/json",
-        Authorization:
-          ObterTokenAuth() != null ? "Bearer " + ObterTokenAuth() : "",
+        Authorization: tokenAut,
       },
     });
     const retorno = await consulta.json();

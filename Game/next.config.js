@@ -6,6 +6,8 @@ const nextConfig = {
   env: {
     URL_PADRAO: "https://funcombat.online/api/",
     URL_PADRAO_SOCKET: "wss://funcombat.online/api",
+    // URL_PADRAO: "http://localhost:8000/api/",
+    // URL_PADRAO_SOCKET: "ws://localhost:8000/api",
   },
   reactStrictMode: false,
 };
