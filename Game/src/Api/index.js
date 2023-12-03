@@ -22,13 +22,14 @@ const executarREST = async (
         Authorization: tokenAut,
       },
     });
+
     const retorno = await consulta.json();
     if (consulta.status < 200 || consulta.status > 299)
       return {
         error: retorno.detail,
       };
 
-    return retorno;
+    return retorno == null ? {} : retorno ;
   } catch (error) {
     return {
       error: "Ocorreu uma falha ao tentar conectar",

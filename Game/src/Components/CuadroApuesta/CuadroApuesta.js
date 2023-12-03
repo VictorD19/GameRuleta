@@ -39,6 +39,7 @@ export const CuadroAposta = ({ idMesa }) => {
         null,
         "Insira um valor maior que 0"
       );
+      debugger;
     const novaAposta = {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,
@@ -46,13 +47,14 @@ export const CuadroAposta = ({ idMesa }) => {
       IdMesa: Number(roomAtual), // Azul
     };
     loading.ativarLoading();
-    const { error, ...data } = await executarREST(
+    const { error } = await executarREST(
       "apuestas/hacer-apuesta/",
       "POST",
       novaAposta
     );
     loading.desativarLoading();
     if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
+    
     dispatch({
       tipo: "DADOS_USUARIO",
       data: { Saldo: (Usuario.Saldo - valor).toFixed(2) },
@@ -77,6 +79,7 @@ export const CuadroAposta = ({ idMesa }) => {
         null,
         "Insira um valor maior que 0"
       );
+ 
     const novaAposta = {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,
@@ -84,7 +87,7 @@ export const CuadroAposta = ({ idMesa }) => {
       IdMesa: Number(roomAtual),
     };
     loading.ativarLoading();
-    const { error, ...data } = await executarREST(
+    const { error } = await executarREST(
       "apuestas/hacer-apuesta/",
       "POST",
       novaAposta
