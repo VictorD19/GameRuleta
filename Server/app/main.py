@@ -8,7 +8,10 @@ from fastapi import FastAPI
 app = FastAPI()
 #from socketServer import socketApp
 origins = [
-    "*"
+    "https://funcombat.online",
+    "https://www.funcombat.online",
+    "http://funcombat.online",
+    "http://www.funcombat.online",
 ]
 # Crea una instancia de FastAPI
 
