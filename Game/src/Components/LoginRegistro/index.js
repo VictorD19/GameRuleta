@@ -30,8 +30,34 @@ export const LoginModal = ({ show, cerrarModal }) => {
     loading.desativarLoading();
     if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
     loading.ativarLoading();
+
+    let dadoUsuario = await executarREST(
+      `user/get/${ObterIdUsuariPorToken()}`,
+      "GET"
+    );
+    if (dadoUsuario.error != null) {
+      LimparTudoLocalStorage();
+      dispatch({ tipo: "CONECTADO", data: false });
+      CriarAlerta(
+        TIPO_ALERTA.ERROR,
+        null,
+        "Problema ao tentar inciar Sessão tente novamente"
+      );
+      return;
+    }
+
+    const atualizarDados = {
+      Id: data.id,
+      Saldo: data.saldo,
+      FotoAvatar: data.avatar,
+      DataCreacion: data.dataCriacion,
+      Nombre: data.username,
+      Status: data.status,
+    };
+
     InserirRegistroLocalStorage("token", { access_token, data: new Date() });
     dispatch({ tipo: "CONECTADO", data: true });
+    dispatch({ tipo: "DADOS_USUARIO", data: atualizarDados });
     IrPara(`/Salas?room=1`);
     loading.desativarLoading();
   };
