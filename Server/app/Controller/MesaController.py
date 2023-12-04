@@ -52,10 +52,7 @@ class SalasGeral:
             if not jugada.inicio:
                 return
 
-            tiempoJugada = jugada.inicio + timedelta(seconds=30)            
-            print(type(tiempoJugada))
-            print(tiempoJugada)
-            print(datetime.now())
+            tiempoJugada = jugada.inicio + timedelta(seconds=30) 
             if datetime.now() >= tiempoJugada:
                 jugada.fin = datetime.now()
                 mesa.status = False

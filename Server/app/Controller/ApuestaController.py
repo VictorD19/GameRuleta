@@ -109,12 +109,7 @@ class ApuestaController:
                     )
 
                 jugadaActiva.ruleta = str(Ruleta(jugada=jugadaActiva).GenerarRuleta())
-                if (
-                    jugadaActiva.inicio == None
-                    and jugadaActiva.ladoA > 0
-                    and jugadaActiva.ladoB > 0
-                ):
-                    jugadaActiva.inicio = datetime.now()
+               
                 self.session.commit()
                 self.session.refresh(jugadaActiva)
                 self.descontarSaldo()
@@ -141,7 +136,7 @@ class ApuestaController:
 
                     nuevaJugada.ruleta = str(Ruleta(jugada=nuevaJugada).GenerarRuleta())
                     self.session.commit()
-                    self.session.refresh(jugadaActiva)
+                    self.session.refresh(nuevaJugada)
                     self.descontarSaldo()
                     return
 
@@ -192,6 +187,7 @@ class ApuestaController:
                         jugadaActiva.ruleta = str(
                             Ruleta(jugada=jugadaActiva).GenerarRuleta()
                         )
+                        jugadaActiva.inicio = datetime.now()
                         self.session.commit()
                         self.session.refresh(jugadaActiva)
                         self.descontarSaldo()
