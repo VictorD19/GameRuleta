@@ -6,7 +6,7 @@ from Schemas.Exection import ControllerException
 from Models.model import ApuestaModel, JugadaModel, Session, MesaModel
 from Service.Porcentagem import Porcentagem
 from Service.Ruleta import Ruleta
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, desc
 from sqlalchemy.orm import joinedload
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -77,13 +77,14 @@ class SalasGeral:
             if not (
                 jugada := self.session.query(JugadaModel)
                 .filter(JugadaModel.fin.is_not(None))
-                .order_by(JugadaModel.fin)
+                .order_by(desc(JugadaModel.id))
                 .first()
             ):                
                 return 0, 0
             IndiceGanador = jugada.IndiceGanador if jugada.IndiceGanador else 0
             ladoGanador = jugada.ladoGanador if jugada.ladoGanador else 0
-            return IndiceGanador, ladoGanador
+            ultimaruletaGenerada = jugada.ruleta
+            return IndiceGanador, ladoGanador, ultimaruletaGenerada
         except Exception as ex:
             return 0, 0
 
@@ -115,7 +116,7 @@ class SalasGeral:
             valorTotalLado=valorLadoB,
         )
 
-        ultimoIndiceGanador, ultimoLadoGanador = self.ObterUltimoIndexLadoGanador()
+        ultimoIndiceGanador, ultimoLadoGanador, ultimaruletaGenerada = self.ObterUltimoIndexLadoGanador()
 
         detallesMesa = MesaDetalhesCompletos(
             idMesa=existeMesa.id if existeMesa else 0,
@@ -134,8 +135,9 @@ class SalasGeral:
             ).CalcularPorcentagemAReceberPorValor(valorLadoB),
             ultimoIndiceGanador=int(ultimoIndiceGanador),
             ultimoLadoGanador=int(ultimoLadoGanador),
+            ultimaruletaGenerada = ultimaruletaGenerada,
             SegundoRestantes=servicoMesa.segundos_restantes(jogadaActivaMesa),
-            RuletaGenerada=jogadaActivaMesa.ruleta
+            RuletaGenerada=jogadaActivaMesa.ruleta            
             if jogadaActivaMesa != None and jogadaActivaMesa.ruleta != None
             else "[]",
         )

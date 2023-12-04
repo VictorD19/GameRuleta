@@ -36,6 +36,7 @@ class MesaDetalhesCompletos(BaseModel):
     porcentagemLadoB: float
     ultimoIndiceGanador: int
     ultimoLadoGanador: int
+    ultimaruletaGenerada:str
     RuletaGenerada: str
 
 

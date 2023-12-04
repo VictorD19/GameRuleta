@@ -1,5 +1,5 @@
 
-from app.Models.model import MesaModel, Session, engine
+from app.Models.model import MesaModel, Session, engine, JugadaModel
 
 
 def crearMesas():
@@ -13,13 +13,10 @@ def crearMesas():
         session.commit()
         session.refresh(mesa)
 
-# crearMesas()
+#crearMesas()
 
-mesa = MesaModel(numero =2,
-                 id = 2,
-                 status = False)
-                 
 session = Session(engine)
-session.add(mesa)
+jugada = session.query(JugadaModel).filter(JugadaModel.id == 21).first()
+jugada.IndiceGanador = 22  
 session.commit()
-session.refresh(mesa)
+session.refresh(jugada)
