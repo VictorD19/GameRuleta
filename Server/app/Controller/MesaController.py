@@ -76,10 +76,14 @@ class SalasGeral:
         try:
             if not (
                 jugada := self.session.query(JugadaModel)
-                .filter(JugadaModel.fin.is_not(None)).order_by(JugadaModel.fin)                
-            ):
+                .filter(JugadaModel.fin.is_not(None))
+                .order_by(JugadaModel.fin)
+                .first()
+            ):                
                 return 0, 0
-            return jugada.IndiceGanador, jugada.ladoGanador
+            IndiceGanador = jugada.IndiceGanador if jugada.IndiceGanador else 0
+            ladoGanador = jugada.ladoGanador if jugada.ladoGanador else 0
+            return IndiceGanador, ladoGanador
         except Exception as ex:
             return 0, 0
 
