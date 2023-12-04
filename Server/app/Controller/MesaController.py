@@ -84,7 +84,8 @@ class SalasGeral:
             IndiceGanador = jugada.IndiceGanador if jugada.IndiceGanador else 0
             ladoGanador = jugada.ladoGanador if jugada.ladoGanador else 0
             ultimaruletaGenerada = jugada.ruleta
-            return IndiceGanador, ladoGanador, ultimaruletaGenerada
+            dataFin = jugada.fin.strftime("%m/%d/%Y, %H:%M:%S")
+            return IndiceGanador, ladoGanador, ultimaruletaGenerada,dataFin
         except Exception as ex:
             return 0, 0
 
@@ -116,7 +117,7 @@ class SalasGeral:
             valorTotalLado=valorLadoB,
         )
 
-        ultimoIndiceGanador, ultimoLadoGanador, ultimaruletaGenerada = self.ObterUltimoIndexLadoGanador()
+        ultimoIndiceGanador, ultimoLadoGanador, ultimaruletaGenerada,dataFin = self.ObterUltimoIndexLadoGanador()
 
         detallesMesa = MesaDetalhesCompletos(
             idMesa=existeMesa.id if existeMesa else 0,
@@ -136,6 +137,7 @@ class SalasGeral:
             ultimoIndiceGanador=int(ultimoIndiceGanador),
             ultimoLadoGanador=int(ultimoLadoGanador),
             ultimaruletaGenerada = ultimaruletaGenerada,
+            ultimaDataRuletaGenerada = dataFin,
             SegundoRestantes=servicoMesa.segundos_restantes(jogadaActivaMesa),
             RuletaGenerada=jogadaActivaMesa.ruleta            
             if jogadaActivaMesa != None and jogadaActivaMesa.ruleta != None

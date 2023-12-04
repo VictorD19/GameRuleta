@@ -1,3 +1,4 @@
+import datetime
 from pydantic import BaseModel
 from Schemas.SchemaUser import DetalhesApuestaUsuario
 from typing import List
@@ -38,6 +39,7 @@ class MesaDetalhesCompletos(BaseModel):
     ultimoLadoGanador: int
     ultimaruletaGenerada:str
     RuletaGenerada: str
+    ultimaDataRuletaGenerada: str
 
 
 class EstadisticaJuego(BaseModel):

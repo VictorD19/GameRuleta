@@ -47,35 +47,46 @@ const numbersArray = Array.from({ length: 100 }, (_, index) => index + 1);
 // Trigger the animatio
 export function Mesa() {
   const [ruletaItems, setItemRuleta] = useState([]);
+  const [bloquearTudo, setBloquearTudo] = useState(false);
   const ruletaRef = useRef(null);
   const {
     appData: { SalaAtual },
   } = useDataContext();
 
   useEffect(() => {
-    if (
-      SalaAtual.SegundosRestantes == 0 &&
-      SalaAtual.RuletaGenerada.length > 0
-    ) {
-      setItemRuleta(SalaAtual.RuletaGenerada);
-      setTimeout(() => {
-        spinRoulette(SalaAtual.IndiceGanador);
-      }, 1500);
-    }
-  }, [SalaAtual.SegundosRestantes]);
+    console.log("vai");
+    let dataAtual = new Date();
+    let dataUltimaPartida =
+      SalaAtual.UltimaNotificacaoFinJogada != ""
+        ? new Date(SalaAtual.UltimaNotificacaoFinJogada)
+        : new Date();
 
+    var diferencaEmMilissegundos = Math.abs(dataAtual - dataUltimaPartida);
+
+    if ((diferencaEmMilissegundos/1000) > 10) return;
+
+    setItemRuleta(SalaAtual.RuletaGenerada);
+    setTimeout(() => {
+      spinRoulette(SalaAtual.IndiceGanador);
+      setTimeout(() => {
+        spinRoulette([]);
+      }, 1000);
+    }, 1500);
+ 
+    return ()=> setItemRuleta([])
+  }, [SalaAtual.UltimaNotificacaoFinJogada]);
+console.log(SalaAtual.UltimaNotificacaoFinJogada)
+console.log(SalaAtual.RuletaGenerada)
   function spinRoulette(numeroRandom) {
     const rotation = numeroRandom * -55;
     if (!ruletaRef || !ruletaRef.current) return;
     ruletaRef.current.style.transform = `translateX(${rotation}px)`;
   }
-  console.log(SalaAtual.IndiceGanador);
   return (
     <div className="col-sm-12 col-md-8">
       <div className="card bg-dark ">
         <div className="card-body py-4  d-flex flex-column">
-          {SalaAtual.SegundosRestantes == 0 &&
-          SalaAtual.RuletaGenerada.length > 0 ? (
+          {ruletaItems.length > 0 ? (
             <RuletaComponente id="Ruleta">
               <span className="indicador"></span>
               <span className="indicador-end"></span>
@@ -143,9 +154,9 @@ export function Mesa() {
   );
 }
 
-const RuletaItem = ({ lado, key }) => {
+const RuletaItem = ({ lado }) => {
   return (
-    <div className="" key={key}>
+    <div className="">
       <Image
         src={lado == 1 ? Azul : Rojo}
         alt="lado hg"

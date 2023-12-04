@@ -39,7 +39,6 @@ export const CuadroAposta = ({ idMesa }) => {
         null,
         "Insira um valor maior que 0"
       );
-      debugger;
     const novaAposta = {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,

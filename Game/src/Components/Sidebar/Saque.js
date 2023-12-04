@@ -19,7 +19,7 @@ export const ModalSaque = ({ show, close }) => {
     const chavePix = data["chavePix"].value;
 
     loading.ativarLoading();
-    const { error, ...dataResponse } = executarREST("user/retiro/", "POST", {
+    const { error} = executarREST("user/retiro/", "POST", {
       userId: Usuario.Id,
       monto: valor,
       chavePix: chavePix,

@@ -5,7 +5,6 @@ export const useRedirectApp = () => {
 
   return {
     IrPara: (url = "/Salas?room=1") => {
-      debugger;
       router.push(url);
     },
   };

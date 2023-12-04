@@ -75,7 +75,6 @@ export const ContextAppProvider = ({ children }) => {
   useEffect(() => {
     try {
       ativarLoading();
-      debugger;
       if (!SessionLoginActiva()) {
         return dispatch({ tipo: "CONECTADO", data: false });
       }
