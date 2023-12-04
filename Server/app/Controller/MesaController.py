@@ -52,7 +52,7 @@ class SalasGeral:
             if not jugada.inicio:
                 return
 
-            tiempoJugada = jugada.inicio + timedelta(seconds=30) 
+            tiempoJugada = jugada.inicio + timedelta(seconds=30)
             if datetime.now() >= tiempoJugada:
                 jugada.fin = datetime.now()
                 mesa.status = False
@@ -117,7 +117,9 @@ class SalasGeral:
             porcentagemLadoB=Porcentagem(
                 valorLadoA + valorLadoB
             ).CalcularPorcentagemAReceberPorValor(valorLadoB),
-            IndiceGanador=0,
+            IndiceGanador=jogadaActivaMesa.ladoGanador
+            if (jogadaActivaMesa != None and jogadaActivaMesa.ladoGanador != None)
+            else 0,
             SegundoRestantes=servicoMesa.segundos_restantes(jogadaActivaMesa),
             RuletaGenerada=jogadaActivaMesa.ruleta
             if jogadaActivaMesa != None and jogadaActivaMesa.ruleta != None

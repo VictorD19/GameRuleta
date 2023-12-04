@@ -99,7 +99,9 @@ export default function SalasCard() {
                           height={100}
                         />
                         <h2 className="position-absolute top-50 start-50 translate-middle">
-                          {mesa.SegundosRestantes}
+                          {mesa.SegundosRestantes >= 0
+                            ? mesa.SegundosRestantes
+                            : 30}
                         </h2>
                       </div>
                     ) : (
@@ -160,7 +162,9 @@ export default function SalasCard() {
                         height={100}
                       />
                       <h2 className="position-absolute top-50 start-50 translate-middle">
-                        {mesa.SegundosRestantes}
+                        {mesa.SegundosRestantes >= 0
+                          ? mesa.SegundosRestantes
+                          : 0}
                       </h2>
                     </div>
                   ) : (

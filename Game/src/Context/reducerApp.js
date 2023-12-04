@@ -49,7 +49,7 @@ export const DataInicialApp = {
     PorcentagemB: 100,
     TotalApostado: 0,
     IndiceGanador: 0,
-    SegundosRestantes: 0,
+    SegundosRestantes: 30,
     HistoricoPartidas: [],
     RuletaGenerada: [],
   },

@@ -53,10 +53,13 @@ export function Mesa() {
   } = useDataContext();
 
   useEffect(() => {
-    if (SalaAtual.SegundosRestantes < 0) {
+    if (
+      SalaAtual.SegundosRestantes == 0 &&
+      SalaAtual.RuletaGenerada.length > 0
+    ) {
       setItemRuleta(SalaAtual.RuletaGenerada);
       setTimeout(() => {
-        spinRoulette(80);
+        spinRoulette(SalaAtual.IndiceGanador);
       }, 1500);
     }
   }, [SalaAtual.SegundosRestantes]);
@@ -66,12 +69,13 @@ export function Mesa() {
     if (!ruletaRef || !ruletaRef.current) return;
     ruletaRef.current.style.transform = `translateX(${rotation}px)`;
   }
-
+  console.log(SalaAtual.IndiceGanador);
   return (
     <div className="col-sm-12 col-md-8">
       <div className="card bg-dark ">
         <div className="card-body py-4  d-flex flex-column">
-          {SalaAtual.SegundosRestantes < 0 ? (
+          {SalaAtual.SegundosRestantes == 0 &&
+          SalaAtual.RuletaGenerada.length > 0 ? (
             <RuletaComponente id="Ruleta">
               <span className="indicador"></span>
               <span className="indicador-end"></span>
@@ -101,7 +105,9 @@ export function Mesa() {
                 <div className="position-relative">
                   <Image src={Relogio} alt="loading" width={100} height={100} />
                   <h2 className="position-absolute top-50 start-50 translate-middle">
-                    {SalaAtual.SegundosRestantes}
+                    {SalaAtual.SegundosRestantes >= 0
+                      ? SalaAtual.SegundosRestantes
+                      : 30}
                   </h2>
                 </div>
                 <div className="text-center text-white">

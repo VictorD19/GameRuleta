@@ -118,16 +118,18 @@ class Mesa:
     def segundos_restantes(self, jugada: JugadaModel | list):
         if type(jugada) == list and len(jugada) > 0:
             jugada = jugada[0]
-        else: 
-            return 0
-        
+        elif type(jugada) == JugadaModel and jugada != None:
+            jugada = jugada
+        else:
+            return -1
+
         if not jugada.inicio:
-            return 0
-        
+            return -1
+
         limite = jugada.inicio + timedelta(seconds=30)
         restante = limite - datetime.now()
         return (
-            restante.seconds if restante.seconds >= 1 and restante.seconds <= 30 else 0
+            restante.seconds if restante.seconds >= 1 and restante.seconds <= 30 else -1
         )
 
     async def ObterDetallesMesas(self):

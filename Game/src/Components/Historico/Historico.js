@@ -12,9 +12,11 @@ export default function Historico({ historicos = [] }) {
             <span className="col-3">Players</span>
             <span className="col-3">Total</span>
           </div>
-          {historicos.map((historico, i) => (
-            <HistoricoItem historico={historico} key={"historico" + i} />
-          ))}
+          {historicos
+            .sort((a, b) => b.idJogada - a.idJogada)
+            .map((historico, i) => (
+              <HistoricoItem historico={historico} key={"historico" + i} />
+            ))}
         </div>
       </div>
     </div>
