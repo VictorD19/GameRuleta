@@ -52,7 +52,9 @@ class Ruleta:
         random.seed(a=time.second, version=2)
         ruleta = ruleta.replace("]","").replace("[","").replace(' ','')
         ruleta = ruleta.split(',')
-        return random.choice(ruleta)
+        index = random.choice([i for i in range(100)])
+        ladoGanador = ruleta[index]
+        return index, ladoGanador
 
     
     # endregion

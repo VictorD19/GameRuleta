@@ -70,6 +70,7 @@ class JugadaModel(Base):
     ladoA: Mapped[float] = mapped_column(nullable=True)
     ladoB: Mapped[float] = mapped_column(nullable=True)
     ladoGanador: Mapped[int] = mapped_column(nullable=True)
+    IndiceGanador: Mapped[int] = mapped_column(nullable=True)
     creacion: Mapped[datetime]
     inicio: Mapped[datetime] = mapped_column(nullable=True)
     fin: Mapped[datetime] = mapped_column(nullable=True)

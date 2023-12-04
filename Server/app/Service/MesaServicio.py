@@ -13,7 +13,7 @@ import math
 class Mesa:
     def __init__(self, session: Session) -> None:
         self.session = session
-
+    
     # region Metodos Auxiliares
     def ObterNovoValorTotalDoLadoApostado(self, apuesta: Apuesta, jugada: JugadaModel):
         if apuesta.IdLadoApostado == 1:

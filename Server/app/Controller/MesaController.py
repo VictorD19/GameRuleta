@@ -30,12 +30,6 @@ class SalasGeral:
         try:
             if not (
                 mesa := (
-                    # self.session.scalars(
-                    #     select(MesaModel)
-                    #     .join(MesaModel.jugada)
-                    #     .where(MesaModel.id == idMesa)
-                    #     .where(MesaModel.status == True)
-                    # ).one()]
                     self.session.query(MesaModel)
                     .filter(and_(MesaModel.id == idMesa, MesaModel.status == True))
                     .options(joinedload(MesaModel.jugada))
@@ -56,9 +50,12 @@ class SalasGeral:
             if datetime.now() >= tiempoJugada:
                 jugada.fin = datetime.now()
                 mesa.status = False
-                jugada.ladoGanador = int(
-                    Ruleta(jugada=jugada).selecionar_ganador(ruleta=jugada.ruleta)
+                index, ladoGanador = Ruleta(jugada=jugada).selecionar_ganador(
+                    ruleta=jugada.ruleta
                 )
+                jugada.ladoGanador = int(ladoGanador)
+                jugada.IndiceGanador = index
+
                 if not (
                     Mesa(session=self.session).PagarJugadoresGanador(jugada=jugada)
                 ):
@@ -74,6 +71,17 @@ class SalasGeral:
         except Exception as ex:
             self.session.rollback()
             raise HTTPException(status_code=400, detail=str(ex))
+
+    def ObterUltimoIndexLadoGanador(self):
+        try:
+            if not (
+                jugada := self.session.query(JugadaModel)
+                .filter(JugadaModel.fin.is_not(None)).order_by(JugadaModel.fin)                
+            ):
+                return 0, 0
+            return jugada.IndiceGanador, jugada.ladoGanador
+        except Exception as ex:
+            return 0, 0
 
     async def ObterDadosMesaPorId(self, idMesa: int):
         servicoMesa = Mesa(self.session)
@@ -96,11 +104,14 @@ class SalasGeral:
             idlado=1,
             valorTotalLado=valorLadoA,
         )
+
         jugadoresLadoB = self.ObterDatosJugadoresPorLado(
             list(apuestas),
             idlado=2,
             valorTotalLado=valorLadoB,
         )
+
+        ultimoIndiceGanador, ultimoLadoGanador = self.ObterUltimoIndexLadoGanador()
 
         detallesMesa = MesaDetalhesCompletos(
             idMesa=existeMesa.id if existeMesa else 0,
@@ -117,9 +128,8 @@ class SalasGeral:
             porcentagemLadoB=Porcentagem(
                 valorLadoA + valorLadoB
             ).CalcularPorcentagemAReceberPorValor(valorLadoB),
-            IndiceGanador=jogadaActivaMesa.ladoGanador
-            if (jogadaActivaMesa != None and jogadaActivaMesa.ladoGanador != None)
-            else 0,
+            ultimoIndiceGanador=int(ultimoIndiceGanador),
+            ultimoLadoGanador=int(ultimoLadoGanador),
             SegundoRestantes=servicoMesa.segundos_restantes(jogadaActivaMesa),
             RuletaGenerada=jogadaActivaMesa.ruleta
             if jogadaActivaMesa != None and jogadaActivaMesa.ruleta != None
