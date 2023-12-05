@@ -48,7 +48,7 @@ export const ContextAppProvider = ({ children }) => {
     useState(false);
   const [modalLoginVisibilidade, setVisibilidadeModalLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [ruletaActiva, setRuletaActiva] = useState(false);
   const cerrarModalLogin = () => setVisibilidadeModalLogin(false);
   const abrirModalLogin = () => setVisibilidadeModalLogin(true);
 
@@ -60,6 +60,10 @@ export const ContextAppProvider = ({ children }) => {
   const loading = {
     ativarLoading,
     desativarLoading,
+  };
+  const ruletaState = {
+    ruletaActiva,
+    setRuletaActiva,
   };
   const loginsMethod = {
     cerrarModalRegistro,
@@ -124,6 +128,7 @@ export const ContextAppProvider = ({ children }) => {
         modalRegistroVisibilidade,
         modalLoginVisibilidade,
         loginsMethod,
+        ruletaState,
         loading,
       }}
     >
@@ -143,6 +148,7 @@ export const useDataContext = () => {
     modalLoginVisibilidade,
     loginsMethod,
     loading,
+    ruletaState,
   } = useContext(ContextoApp);
   return {
     appData,
@@ -153,6 +159,7 @@ export const useDataContext = () => {
     modalRegistroVisibilidade,
     modalLoginVisibilidade,
     loginsMethod,
+    ruletaState,
   };
 };
 

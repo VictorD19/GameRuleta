@@ -12,6 +12,8 @@ import { useDataContext } from "@/Context";
 import LoadingRelogion from "../../Assert/loadinEspera.svg";
 import { executarREST } from "@/Api";
 import { CriarAlerta, TIPO_ALERTA } from "../Alertas/Alertas";
+import { useAuthHook } from "@/Hooks/AuthHook";
+import { Ganador } from "../Ganador";
 const RuletaComponente = styled.div`
   position: relative;
   width: 100%;
@@ -49,10 +51,12 @@ const numbersArray = Array.from({ length: 100 }, (_, index) => index + 1);
 // Trigger the animatio
 export function Mesa() {
   const [ruletaItems, setItemRuleta] = useState([]);
-  const [bloquearTudo, setBloquearTudo] = useState(false);
+  const [exibirGanhador, setGanhador] = useState(true);
   const ruletaRef = useRef(null);
+  const { SessionLoginActiva } = useAuthHook();
   const {
     appData: { SalaAtual, Usuario },
+    ruletaState,
     dispatch,
   } = useDataContext();
 
@@ -64,9 +68,8 @@ export function Mesa() {
         : new Date();
 
     var diferencaEmMilissegundos = Math.abs(dataAtual - dataUltimaPartida);
-    console.log(diferencaEmMilissegundos / 1000 > 10);
     if (diferencaEmMilissegundos / 1000 > 10) return;
-
+    ruletaState.setRuletaActiva(true);
     setItemRuleta(SalaAtual.RuletaGenerada);
 
     setTimeout(() => {
@@ -74,6 +77,7 @@ export function Mesa() {
       setTimeout(() => {
         setItemRuleta([]);
         (async () => {
+          if (!SessionLoginActiva()) return;
           const { error, ...data } = await executarREST(
             "user/saldo-cliente/" + Usuario.Id,
             "GET"
@@ -86,7 +90,14 @@ export function Mesa() {
             data: { Saldo: data.account + data.ganancias },
           });
         })();
-      }, 3000);
+        ruletaState.setRuletaActiva(false);
+        setTimeout(() => {
+          setGanhador(true);
+          setTimeout(() => {
+            setGanhador(false);
+          }, 2000);
+        }, 1000);
+      }, 5000);
     }, 100);
 
     return () => setItemRuleta([]);
@@ -165,6 +176,7 @@ export function Mesa() {
           )}
         </div>
       </div>
+      {exibirGanhador && <Ganador />}
     </div>
   );
 }

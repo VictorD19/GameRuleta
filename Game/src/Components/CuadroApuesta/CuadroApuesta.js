@@ -11,7 +11,8 @@ import { useSearchParams } from "next/navigation";
 export const CuadroAposta = ({ idMesa }) => {
   const [valor, setValor] = useState(0);
   const { SessionLoginActiva } = useAuthHook();
-  const { appData, loginsMethod, dispatch, loading } = useDataContext();
+  const { appData, loginsMethod, dispatch, loading, ruletaState } =
+    useDataContext();
   const { Usuario } = appData;
   const params = useSearchParams();
   const roomAtual = params.get("room");
@@ -53,7 +54,7 @@ export const CuadroAposta = ({ idMesa }) => {
     );
     loading.desativarLoading();
     if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
-    
+
     dispatch({
       tipo: "DADOS_USUARIO",
       data: { Saldo: (Usuario.Saldo - valor).toFixed(2) },
@@ -78,7 +79,7 @@ export const CuadroAposta = ({ idMesa }) => {
         null,
         "Insira um valor maior que 0"
       );
- 
+
     const novaAposta = {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,
@@ -111,6 +112,10 @@ export const CuadroAposta = ({ idMesa }) => {
         <div className="card-header text-white text-center">APOSTAR AGORA</div>
         <div className="card-body p-4 ">
           <Form className="d-flex flex-column align-items-center">
+            <div className="text-center">
+              <p className="p-0 m-0">Saldo Disponivel</p>
+              <h5>{parseFloat(`${Usuario.Saldo}`).toFixed(2)}</h5>
+            </div>
             <FormControl
               type="number"
               className="form-control my-3 w-100 "
@@ -165,6 +170,7 @@ export const CuadroAposta = ({ idMesa }) => {
                 <Button
                   onClick={ApostarLadoA}
                   className="p-2"
+                  disabled={ruletaState.ruletaActiva}
                   style={{ width: "99%", fontSize: "0.8em" }}
                 >
                   AZUL
@@ -174,6 +180,7 @@ export const CuadroAposta = ({ idMesa }) => {
                 <Button
                   variant="danger"
                   className="p-2"
+                  disabled={ruletaState.ruletaActiva}
                   style={{ width: "99%", fontSize: "0.8em" }}
                   onClick={ApostarLadoB}
                 >
