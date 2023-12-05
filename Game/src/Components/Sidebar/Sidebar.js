@@ -166,7 +166,7 @@ export function Sidebar({
                   </b>
                 </span>
                 <div className="d-flex justify-content-between">
-                  <h1>R$ {Usuario.Saldo}</h1>
+                  <h1>R$ {Usuario.Saldo.toFixed(2)}</h1>
                   <IoSyncOutline
                     color="#fff"
                     size={30}

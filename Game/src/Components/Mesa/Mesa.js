@@ -10,6 +10,7 @@ import Azul from "../../Assert/fichaAzul.svg";
 import Rojo from "../../Assert/fichaRojo.svg";
 import { useDataContext } from "@/Context";
 import LoadingRelogion from "../../Assert/loadinEspera.svg";
+import { executarREST } from "@/Api";
 const RuletaComponente = styled.div`
   position: relative;
   width: 100%;
