@@ -166,7 +166,12 @@ export function Sidebar({
                   </b>
                 </span>
                 <div className="d-flex justify-content-between">
-                  <h1>R$ {Usuario.Saldo.toFixed(2)}</h1>
+                  <h1>
+                    R${" "}
+                    {Usuario.Saldo != null
+                      ? parseFloat(`${Usuario.Saldo}`).toFixed(2)
+                      : 0}
+                  </h1>
                   <IoSyncOutline
                     color="#fff"
                     size={30}

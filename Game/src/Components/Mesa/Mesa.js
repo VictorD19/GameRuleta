@@ -80,14 +80,14 @@ export function Mesa() {
           );
 
           if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
-          console.log(data);
+
           dispatch({
             tipo: "DADOS_USUARIO",
             data: { Saldo: data.account + data.ganancias },
           });
         })();
       }, 3000);
-    }, 1500);
+    }, 100);
 
     return () => setItemRuleta([]);
   }, [SalaAtual.UltimaNotificacaoFinJogada]);
