@@ -5,6 +5,7 @@ from Schemas.SchemaUser import DetalhesApuestaUsuario
 from Schemas.Exection import ControllerException
 from Models.model import ApuestaModel, JugadaModel, Session, MesaModel
 from Service.Porcentagem import Porcentagem
+from Service.datetime_now import datetime_local_actual
 from Service.Ruleta import Ruleta
 from sqlalchemy import select, and_, desc
 from sqlalchemy.orm import joinedload
@@ -47,8 +48,8 @@ class SalasGeral:
                 return
 
             tiempoJugada = jugada.inicio + timedelta(seconds=30)
-            if datetime.now() >= tiempoJugada:
-                jugada.fin = datetime.now()
+            if datetime_local_actual() >= tiempoJugada:
+                jugada.fin = datetime_local_actual()
                 mesa.status = False
                 index, ladoGanador = Ruleta(jugada=jugada).selecionar_ganador(
                     ruleta=jugada.ruleta

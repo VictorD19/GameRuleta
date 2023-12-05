@@ -2,6 +2,7 @@ from Models.model import JugadaModel, ApuestaModel, MesaModel, UserModel
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select, and_, desc
 from Schemas.Apuesta import Apuesta
+from Service.datetime_now import datetime_local_actual
 from Service.Porcentagem import Porcentagem
 from Schemas.Exection import ServicoException
 from datetime import datetime, timedelta
@@ -75,7 +76,7 @@ class Mesa:
 
     def CriarNovaJogada(self, apuesta: Apuesta):
         try:
-            novaJogada = JugadaModel(mesa=apuesta.IdMesa, creacion=datetime.now())
+            novaJogada = JugadaModel(mesa=apuesta.IdMesa, creacion=datetime_local_actual())
 
             if apuesta.IdLadoApostado == 1:
                 novaJogada.ladoA = apuesta.ValorApostado
@@ -111,7 +112,7 @@ class Mesa:
             lado=apuesta.IdLadoApostado,
             jugada=jugada.id,
             porcentaje=porcentagemJugada,
-            fecha=datetime.now(),
+            fecha=datetime_local_actual(),
         )
         self.session.add(nuevaApuesta)
         return nuevaApuesta
@@ -128,7 +129,7 @@ class Mesa:
             return -1
 
         limite = jugada.inicio + timedelta(seconds=30)
-        restante = limite - datetime.now()
+        restante = limite - datetime_local_actual()
         return (
             restante.seconds if restante.seconds >= 1 and restante.seconds <= 30 else -1
         )

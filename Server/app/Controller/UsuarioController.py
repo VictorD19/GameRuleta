@@ -9,6 +9,7 @@ from random import choice
 from Service.APIAsaasService import NewCobropix, NewTransferenciaPIX
 from Service.send_mail import Send_Mail
 from Service import templates_mail
+from Service.datetime_now import datetime_local_actual
 from Service.securtity import get_password_hash
 from Schemas.Exection import ControllerException
 from Schemas.SchemaUser import UserPublic, TransaccionesBanco, RetiroFondos, StatusPix
@@ -117,7 +118,7 @@ class Banco:
                 usuarioTransaccion=self.user,
                 idExterno=idTransac,
                 monto=self.monto,
-                fechaCreado=datetime.now(),
+                fechaCreado=datetime_local_actual(),
             )
             self.session.add(transaccion)
             self.session.commit()
@@ -146,7 +147,7 @@ class Banco:
                     status_code=400, detail="Monto invalido para actualizar"
                 )
             transac.status = True
-            transac.fechaPagado = datetime.now()
+            transac.fechaPagado = datetime_local_actual()
 
             cuenta = (
                 self.session.query(UserModel)
@@ -224,7 +225,7 @@ class Banco:
             transaccSalida = TransacSalidaModel(
                 usuario=self.user,
                 monto=retiro.monto,
-                fechaCreado=datetime.now(),
+                fechaCreado=datetime_local_actual(),
                 status=False,
             )
             self.session.add(transaccSalida)

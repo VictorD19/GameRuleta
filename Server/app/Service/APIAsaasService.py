@@ -1,7 +1,7 @@
 import os
 import json
 import requests
-
+from Service.datetime_now import datetime_local_actual
 from fastapi import HTTPException
 from Schemas.Exection import ControllerException
 from Schemas.SchemaUser import RetiroFondos, UserPublic
@@ -23,7 +23,7 @@ class AuthenticationAsaas:
 
 class NewCobropix(AuthenticationAsaas):
     def __init__(self, monto) -> None:
-        self.duedate = datetime.now() + timedelta(days=1)
+        self.duedate = datetime_local_actual() + timedelta(days=1)
         self.url = os.getenv("LINK_API_ASAAS")
         self.chavePIX = os.getenv("CHAVE_PIX_ASAAS")
         self.uri = "/v3/pix/qrCodes/static/"
