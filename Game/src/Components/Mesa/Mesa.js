@@ -103,7 +103,13 @@ export function Mesa() {
   function spinRoulette(numeroRandom) {
     const rotation = numeroRandom * -50;
     if (!ruletaRef || !ruletaRef.current) return;
-    ruletaRef.current.style.transform = `translateX(${rotation}px)`;
+
+    let elemento = document.getElementById("Ganador");
+    let largura = elemento.offsetWidth;
+
+    var translateX = (numeroRandom - 1) * -largura;
+
+    elemento.style.transform = `translateX(${translateX}px)`;
   }
   return (
     <div className="col-sm-12 col-md-8">
@@ -115,7 +121,11 @@ export function Mesa() {
               <span className="indicador-end"></span>
               <RuletaItems id="ruletaItems" ref={ruletaRef}>
                 {ruletaItems.map((lado, i) => (
-                  <RuletaItem lado={lado} key={i} />
+                  <RuletaItem
+                    lado={lado}
+                    key={i}
+                    ganador={SalaAtual.IndiceGanador == i}
+                  />
                 ))}
               </RuletaItems>
             </RuletaComponente>
@@ -178,9 +188,9 @@ export function Mesa() {
   );
 }
 
-const RuletaItem = ({ lado }) => {
+const RuletaItem = ({ lado, ganador }) => {
   return (
-    <div className="">
+    <div className="" id={ganador ? "Ganador" : ""}>
       <Image
         src={lado == 1 ? Azul : Rojo}
         alt="lado hg"

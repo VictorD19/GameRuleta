@@ -13,6 +13,16 @@
             "username": "DBRuletaUser",
             "name": "Game",
             "password": "f71892f166cf242d9392ad069ae4a55c"
+        },
+        {
+            "previewLimit": 50,
+            "server": "15.228.155.231",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "GameRuletaPRD",
+            "database": "DBRuleta",
+            "username": "DBRuletaUser",
+            "password": "f71892f166cf242d9392ad069ae4a55c"
         }
     ]
 }
