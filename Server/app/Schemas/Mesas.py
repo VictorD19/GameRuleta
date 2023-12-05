@@ -35,9 +35,10 @@ class MesaDetalhesCompletos(BaseModel):
     historicoMesa: List[HistoricoMesa]
     porcentagemLadoA: float
     porcentagemLadoB: float
+    ultimoValorTotalJogada: float
     ultimoIndiceGanador: int
     ultimoLadoGanador: int
-    ultimaruletaGenerada:str
+    ultimaruletaGenerada: str
     RuletaGenerada: str
     ultimaDataRuletaGenerada: str
 

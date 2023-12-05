@@ -46,12 +46,9 @@ const RuletaItems = styled.div`
   }
 `;
 
-const numbersArray = Array.from({ length: 100 }, (_, index) => index + 1);
-
-// Trigger the animatio
 export function Mesa() {
   const [ruletaItems, setItemRuleta] = useState([]);
-  const [exibirGanhador, setGanhador] = useState(true);
+  const [exibirGanhador, setGanhador] = useState(false);
   const ruletaRef = useRef(null);
   const { SessionLoginActiva } = useAuthHook();
   const {
@@ -96,7 +93,7 @@ export function Mesa() {
           setTimeout(() => {
             setGanhador(false);
           }, 2000);
-        }, 1000);
+        }, 100);
       }, 5000);
     }, 100);
 

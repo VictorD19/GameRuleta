@@ -50,6 +50,7 @@ export const DataInicialApp = {
     TotalApostado: 0,
     IndiceGanador: 0,
     LadoGanador: 0,
+    UltimoValorTotal: 0,
     UltimaNotificacaoFinJogada: "",
     SegundosRestantes: 30,
     HistoricoPartidas: [],
@@ -82,10 +83,14 @@ export const reducer = (state, action) => {
       salaAtual.TotalApostado = dadosSalaAtual.totalApostado;
       salaAtual.HistoricoPartidas = dadosSalaAtual.historicoMesa;
       salaAtual.SegundosRestantes = dadosSalaAtual.SegundoRestantes;
-      salaAtual.RuletaGenerada = JSON.parse(dadosSalaAtual.ultimaruletaGenerada);
+      salaAtual.RuletaGenerada = JSON.parse(
+        dadosSalaAtual.ultimaruletaGenerada
+      );
       salaAtual.IndiceGanador = dadosSalaAtual.ultimoIndiceGanador;
       salaAtual.LadoGanador = dadosSalaAtual.ultimoLadoGanador;
-      salaAtual.UltimaNotificacaoFinJogada = dadosSalaAtual.ultimaDataRuletaGenerada;
+      salaAtual.UltimaNotificacaoFinJogada =
+        dadosSalaAtual.ultimaDataRuletaGenerada;
+      salaAtual.UltimoValorTotal = dadosSalaAtual.ultimoValorTotalJogada;
       return {
         ...state,
         SalaAtual: salaAtual,

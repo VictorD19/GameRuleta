@@ -12,7 +12,7 @@ export const Ganador = () => {
           O LADO {ObterDadosLado(SalaAtual.LadoGanador).Icon} GANHOU UM TOTAL DE
         </h5>
         <h1 style={{ fontWeight: "700", zIndex: "4" }}>
-          R$ {SalaAtual.TotalApostado.toFixed(2)}
+          R$ {SalaAtual.UltimoValorTotal.toFixed(2)}
         </h1>
         <Image
           src={Espera}
