@@ -109,11 +109,12 @@ class ApuestaController:
                     )
 
                 jugadaActiva.ruleta = str(Ruleta(jugada=jugadaActiva).GenerarRuleta())
-               
+
                 self.session.commit()
                 self.session.refresh(jugadaActiva)
                 self.descontarSaldo()
-                return
+
+                return Response()
             else:
                 # si la mesa esa cerrada entra en este flujo
                 if not (

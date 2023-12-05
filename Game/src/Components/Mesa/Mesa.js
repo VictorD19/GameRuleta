@@ -54,7 +54,6 @@ export function Mesa() {
   } = useDataContext();
 
   useEffect(() => {
-    console.log("vai");
     let dataAtual = new Date();
     let dataUltimaPartida =
       SalaAtual.UltimaNotificacaoFinJogada != ""
@@ -63,22 +62,29 @@ export function Mesa() {
 
     var diferencaEmMilissegundos = Math.abs(dataAtual - dataUltimaPartida);
 
-    if ((diferencaEmMilissegundos/1000) > 10) return;
+    if (diferencaEmMilissegundos / 1000 > 10) return;
 
     setItemRuleta(SalaAtual.RuletaGenerada);
+
     setTimeout(() => {
       spinRoulette(SalaAtual.IndiceGanador);
       setTimeout(() => {
-        spinRoulette([]);
-      }, 1000);
-    }, 1500);
- 
-    return ()=> setItemRuleta([])
+        setItemRuleta([]);
+      }, 4000);
+    }, 1000);
+
+    return () => setItemRuleta([]);
   }, [SalaAtual.UltimaNotificacaoFinJogada]);
-console.log(SalaAtual.UltimaNotificacaoFinJogada)
-console.log(SalaAtual.RuletaGenerada)
+  console.log(SalaAtual.UltimaNotificacaoFinJogada);
+  console.log(SalaAtual.IndiceGanador);
+  console.log(
+    `A COR DA RULETA GENERAD É ${
+      SalaAtual.RuletaGenerada[SalaAtual.IndiceGanador] == 1 ? "AZUL" : "ROJO"
+    } (${SalaAtual.IndiceGanador})`
+  );
+
   function spinRoulette(numeroRandom) {
-    const rotation = numeroRandom * -55;
+    const rotation = numeroRandom * -50;
     if (!ruletaRef || !ruletaRef.current) return;
     ruletaRef.current.style.transform = `translateX(${rotation}px)`;
   }

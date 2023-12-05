@@ -1,6 +1,6 @@
 from Models.model import JugadaModel, ApuestaModel, MesaModel, UserModel
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, desc
 from Schemas.Apuesta import Apuesta
 from Service.Porcentagem import Porcentagem
 from Schemas.Exection import ServicoException
@@ -13,7 +13,7 @@ import math
 class Mesa:
     def __init__(self, session: Session) -> None:
         self.session = session
-    
+
     # region Metodos Auxiliares
     def ObterNovoValorTotalDoLadoApostado(self, apuesta: Apuesta, jugada: JugadaModel):
         if apuesta.IdLadoApostado == 1:
@@ -68,6 +68,7 @@ class Mesa:
         return (
             self.session.query(JugadaModel)
             .filter(and_(JugadaModel.mesa == idMesa, JugadaModel.fin != None))
+            .order_by(desc(JugadaModel.fin))
             .limit(15)
             .all()
         )

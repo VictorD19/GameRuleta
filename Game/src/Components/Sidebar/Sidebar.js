@@ -13,12 +13,13 @@ import {
   FaSignOutAlt,
   FaUserAstronaut,
 } from "react-icons/fa";
+import { IoSyncOutline } from "react-icons/io5";
 import { usePathname, useRouter } from "next/navigation";
 import { ModalComponent } from "../Modal/Modal";
 import { useEffect, useState } from "react";
 import { useDataContext } from "@/Context";
 import { CardLogin } from "./cardLogin";
-import { LimparTudoLocalStorage } from "@/Api";
+import { LimparTudoLocalStorage, executarREST } from "@/Api";
 import Profiles from "../../Assert/Profile";
 import { ModalSaque } from "./Saque";
 import { DepositoModal } from "./Deposito";
@@ -105,6 +106,9 @@ export function Sidebar({
     toogle();
   };
 
+  const atualizarSaldo = async () => {
+    // const {error,...data} = executarREST("user/")
+  };
   return (
     <>
       <NavComponent $visible={{ visible: visible == true ? true : false }}>
@@ -150,7 +154,14 @@ export function Sidebar({
                     <FaMoneyBillWave /> Conta{" "}
                   </b>
                 </span>
-                <h1>R$ {Usuario.Saldo}</h1>
+                <div className="d-flex justify-content-between">
+                  <h1>R$ {Usuario.Saldo}</h1>
+                  <IoSyncOutline
+                    color="#fff"
+                    size={30}
+                    onClick={atualizarSaldo}
+                  />
+                </div>
               </div>
               <div className="row">
                 <div className="col-6  px-2">
