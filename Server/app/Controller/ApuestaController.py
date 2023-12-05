@@ -5,6 +5,7 @@ from Schemas.Apuesta import Apuesta
 from Schemas.Exection import ControllerException
 from Service.MesaServicio import Mesa as MesaService
 from Service.Ruleta import Ruleta
+from Service.datetime_now import datetime_local_actual
 
 
 class ApuestaController:
@@ -188,7 +189,7 @@ class ApuestaController:
                         jugadaActiva.ruleta = str(
                             Ruleta(jugada=jugadaActiva).GenerarRuleta()
                         )
-                        jugadaActiva.inicio = datetime.now()
+                        jugadaActiva.inicio = datetime_local_actual()
                         self.session.commit()
                         self.session.refresh(jugadaActiva)
                         self.descontarSaldo()

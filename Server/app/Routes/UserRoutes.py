@@ -19,6 +19,7 @@ from Schemas.SchemaUser import (
 )
 from Schemas.SchemaWebhooks import PaymentEvent
 from Models.model import get_session, UserModel, TransacEntradaModel
+from Service.datetime_now import datetime_local_actual
 from Service.securtity import (
     get_password_hash,
     verify_password,
@@ -78,8 +79,8 @@ def create_user(user: User, session: Session = Depends(get_session)):
                 usuario=usuarioQueIndicou.id,
                 monto=valorBonus,
                 status=True,
-                fechaCreado=datetime.now(),
-                fechaPagado=datetime.now(),
+                fechaCreado=datetime_local_actual(),
+                fechaPagado=datetime_local_actual(),
             )
             session.add(novaTransacion)
             session.commit()
@@ -92,7 +93,7 @@ def create_user(user: User, session: Session = Depends(get_session)):
         avatar=user.avatar,
         account=0.0,
         ganancias=0.0,
-        dataCriacion=datetime.now(),
+        dataCriacion=datetime_local_actual(),
         codIndicacion=f"{user.username}{randint(1,299)}",
         codreferencia=user.codReferencia,
         email=user.email,

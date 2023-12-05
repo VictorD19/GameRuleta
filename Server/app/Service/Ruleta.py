@@ -1,6 +1,7 @@
 from Models.model import JugadaModel
 from Schemas.Ruleta import DadosParaGenerarRuleta, Lados
 from Service.Porcentagem import Porcentagem
+from Service.datetime_now import datetime_local_actual
 from datetime import datetime
 import random
 
@@ -49,7 +50,7 @@ class Ruleta:
             )
 
     def selecionar_ganador(self, ruleta: str):
-        time = datetime.now()
+        time = datetime_local_actual()
         random.seed(a=time.second, version=2)
         ruleta = ruleta.replace("]", "").replace("[", "").replace(" ", "")
         ruleta = ruleta.split(",")
