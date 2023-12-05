@@ -46,7 +46,7 @@ export const Partidas = () => {
           <tr key={"partida_" + id}>
             <td>{ObterDadosLado(partida.lado).Icon}</td>
             <td>{new Date(partida.fecha).toLocaleString()}</td>
-            <td>R$ {parseFloat(partida.monto).toFixed(2)}</td>
+            <td>{partida.resultado ?"+ " : "- "}R$ {parseFloat(partida.monto).toFixed(2)}</td>
             <td>{partida.porcentaje}%</td>
             <td>
               <FaCheckCircle color={partida.resultado ? "green" : "red"} />
