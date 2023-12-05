@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, Response
+from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Header
 from sqlalchemy.orm import Session
 from datetime import datetime
@@ -17,6 +18,7 @@ from Schemas.SchemaUser import (
     UserEmail,
     StatusPix,
 )
+from Schemas.Apuesta import UltimasApuestas
 from Schemas.SchemaWebhooks import PaymentEvent
 from Models.model import get_session, UserModel, TransacEntradaModel
 from Service.datetime_now import datetime_local_actual
@@ -58,7 +60,7 @@ def read_user(
     return user
 
 
-@router.post("/create-user/", response_model=UserPublic, status_code=201)
+@router.post("/create-user", response_model=UserPublic, status_code=201)
 def create_user(user: User, session: Session = Depends(get_session)):
     db_user = session.scalar(
         select(UserModel).where(UserModel.username == user.username)
@@ -143,7 +145,7 @@ def update_user(
     return db_user
 
 
-@router.post("/login/", response_model=Token)
+@router.post("/login", response_model=Token)
 def login_for_access_token(user: User, session: Session = Depends(get_session)):
     userdb = session.scalar(
         select(UserModel).where(UserModel.username == user.username)
@@ -164,7 +166,7 @@ def login_for_access_token(user: User, session: Session = Depends(get_session)):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/refresh_token/", response_model=Token)
+@router.post("/refresh_token", response_model=Token)
 def refresh_access_token(user: User = Depends(get_current_user)):
     new_access_token = create_access_token(data={"id": user.id})
     if not new_access_token:
@@ -226,7 +228,7 @@ def obterTransacciones(
     )
 
 
-@router.post("/retiro/", status_code=200)
+@router.post("/retiro", status_code=200)
 def retiroDeFondos(
     retiro: RetiroFondos,
     session: Session = Depends(get_session),
@@ -240,7 +242,7 @@ def retiroDeFondos(
     return Response(status_code=200)
 
 
-@router.post("/recuperar-senha/", status_code=200)
+@router.post("/recuperar-senha", status_code=200)
 def recuperarSenha(userEmail=UserEmail, session: Session = Depends(get_session)):
     if not (
         emailDB := session.query(UserModel)
@@ -268,11 +270,26 @@ def status_pix(
 
 
 @router.get("/saldo-cliente/{user_id}", status_code=200, response_model=UserSaldo)
-def saldo_cliente(
-    user_id: int,   
-    current_user: UserSaldo = Depends(get_current_user)
-):
+def saldo_cliente(user_id: int, current_user: UserSaldo = Depends(get_current_user)):
     if current_user.id != user_id:
         raise HTTPException(status_code=400, detail="Permissões insuficientes")
 
     return current_user
+
+
+@router.get(
+    "/apuestas-jugador/{user_id}", status_code=200)
+def apuestas(
+    user_id: int,
+    current_user: UserSaldo = Depends(get_current_user),
+    session: Session = Depends(get_session),
+):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=400, detail="Permissões insuficientes")
+
+    if not (
+        listaApuestas := Usuario(session=session).ultimas_apuestas(usuario=current_user)
+    ):
+        return Response(content=[],status_code=200)
+
+    return JSONResponse(listaApuestas, status_code=200)

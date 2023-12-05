@@ -82,6 +82,12 @@ class ApuestaController:
                 raise ControllerException(
                     "A mesa que você está tentando jogar não existe"
                 )
+            
+            # validamos que la apuesta esa dentro de los limites aceptados en esa ruleta
+            if (self.mesa.minimo > self.apuesta.ValorApostado) or (self.apuesta.ValorApostado > self.mesa.maximo):
+                raise ControllerException(
+                    "O valor da aposta está fora dos limites aceitos nesta roleta"
+                )
 
             # si la mesa esta abierta entra en este flujo
             if self.mesa.status:
@@ -115,7 +121,7 @@ class ApuestaController:
                 self.session.refresh(jugadaActiva)
                 self.descontarSaldo()
 
-                return Response()
+                return
             else:
                 # si la mesa esa cerrada entra en este flujo
                 if not (
