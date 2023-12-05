@@ -8,13 +8,14 @@ from sqlalchemy import select
 from Schemas.SchemaUser import (
     UserPublic,
     User,
+    UserSaldo,
     UserUpdate,
     Token,
     QrPix,
     ListTransaccionesBanco,
     RetiroFondos,
     UserEmail,
-    StatusPix
+    StatusPix,
 )
 from Schemas.SchemaWebhooks import PaymentEvent
 from Models.model import get_session, UserModel, TransacEntradaModel
@@ -256,8 +257,21 @@ def recuperarSenha(userEmail=UserEmail, session: Session = Depends(get_session))
 
 
 @router.get("/status-pix/{id_pix}", status_code=200, response_model=StatusPix)
-def status_pix(id_pix:str, session: Session = Depends(get_session), current_user : User = Depends(get_current_user)):
-
+def status_pix(
+    id_pix: str,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
     if current_user:
-        return Banco(session=session, user=current_user).get_status_pix(idPix = id_pix)
+        return Banco(session=session, user=current_user).get_status_pix(idPix=id_pix)
 
+
+@router.get("/saldo-cliente/{user_id}", status_code=200, response_model=UserSaldo)
+def saldo_cliente(
+    user_id: int,   
+    current_user: UserSaldo = Depends(get_current_user)
+):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=400, detail="Permissões insuficientes")
+
+    return current_user
