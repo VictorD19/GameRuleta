@@ -1,6 +1,6 @@
 import os
 from fastapi import Depends, WebSocket, HTTPException
-from sqlalchemy import select, or_, and_
+from sqlalchemy import select, or_, and_, desc
 from sqlalchemy.orm import joinedload
 from dotenv import load_dotenv
 from random import choice
@@ -13,12 +13,14 @@ from Service.datetime_now import datetime_local_actual
 from Service.securtity import get_password_hash
 from Schemas.Exection import ControllerException
 from Schemas.SchemaUser import UserPublic, TransaccionesBanco, RetiroFondos, StatusPix
+from Schemas.Apuesta import UltimaApuesta
 from Models.model import (
     Session,
     get_session,
     TransacEntradaModel,
     UserModel,
     TransacSalidaModel,
+    ApuestaModel,
 )
 from datetime import datetime
 
@@ -64,17 +66,25 @@ class Usuario:
             self.session.rollback()
             return False
 
-    # def ObterApuestaUsuario(self):
-    #     apuestaUsuario = Apuesta
-    #     print(self)
-    #     # apuestaUsuario.IdUsuario = self.WebSocket.query_params["IdUsuario"]
-    #     # apuestaUsuario.IdLadoApostado = self.WebSocket.query_params["IdLadoApostado"]
-    #     # apuestaUsuario.ValorApostado = self.WebSocket.query_params["ValorApostado"]
-    #     return apuestaUsuario
+    def ultimas_apuestas(self, usuario: UserModel):
+        apuestas = (
+            self.session.query(ApuestaModel)
+            .filter(ApuestaModel.usuario == usuario.id)
+            .order_by(desc(ApuestaModel.fecha))
+            .limit(20)
+        )
 
-    # async def HacerApuesta(self):
-    #     apuestaUsuario = self.ObterApuestaUsuario()
-    #     return json.dumps({"Apuesta": "qasas"})
+        return [
+            UltimaApuesta(
+                monto=apuesta.monto,
+                montoResultado=apuesta.montoResultado,
+                porcentaje=apuesta.porcentaje,
+                lado=apuesta.lado,
+                fecha=datetime.strftime(apuesta.fecha, "%d/%m/%Y, %H:%M:%S"),
+                resultado=apuesta.resultado,
+            ).model_dump()
+            for apuesta in apuestas
+        ]
 
 
 class Banco:
@@ -266,7 +276,7 @@ class Banco:
         finally:
             self.session.close()
 
-    def get_status_pix(self, idPix:str):
+    def get_status_pix(self, idPix: str):
         if not (
             statusPix := self.session.scalar(
                 select(TransacEntradaModel).where(
@@ -275,7 +285,7 @@ class Banco:
             )
         ):
             raise HTTPException(
-                status_code=400, detail=StatusPix(error="transação pix não encontrada").model_dump()
+                status_code=400,
+                detail=StatusPix(error="transação pix não encontrada").model_dump(),
             )
         return StatusPix(idQr=statusPix.idExterno, status=statusPix.status).model_dump()
-    
