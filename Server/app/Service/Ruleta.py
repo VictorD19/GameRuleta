@@ -11,11 +11,12 @@ class Ruleta:
         self.__ruletaGenerada = []
 
     def GenerarRuleta(self):
+        self.__ruletaGenerada = []
         dadoGerarRuleta = self.__ObterDatosParaGenerarRuleta()
         for numerador in range(1, 101):
             self.__ruletaGenerada.append(
                 dadoGerarRuleta.IdLadoMaior
-                if dadoGerarRuleta.PorcentagemLadoMaior <= numerador
+                if dadoGerarRuleta.PorcentagemLadoMaior >= numerador
                 else dadoGerarRuleta.IdLadoMenor,
             )
         self.__DesordenarRuleta()
@@ -27,7 +28,7 @@ class Ruleta:
         idLadoMaior: Lados = (
             Lados.AZUL if self.__jugada.ladoA > self.__jugada.ladoB else Lados.ROJO
         )
-        idLadoMenor = Lados.ROJO if idLadoMaior == Lados.AZUL else Lados.AZUL
+        idLadoMenor = Lados.AZUL if idLadoMaior == Lados.ROJO else Lados.ROJO
         porcentagemMaior = Porcentagem(valorTotal).CalcularPorcentagemAReceberPorValor(
             self.__jugada.ladoA if idLadoMaior == Lados.AZUL else self.__jugada.ladoB
         )
@@ -47,14 +48,13 @@ class Ruleta:
                 self.__ruletaGenerada[i],
             )
 
-    def selecionar_ganador(self, ruleta : str):
-        time = datetime.now()        
+    def selecionar_ganador(self, ruleta: str):
+        time = datetime.now()
         random.seed(a=time.second, version=2)
-        ruleta = ruleta.replace("]","").replace("[","").replace(' ','')
-        ruleta = ruleta.split(',')
+        ruleta = ruleta.replace("]", "").replace("[", "").replace(" ", "")
+        ruleta = ruleta.split(",")
         index = random.choice([i for i in range(100)])
         ladoGanador = ruleta[index]
         return index, ladoGanador
 
-    
     # endregion

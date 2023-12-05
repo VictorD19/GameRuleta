@@ -79,13 +79,13 @@ class SalasGeral:
                 .filter(JugadaModel.fin.is_not(None))
                 .order_by(desc(JugadaModel.id))
                 .first()
-            ):                
+            ):
                 return 0, 0
             IndiceGanador = jugada.IndiceGanador if jugada.IndiceGanador else 0
             ladoGanador = jugada.ladoGanador if jugada.ladoGanador else 0
             ultimaruletaGenerada = jugada.ruleta
             dataFin = jugada.fin.strftime("%m/%d/%Y, %H:%M:%S")
-            return IndiceGanador, ladoGanador, ultimaruletaGenerada,dataFin
+            return IndiceGanador, ladoGanador, ultimaruletaGenerada, dataFin
         except Exception as ex:
             return 0, 0
 
@@ -117,7 +117,12 @@ class SalasGeral:
             valorTotalLado=valorLadoB,
         )
 
-        ultimoIndiceGanador, ultimoLadoGanador, ultimaruletaGenerada,dataFin = self.ObterUltimoIndexLadoGanador()
+        (
+            ultimoIndiceGanador,
+            ultimoLadoGanador,
+            ultimaruletaGenerada,
+            dataFin,
+        ) = self.ObterUltimoIndexLadoGanador()
 
         detallesMesa = MesaDetalhesCompletos(
             idMesa=existeMesa.id if existeMesa else 0,
@@ -136,10 +141,10 @@ class SalasGeral:
             ).CalcularPorcentagemAReceberPorValor(valorLadoB),
             ultimoIndiceGanador=int(ultimoIndiceGanador),
             ultimoLadoGanador=int(ultimoLadoGanador),
-            ultimaruletaGenerada = ultimaruletaGenerada,
-            ultimaDataRuletaGenerada = dataFin,
+            ultimaruletaGenerada=ultimaruletaGenerada,
+            ultimaDataRuletaGenerada=dataFin,
             SegundoRestantes=servicoMesa.segundos_restantes(jogadaActivaMesa),
-            RuletaGenerada=jogadaActivaMesa.ruleta            
+            RuletaGenerada=jogadaActivaMesa.ruleta
             if jogadaActivaMesa != None and jogadaActivaMesa.ruleta != None
             else "[]",
         )
