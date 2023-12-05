@@ -70,8 +70,21 @@ export function Mesa() {
       spinRoulette(SalaAtual.IndiceGanador);
       setTimeout(() => {
         setItemRuleta([]);
-      }, 5000);
-    }, 100);
+        (async () => {
+          const { error, ...data } = await executarREST(
+            "user/saldo-cliente/" + Usuario.Id,
+            "GET"
+          );
+
+          if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
+
+          dispatch({
+            tipo: "DADOS_USUARIO",
+            data: { Saldo: data.account + data.ganancias },
+          });
+        })();
+      }, 3000);
+    }, 1500);
 
     return () => setItemRuleta([]);
   }, [SalaAtual.UltimaNotificacaoFinJogada]);
