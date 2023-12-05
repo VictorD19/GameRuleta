@@ -34,7 +34,7 @@ export const Transaciones = () => {
       });
     })();
   }, []);
-
+  console.log(Usuario.HistoricoTransiones);
   return (
     <Table striped variant="dark" responsive>
       <thead>
@@ -48,16 +48,27 @@ export const Transaciones = () => {
       </thead>
       <tbody>
         {Usuario.HistoricoTransiones.map((transacione, index) => (
-          <tr key={"transacion_" + transacione.id}>
-            <td>{transacione.id}</td>
-            <td>{transacione.metodo}</td>
-            <td>{transacione.valor}</td>
-            <td>{transacione.data}</td>
+          <tr key={"transacion_" + index}>
             <td>
-              {transacione.entrada ? (
-                <FaArrowCircleUp color="green" />
+              {transacione.idExterno.substring(
+                transacione.idExterno.length - 5,
+                4
+              )}
+            </td>
+            <td>Pix</td>
+            <td>{transacione.monto}</td>
+            <td>
+              {transacione.fechaPagado != null
+                ? new Date(transacione.fechaPagado).toLocaleString()
+                : new Date(transacione.fechaCreado).toLocaleString()}
+            </td>
+            <td>
+              {transacione.tipo == "entrada" ? (
+                <FaArrowCircleUp color={transacione.status ? "green" : "red"} />
               ) : (
-                <FaArrowCircleDown color="red" />
+                <FaArrowCircleDown
+                  color={transacione.status ? "green" : "red"}
+                />
               )}
             </td>
           </tr>

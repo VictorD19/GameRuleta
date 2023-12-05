@@ -26,7 +26,7 @@ export default function Historico({ historicos = [] }) {
 const HistoricoItem = ({ historico }) => {
   return (
     <div
-      className="row justify-content-center text-start "
+      className="row justify-content-center text-start  "
       style={{ color: "#c1c1c1" }}
     >
       <span className="col-3">{historico.idJogada}</span>
