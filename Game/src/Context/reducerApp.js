@@ -65,6 +65,11 @@ export const reducer = (state, action) => {
         ...state,
         SalasGerais: action.data,
       };
+    case "PARTIDAS":
+      return {
+        ...state,
+        Partidas: action.data,
+      };
     case "SALA_ATUAL":
       let salaAtual = state.SalaAtual;
       let dadosSalaAtual = action.data;
