@@ -29,12 +29,12 @@ const HistoricoItem = ({ historico }) => {
       className="row justify-content-center text-start "
       style={{ color: "#c1c1c1" }}
     >
-      <span className="col-3">#{historico.idJogada}</span>
-      <span className="col-3 text-center">
+      <span className="col-3">{historico.idJogada}</span>
+      <span className="col-3 ">
         {ObterDadosLado(historico.idLadoGanador).Icon}
       </span>
       <span className="col-3">{historico.TotalJogadores}</span>
-      <span className="col-3">R$ {historico.TotalValoApostado}</span>
+      <span className="col-3">R$ {historico.TotalValoApostado.toFixed(2)}</span>
     </div>
   );
 };

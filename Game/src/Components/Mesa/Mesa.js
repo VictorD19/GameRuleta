@@ -61,7 +61,7 @@ export function Mesa() {
         : new Date();
 
     var diferencaEmMilissegundos = Math.abs(dataAtual - dataUltimaPartida);
-
+    console.log(diferencaEmMilissegundos / 1000 > 10);
     if (diferencaEmMilissegundos / 1000 > 10) return;
 
     setItemRuleta(SalaAtual.RuletaGenerada);
@@ -70,18 +70,11 @@ export function Mesa() {
       spinRoulette(SalaAtual.IndiceGanador);
       setTimeout(() => {
         setItemRuleta([]);
-      }, 4000);
-    }, 1000);
+      }, 5000);
+    }, 100);
 
     return () => setItemRuleta([]);
   }, [SalaAtual.UltimaNotificacaoFinJogada]);
-  console.log(SalaAtual.UltimaNotificacaoFinJogada);
-  console.log(SalaAtual.IndiceGanador);
-  console.log(
-    `A COR DA RULETA GENERAD É ${
-      SalaAtual.RuletaGenerada[SalaAtual.IndiceGanador] == 1 ? "AZUL" : "ROJO"
-    } (${SalaAtual.IndiceGanador})`
-  );
 
   function spinRoulette(numeroRandom) {
     const rotation = numeroRandom * -50;
