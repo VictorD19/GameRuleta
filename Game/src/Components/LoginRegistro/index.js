@@ -19,6 +19,36 @@ export const LoginModal = ({ show, cerrarModal }) => {
   const { dispatch, loading, loginsMethod } = useDataContext();
   const { IrPara } = useRedirectApp();
   const { ObterIdUsuariPorToken, SessionLoginActiva } = useAuthHook();
+  const [modalSenha, setMoldaSenha] = useState(false);
+
+  const mostrarModalSenha = () => {
+    cerrarModal()
+    setMoldaSenha(true)
+  };
+  const cerrarModalSenha = () => setMoldaSenha(false);
+  const obterSenhaTemporaria = async (e) => {
+    e.preventDefault();
+    let formulario = e.target;
+    const email = formulario["email"].value;
+    if (!email || !email.includes("@"))
+      return CriarAlerta(
+        TIPO_ALERTA.ERROR,
+        null,
+        "Precisa informar um email valido!"
+      );
+    const { error } = await executarREST("user/recuperar-senha/", "POST", {
+      email,
+    });
+    if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
+
+    CriarAlerta(
+      TIPO_ALERTA.SUCESSO,
+      null,
+      "Recuperação de senha feita com sucesso, uma nova senha sera enviada no seu email!!"
+    );
+    formulario["email"].value = "";
+    cerrarModalSenha();
+  };
   const loginApp = async (event) => {
     event.preventDefault();
     let data = event.target;
@@ -70,46 +100,64 @@ export const LoginModal = ({ show, cerrarModal }) => {
   };
 
   return (
-    <ModalComponent titulo={"Entrar"} show={show} cerrarModal={cerrarModal}>
-      <Form onSubmit={loginApp}>
-        <Form.Label htmlFor="usuario">Usuario</Form.Label>
-        <FormControl type="text" id="usuario" className="mb-3" required />
-        <Form.Label htmlFor="senha">Senha</Form.Label>
-        <FormControl type="password" className="mb-2" required id="senha" />
-        <div className="d-flex justify-content-between">
-          <Button
-            className=" px-0"
-            variant="text"
-            style={{
-              textDecoration: "underline",
-              color: "#c1c1c1",
-              fontSize: "0.8em",
-            }}
-          >
-            Esqueceu a senha?
-          </Button>
-          <Button
-            className="px-0"
-            onClick={() => {
-              loginsMethod.cerrarModalLogin();
-              loginsMethod.abrirModalRegistro();
-            }}
-            style={{
-              textDecoration: "underline",
-              color: "#c1c1c1",
-              fontSize: "0.8em",
-            }}
-            variant="text"
-          >
-            Não tem Conta?
-          </Button>
-        </div>
+    <>
+      <ModalComponent titulo={"Entrar"} show={show} cerrarModal={cerrarModal}>
+        <Form onSubmit={loginApp}>
+          <Form.Label htmlFor="usuario">Usuario</Form.Label>
+          <FormControl type="text" id="usuario" className="mb-3" required />
+          <Form.Label htmlFor="senha">Senha</Form.Label>
+          <FormControl type="password" className="mb-2" required id="senha" />
+          <div className="d-flex justify-content-between">
+            <Button
+              className=" px-0"
+              variant="text"
+              type="button"
+              onClick={mostrarModalSenha}
+              style={{
+                textDecoration: "underline",
+                color: "#c1c1c1",
+                fontSize: "0.8em",
+              }}
+            >
+              Esqueceu a senha?
+            </Button>
+            <Button
+              className="px-0"
+              onClick={() => {
+                loginsMethod.cerrarModalLogin();
+                loginsMethod.abrirModalRegistro();
+              }}
+              style={{
+                textDecoration: "underline",
+                color: "#c1c1c1",
+                fontSize: "0.8em",
+              }}
+              variant="text"
+            >
+              Não tem Conta?
+            </Button>
+          </div>
 
-        <Button className="w-100 mt-3" type="submit" variant="success">
-          Entrar
-        </Button>
-      </Form>
-    </ModalComponent>
+          <Button className="w-100 mt-3" type="submit" variant="success">
+            Entrar
+          </Button>
+        </Form>
+      </ModalComponent>
+      <ModalComponent
+        titulo={"Recuperação Senha"}
+        show={modalSenha}
+        cerrarModal={cerrarModalSenha}
+      >
+        <Form onSubmit={obterSenhaTemporaria}>
+          <Form.Label htmlFor="email">Email</Form.Label>
+          <FormControl type="text" id="email" className="mb-3" required />
+          
+          <div className="d-flex justify-content-end mt-3">
+            <Button type="submit" variant="primary">Recuperar Senha</Button>
+          </div>
+        </Form>
+      </ModalComponent>
+    </>
   );
 };
 
