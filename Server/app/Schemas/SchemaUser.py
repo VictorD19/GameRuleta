@@ -11,6 +11,10 @@ class User(BaseModel):
     codReferencia: str | None = None
     email: str | None = None
 
+class UserSaldo(BaseModel):
+    id: int | None = None
+    account: float
+    ganancias: float
 
 class UserUpdate(BaseModel):
     username: str | None = None
