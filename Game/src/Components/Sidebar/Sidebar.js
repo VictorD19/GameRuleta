@@ -24,6 +24,7 @@ import Profiles from "../../Assert/Profile";
 import { ModalSaque } from "./Saque";
 import { DepositoModal } from "./Deposito";
 import { useRedirectApp } from "@/Hooks/RoutesHooks";
+import { CriarAlerta, TIPO_ALERTA } from "../Alertas/Alertas";
 const NavComponent = styled.nav`
   display: none;
 
@@ -107,7 +108,17 @@ export function Sidebar({
   };
 
   const atualizarSaldo = async () => {
-    // const {error,...data} = executarREST("user/")
+    const { error, ...data } = await executarREST(
+      "user/saldo-cliente/" + Usuario.Id,
+      "GET"
+    );
+
+    if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
+
+    dispatch({
+      tipo: "DADOS_USUARIO",
+      data: { Saldo: data.account + data.ganancias },
+    });
   };
   return (
     <>
