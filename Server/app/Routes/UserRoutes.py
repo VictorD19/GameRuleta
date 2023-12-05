@@ -242,11 +242,11 @@ def retiroDeFondos(
     return Response(status_code=200)
 
 
-@router.post("/recuperar-senha", status_code=200)
-def recuperarSenha(userEmail=UserEmail, session: Session = Depends(get_session)):
+@router.post("/recuperar-senha/", status_code=200)
+def recuperarSenha(user_email:UserEmail, session: Session = Depends(get_session)):
     if not (
         emailDB := session.query(UserModel)
-        .filter(UserModel.email == userEmail.email)
+        .filter(UserModel.email == user_email.email)
         .first()
     ):
         raise HTTPException(

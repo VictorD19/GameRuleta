@@ -57,6 +57,7 @@ class Usuario:
             usuario.password = get_password_hash(senha_aleatoria)
             self.session.commit()
             self.session.refresh(usuario)
+            return True
 
         except ControllerException as ex:
             self.session.rollback()
