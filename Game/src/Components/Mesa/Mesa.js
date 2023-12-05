@@ -11,6 +11,7 @@ import Rojo from "../../Assert/fichaRojo.svg";
 import { useDataContext } from "@/Context";
 import LoadingRelogion from "../../Assert/loadinEspera.svg";
 import { executarREST } from "@/Api";
+import { CriarAlerta, TIPO_ALERTA } from "../Alertas/Alertas";
 const RuletaComponente = styled.div`
   position: relative;
   width: 100%;
@@ -51,7 +52,8 @@ export function Mesa() {
   const [bloquearTudo, setBloquearTudo] = useState(false);
   const ruletaRef = useRef(null);
   const {
-    appData: { SalaAtual },
+    appData: { SalaAtual, Usuario },
+    dispatch,
   } = useDataContext();
 
   useEffect(() => {
@@ -78,7 +80,7 @@ export function Mesa() {
           );
 
           if (error != null) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
-
+          console.log(data);
           dispatch({
             tipo: "DADOS_USUARIO",
             data: { Saldo: data.account + data.ganancias },
