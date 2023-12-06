@@ -92,7 +92,7 @@ export function Mesa() {
           setGanhador(true);
           setTimeout(() => {
             setGanhador(false);
-          }, 2000);
+          }, 3000);
         }, 100);
       }, 5000);
     }, 100);
@@ -100,17 +100,46 @@ export function Mesa() {
     return () => setItemRuleta([]);
   }, [SalaAtual.UltimaNotificacaoFinJogada]);
 
+
   function spinRoulette(numeroRandom) {
-    const rotation = numeroRandom * -50;
     if (!ruletaRef || !ruletaRef.current) return;
-
     let elemento = document.getElementById("Ganador");
-    let largura = elemento.offsetWidth;
 
-    var translateX = (numeroRandom - 1) * -largura;
+    let totalAnchoContainerRuleta = ruletaRef.current.offsetWidth;
+    let anchoElemento = elemento.offsetWidth;
 
-    elemento.style.transform = `translateX(${translateX}px)`;
-  }
+    // Establecer el tiempo de giro previo (en segundos)
+    let tiempoGiroPrevio = 3; // Ajusta según sea necesario
+    let posiciones  = 75
+    // Calcular la posición final
+    let translateXFinal = totalAnchoContainerRuleta / 2 - anchoElemento / 2 - numeroRandom * anchoElemento;
+
+      ruletaRef.current.style.transition = `${tiempoGiroPrevio}s transform ease-in-out`;
+      ruletaRef.current.style.transform = `translateX(${anchoElemento*-posiciones}px)`;
+
+        setTimeout(() => {
+          // Agregar transición para un movimiento suave hacia la posición final
+          ruletaRef.current.style.transition = `2.5s transform ease-in-out`;
+          ruletaRef.current.style.transform = `translateX(${translateXFinal}px)`;
+      }, tiempoGiroPrevio *1000);
+    
+}
+
+
+  // function spinRoulette(numeroRandom) {
+  //   const rotation = numeroRandom * -50;
+
+  //   if (!ruletaRef || !ruletaRef.current) return;
+  //   let elemento = document.getElementById("Ganador");
+
+    
+  //   let totalAchoContainerRuleta = ruletaRef.current.offsetWidth;
+  //   let larguraELemento = elemento.offsetWidth;
+
+  //   var translateX = totalAchoContainerRuleta /2 - larguraELemento /2 - numeroRandom * larguraELemento
+  //   ruletaRef.current.style.transition = `0.3s all ease-in-out`;
+  //   ruletaRef.current.style.transform = `translateX(${translateX}px)`;
+  // }
   return (
     <div className="col-sm-12 col-md-8">
       <div className="card bg-dark ">
