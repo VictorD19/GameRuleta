@@ -64,6 +64,9 @@ export function Mesa() {
         ? new Date(SalaAtual.UltimaNotificacaoFinJogada)
         : new Date();
 
+    if(dataAtual == dataUltimaPartida)
+    return;
+  
     var diferencaEmMilissegundos = Math.abs(dataAtual - dataUltimaPartida);
     if (diferencaEmMilissegundos / 1000 > 10) return;
     ruletaState.setRuletaActiva(true);
@@ -73,7 +76,7 @@ export function Mesa() {
       spinRoulette(SalaAtual.IndiceGanador);
       setTimeout(() => {
         (async () => {
-          if (!SessionLoginActiva()) return;
+          if (!SessionLoginActiva() || Usuario.Id == 0) return;
           const { error, ...data } = await executarREST(
             "user/saldo-cliente/" + Usuario.Id,
             "GET"
