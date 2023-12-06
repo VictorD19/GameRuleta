@@ -34,7 +34,6 @@ export const Transaciones = () => {
       });
     })();
   }, []);
-  console.log(Usuario.HistoricoTransiones);
   return (
     <Table striped variant="dark" responsive>
       <thead>

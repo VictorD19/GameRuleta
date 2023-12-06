@@ -85,8 +85,8 @@ export default function SalasCard() {
                         </>
                       ) : (
                         <>
-                          <div>Apuesta Min: R$ {mesa.minimo}</div>
-                          <div>Apuesta Max: R$ {mesa.maximo}</div>
+                          <div>Valor Min: R$ {mesa.minimo}</div>
+                          <div>Valor Max: R$ {mesa.maximo}</div>
                         </>
                       )}
                     </div>

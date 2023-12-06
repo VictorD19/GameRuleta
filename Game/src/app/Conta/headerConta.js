@@ -139,7 +139,7 @@ export const HeaderConta = () => {
           </div>
 
           <div className="col-12 col-md-4">
-            <Form.Label htmlFor="DataCreacion">Cuenta Creada:</Form.Label>
+            <Form.Label htmlFor="DataCreacion">Conta Criada:</Form.Label>
             <Form.Control
               id="DataCreacion"
               disabled
