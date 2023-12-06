@@ -92,7 +92,7 @@ export function Mesa() {
           setGanhador(true);
           setTimeout(() => {
             setGanhador(false);
-          }, 3000);
+          }, 6000);
         }, 100);
       }, 5000);
     }, 100);
