@@ -50,27 +50,29 @@ def confirmar_pagamento(
     if current_user.usuarioAdministrador != True:
         raise HTTPException(status_code=401, detail="Usuario não autorizado.")
 
-    TransSal = (
+    if not (TransSal := (
         session.query(TransacSalidaModel)
         .filter(
-            and_(TransacSalidaModel.id == id, TransacSalidaModel.fechaPagado == None,TransacSalidaModel.status == False)
+            and_(
+                TransacSalidaModel.id == id,
+                TransacSalidaModel.fechaPagado == None,
+                TransacSalidaModel.status == False,
+            )
         )
-        .one()
-    )
-
-    if TransSal == None:
+        .first()
+    )):
         raise HTTPException(
             status_code=400,
             detail="Transação Não encontrada para pagamento ou ja foi realizado o pagamento da mesma",
         )
 
+
     TransSal.fechaPagado = datetime.now()
     TransSal.status = True
 
     session.commit()
-    session.flush()
+    session.refresh(TransSal)
     return
-
 
 
 @router.post("/cancelar-pagamento/{id}", status_code=200)
@@ -82,22 +84,18 @@ def cancelar_pagamento(
     if current_user.usuarioAdministrador != True:
         raise HTTPException(status_code=401, detail="Usuario não autorizado.")
 
-    TransSal = (
+    if not (TransSal := (
         session.query(TransacSalidaModel)
-        .filter(
-            and_(TransacSalidaModel.id == id)
-        )
-        .one()
-    )
-
-    if TransSal == None:
+        .filter(TransacSalidaModel.id == id)
+        .first()
+    )):
         raise HTTPException(
             status_code=400,
             detail="Transação Não encontrada para pagamento ou ja foi realizado o pagamento da mesma",
         )
-
-    TransSal.status = False;
+   
+    TransSal.status = False
 
     session.commit()
-    session.flush()
+    session.refresh(TransSal)
     return
