@@ -10,11 +10,14 @@ class User(BaseModel):
     avatar: str | None = None
     codReferencia: str | None = None
     email: str | None = None
+    usuarioAdministrador: bool  = False
+
 
 class UserSaldo(BaseModel):
     id: int | None = None
     account: float
     ganancias: float
+
 
 class UserUpdate(BaseModel):
     username: str | None = None
@@ -63,6 +66,7 @@ class DetalhesApuestaUsuario(BaseModel):
 
 class TransaccionesBanco(BaseModel):
     idExterno: str
+    id: int
     tipo: str
     monto: float
     fechaCreado: datetime

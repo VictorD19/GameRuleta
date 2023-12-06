@@ -193,6 +193,7 @@ class Banco:
         out = [
             TransaccionesBanco(
                 **{
+                    "id":transacc.id,
                     "idExterno": transacc.idExterno,
                     "tipo": "entrada",
                     "monto": transacc.monto,
@@ -205,6 +206,7 @@ class Banco:
         ] + [
             TransaccionesBanco(
                 **{
+                     "id":transacc.id,
                     "idExterno": transacc.idExterno,
                     "tipo": "salida",
                     "monto": transacc.monto,
