@@ -72,7 +72,6 @@ export function Mesa() {
     setTimeout(() => {
       spinRoulette(SalaAtual.IndiceGanador);
       setTimeout(() => {
-        setItemRuleta([]);
         (async () => {
           if (!SessionLoginActiva()) return;
           const { error, ...data } = await executarREST(
@@ -92,6 +91,7 @@ export function Mesa() {
           setGanhador(true);
           setTimeout(() => {
             setGanhador(false);
+            setItemRuleta([]);
           }, 6000);
         }, 100);
       }, 5000);
