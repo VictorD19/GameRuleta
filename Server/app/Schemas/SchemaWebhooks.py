@@ -1,61 +1,69 @@
-from typing import Optional
+from __future__ import annotations
+
+from typing import Any, Optional
+
 from pydantic import BaseModel
 
+
 class Discount(BaseModel):
-    value: float
-    limitDate: Optional[str]
+    value: int
+    limitDate: Any
     dueDateLimitDays: int
     type: str
 
+
 class Fine(BaseModel):
-    value: float
+    value: int
     type: str
 
+
 class Interest(BaseModel):
-    value: float
+    value: int
     type: str
+
 
 class Payment(BaseModel):
     object: str
     id: str
     dateCreated: str
     customer: str
-    paymentLink: Optional[str]
-    value: float
+    paymentLink: Any
+    value: int
     netValue: float
-    originalValue: Optional[float]
-    interestValue: Optional[float]
+    originalValue: Any
+    interestValue: Any
     description: str
     billingType: str
     confirmedDate: str
-    pixTransaction: Optional[str]
-    pixQrCodeId: Optional[str]
+    pixTransaction: str
+    pixQrCodeId: str
     status: str
     dueDate: str
     originalDueDate: str
     paymentDate: str
     clientPaymentDate: str
-    installmentNumber: Optional[int]
+    installmentNumber: Any
     invoiceUrl: str
     invoiceNumber: str
-    externalReference: Optional[str]
+    externalReference: Any
     deleted: bool
     anticipated: bool
     anticipable: bool
     creditDate: str
     estimatedCreditDate: str
     transactionReceiptUrl: str
-    nossoNumero: Optional[str]
-    bankSlipUrl: Optional[str]
-    lastInvoiceViewedDate: Optional[str]
-    lastBankSlipViewedDate: Optional[str]
+    nossoNumero: Any
+    bankSlipUrl: Any
+    lastInvoiceViewedDate: Any
+    lastBankSlipViewedDate: Any
     discount: Discount
     fine: Fine
     interest: Interest
     postalService: bool
-    custody: Optional[str]
-    refunds: Optional[str]
+    custody: Any
+    refunds: Any
 
-class PaymentEvent(BaseModel):
+
+class Model(BaseModel):
     event: str
     payment: Payment
