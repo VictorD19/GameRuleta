@@ -159,13 +159,8 @@ class Banco:
                 )
             transac.status = True
             transac.fechaPagado = datetime_local_actual()
-
-            cuenta = (
-                self.session.query(UserModel)
-                .filter(UserModel.id == self.user.id)
-                .first()
-            )
-            cuenta.account += transac.monto
+            transac.usuarioTransaccion.account += transac.monto
+          
             self.session.commit()
 
         except Exception as ex:

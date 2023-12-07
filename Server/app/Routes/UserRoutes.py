@@ -192,19 +192,17 @@ def newCobroPix(
 
 
 @router.post("/webhook-asaas/", status_code=200)
-def webhookAsaas(
+async def webhookAsaas(
     data: Request,
-    asaaS_access_token: str = Header(..., convert_underscores=False),
     session: Session = Depends(get_session),
 ):
-    if not asaaS_access_token or asaaS_access_token != os.getenv("WEBHOOK_TOKEN_ASAAS"):
+    token = data.headers.get('asaas-access-token')
+    event = json.loads(await data.body())
+    if not token or token != os.getenv("WEBHOOK_TOKEN_ASAAS"):
         raise HTTPException(
-            status_code=400,
-            detail="Encabezado HTTP_ASAAS_ACCESS_TOKEN no proporcionado",
-        )
-    event = json.loads(data.body())
-
-    pprint(event)
+                status_code=400,
+                detail="Encabezado HTTP_ASAAS_ACCESS_TOKEN no proporcionado",
+            )
 
     if event.get("event") == "PAYMENT_CREATED":
         ...
