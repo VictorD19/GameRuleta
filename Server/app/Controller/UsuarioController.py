@@ -165,7 +165,7 @@ class Banco:
                 .filter(UserModel.id == self.user.id)
                 .first()
             )
-            cuenta.account = cuenta.account + transac.monto
+            cuenta.account += transac.monto
             self.session.commit()
 
         except Exception as ex:

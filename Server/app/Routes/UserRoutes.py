@@ -1,10 +1,11 @@
 from dotenv import load_dotenv
-from fastapi import Depends, HTTPException, Response
+from fastapi import Depends, HTTPException, Response, Request
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Header
 from sqlalchemy.orm import Session
 from datetime import datetime
 from random import randint
+from pprint import pprint
 from sqlalchemy import select
 from Schemas.SchemaUser import (
     UserPublic,
@@ -30,6 +31,7 @@ from Service.securtity import (
 )
 from Controller.UsuarioController import Banco, Usuario
 import os
+import json
 
 load_dotenv()
 router = APIRouter()
@@ -191,7 +193,7 @@ def newCobroPix(
 
 @router.post("/webhook-asaas/", status_code=200)
 def webhookAsaas(
-    event: PaymentEvent,
+    data: Request,
     asaaS_access_token: str = Header(..., convert_underscores=False),
     session: Session = Depends(get_session),
 ):
@@ -200,13 +202,17 @@ def webhookAsaas(
             status_code=400,
             detail="Encabezado HTTP_ASAAS_ACCESS_TOKEN no proporcionado",
         )
-    if event.event == "PAYMENT_CREATED":
+    event = json.loads(data.body())
+
+    pprint(event)
+
+    if event.get("event") == "PAYMENT_CREATED":
         ...
 
-    if event.event == "PAYMENT_RECEIVED" and event.payment.billingType == "PIX":
+    if event.get("event") == "PAYMENT_RECEIVED" and event.get("payment").get("billingType") == "PIX":
         Banco(
-            monto=float(event.payment.value), session=session
-        ).actualizaTransaccionEntrada(idTransac=event.payment.pixQrCodeId)
+            monto=float(event.get("payment").get("value")), session=session
+        ).actualizaTransaccionEntrada(idTransac=event.get("payment").get("pixQrCodeId"))
 
     return Response(status_code=200)
 
