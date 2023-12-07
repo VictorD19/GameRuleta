@@ -8,7 +8,10 @@ from Schemas.Exection import ServicoException
 from datetime import datetime, timedelta
 from Schemas.Ruleta import Lados
 from fastapi import HTTPException
+from dotenv import load_dotenv
+import os
 import math
+load_dotenv()
 
 
 class Mesa:
@@ -185,6 +188,8 @@ class Mesa:
                 set(list(map(lambda a: a.usuario, apuestasDelLadoGanador)))
             )
             totalValorJugada = jugada.ladoA + jugada.ladoB
+            # restamos el % de ganancia de la casa
+            totalValorJugada -= (totalValorJugada * float(os.getenv("PORCENTAJE_CASA")))
             totalLadoGanador = jugada.ladoA if jugada.ladoGanador == 1 else jugada.ladoB
 
             for idUser in idsUsuariosApostas:
