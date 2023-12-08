@@ -53,22 +53,21 @@ export default function SalasCard() {
     return () => setSalaActiva(0);
   }, [roomAtual]);
 
-  if (!webservice.readyState) return <LoadingComponet />;
   return (
-    <div className="row my-3 semMarginRow">
+    <div className="row my-3 semMarginRow cardSalaContainer">
       {appData.SalasGerais.length > 0 &&
         appData.SalasGerais.sort((x, a) => x.numero - a.numero).map(
           (mesa, index) => {
             return (
               <div
-                className={`col-sm-12 col-md-4 ${
-                  index > 0 ? "mt-4 mt-md-0" : ""
+                className={`col-sm-12 col-md-4 containerCardSala ${
+                  index > 0 ? "mt-3 mt-md-0" : ""
                 } `}
                 key={"mesa" + mesa.numero}
                 style={{ cursor: "pointer" }}
               >
                 <div
-                  className={`card  ${
+                  className={`card cardSala  ${
                     salaActiva == mesa.numero
                       ? "SalaActiva"
                       : "bg-dark SalaInativa"
@@ -125,7 +124,7 @@ export default function SalasCard() {
           return (
             <div
               className={`col-sm-12 col-md-4 ${
-                index > 0 ? "mt-4 mt-md-0" : ""
+                index > 0 ? "mt-2 mt-md-0" : ""
               } `}
               key={"mesa" + mesa.numero}
               style={{ cursor: "pointer" }}
