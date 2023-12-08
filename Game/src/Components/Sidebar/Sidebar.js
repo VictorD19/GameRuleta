@@ -132,7 +132,7 @@ export function Sidebar({
     });
   };
 
-  useEffect(()=>{},[Usuario])
+  useEffect(()=>{},[Usuario.Id])
   return (
     <>
       <NavComponent $visible={{ visible: visible == true ? true : false }}>
