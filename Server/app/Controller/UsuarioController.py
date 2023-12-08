@@ -1,7 +1,6 @@
 import os
-from fastapi import Depends, WebSocket, HTTPException
-from sqlalchemy import select, or_, and_, desc
-from sqlalchemy.orm import joinedload
+from fastapi import Response, WebSocket, HTTPException
+from sqlalchemy import select, and_, desc
 from dotenv import load_dotenv
 from random import choice
 
@@ -16,7 +15,6 @@ from Schemas.SchemaUser import UserPublic, TransaccionesBanco, RetiroFondos, Sta
 from Schemas.Apuesta import UltimaApuesta
 from Models.model import (
     Session,
-    get_session,
     TransacEntradaModel,
     UserModel,
     TransacSalidaModel,
@@ -202,7 +200,7 @@ class Banco:
             TransaccionesBanco(
                 **{
                      "id":transacc.id,
-                    "idExterno": transacc.idExterno,
+                    "idExterno": transacc.idExterno if transacc.idExterno != None else "",
                     "tipo": "salida",
                     "monto": transacc.monto,
                     "fechaCreado": transacc.fechaCreado,
@@ -231,7 +229,7 @@ class Banco:
 
             # Crear transaccion de salida
             transaccSalida = TransacSalidaModel(
-                usuario=self.user,
+                usuarioTransaccion=self.user,
                 monto=retiro.monto,
                 fechaCreado=datetime_local_actual(),
                 status=False,
@@ -250,19 +248,20 @@ class Banco:
             self.session.commit()
             self.session.refresh(cuenta)
 
+            #Sera desenvolvida depois no momento lo haremos manual
             # Llamar funcion que hace el pix
-            datos, status_code = NewTransferenciaPIX(
-                retiro=retiro, usuario=self.user
-            ).enviarPix()
+            # datos, status_code = NewTransferenciaPIX(
+            #     retiro=retiro, usuario=self.user
+            # ).enviarPix()
 
-            if status_code != 200:
-                raise ControllerException("erro na conexão do banco para enviar pix")
+            # if status_code != 200:
+            #     raise ControllerException("erro na conexão do banco para enviar pix")
 
-            # actualizamos el ID de la transaccion en la tabla
-            transaccSalida.idExterno = datos["id"]
+            # # actualizamos el ID de la transaccion en la tabla
+            # transaccSalida.idExterno = datos["id"]
             self.session.commit()
             self.session.refresh(transaccSalida)
-            return
+            return Response(status_code=200,)
 
         except ControllerException as ex:
             self.session.rollback()

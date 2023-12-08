@@ -22,8 +22,8 @@ export const LoginModal = ({ show, cerrarModal }) => {
   const [modalSenha, setMoldaSenha] = useState(false);
 
   const mostrarModalSenha = () => {
-    cerrarModal()
-    setMoldaSenha(true)
+    cerrarModal();
+    setMoldaSenha(true);
   };
   const cerrarModalSenha = () => setMoldaSenha(false);
   const obterSenhaTemporaria = async (e) => {
@@ -36,9 +36,11 @@ export const LoginModal = ({ show, cerrarModal }) => {
         null,
         "Precisa informar um email valido!"
       );
+    loading.ativarLoading();
     const { error } = await executarREST("user/recuperar-senha/", "POST", {
       email,
     });
+    loading.desativarLoading();
     if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
 
     CriarAlerta(
@@ -97,7 +99,6 @@ export const LoginModal = ({ show, cerrarModal }) => {
     dispatch({ tipo: "DADOS_USUARIO", data: atualizarDados });
     loading.desativarLoading();
     IrPara(`/Salas?room=1`);
-    
   };
 
   return (
@@ -152,9 +153,11 @@ export const LoginModal = ({ show, cerrarModal }) => {
         <Form onSubmit={obterSenhaTemporaria}>
           <Form.Label htmlFor="email">Email</Form.Label>
           <FormControl type="text" id="email" className="mb-3" required />
-          
+
           <div className="d-flex justify-content-end mt-3">
-            <Button type="submit" variant="primary">Recuperar Senha</Button>
+            <Button type="submit" variant="primary">
+              Recuperar Senha
+            </Button>
           </div>
         </Form>
       </ModalComponent>

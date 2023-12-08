@@ -35,6 +35,7 @@ export const DataInicialApp = {
     FotoAvatar: Profiles["Profile1"],
     Nombre: "",
     DataCreacion: "",
+    Administrador: false,
     HistoricoTransiones: [],
   },
   Partidas: [],

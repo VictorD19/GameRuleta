@@ -12,14 +12,22 @@ export const ModalSaque = ({ show, close }) => {
   const { Usuario } = appData;
   const { SessionLoginActiva } = useAuthHook();
   const { IrPara } = useRedirectApp();
-  const onSubmitSaque = (e) => {
+  const onSubmitSaque = async (e) => {
     e.preventDefault();
     let data = e.target;
     const valor = data["valorSaque"].value;
     const chavePix = data["chavePix"].value;
 
+    if (parseFloat(valor) > Usuario.Ganancias)
+      return CriarAlerta(
+        TIPO_ALERTA.ERROR,
+        null,
+        "Você não pode retirar uma quantidade maior que a disponivel R$" +
+          parseFloat(`${Usuario.Ganancias}`).toFixed(2)
+      );
+
     loading.ativarLoading();
-    const { error} = executarREST("user/retiro/", "POST", {
+    const { error } = await executarREST("user/retiro/", "POST", {
       userId: Usuario.Id,
       monto: valor,
       chavePix: chavePix,
@@ -76,8 +84,40 @@ export const ModalSaque = ({ show, close }) => {
           Taxa de saque de 5%. Transferência do valor solicitado em até 24
           horas.
         </p>
-        <div className="my-3 d-flex justify-content-end">
-          <Button type="submit" variant="success">
+        <label className="mb-2 mt-2 text-bold">Tipo Chave</label>
+        <div className="mb-3" style={{ color: "#c1c1c1" }}>
+          <Form.Check
+            inline
+            label="CPF/CNPJ"
+            name="group1"
+            type="radio"
+            id={`cpfcnpj`}
+          />
+          <Form.Check
+            inline
+            label="Telefone"
+            name="group1"
+            type="radio"
+            id={`telefone`}
+          />
+          <Form.Check
+            inline
+            name="group1"
+            label="Chave Aleatoria"
+            type="radio"
+            id={`chavealeatoria`}
+          />
+          <Form.Check
+            inline
+            name="group1"
+            label="E-mail "
+            type="radio"
+            id={`email`}
+          />
+        </div>
+
+        <div className="mt-4 d-flex justify-content-end">
+          <Button type="submit" className="w-100" variant="success">
             Sacar
           </Button>
         </div>

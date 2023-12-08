@@ -1,12 +1,11 @@
 from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, Response, Request
 from fastapi.responses import JSONResponse
-from fastapi import APIRouter, Header
+from fastapi import APIRouter
 from sqlalchemy.orm import Session
-from datetime import datetime
 from random import randint
-from pprint import pprint
 from sqlalchemy import select
+from Schemas.Response import ResponseRequest
 from Schemas.SchemaUser import (
     UserPublic,
     User,
@@ -19,8 +18,6 @@ from Schemas.SchemaUser import (
     UserEmail,
     StatusPix,
 )
-from Schemas.Apuesta import UltimasApuestas
-from Schemas.SchemaWebhooks import PaymentEvent
 from Models.model import get_session, UserModel, TransacEntradaModel
 from Service.datetime_now import datetime_local_actual
 from Service.securtity import (
@@ -35,7 +32,6 @@ import json
 
 load_dotenv()
 router = APIRouter()
-
 
 @router.get("/get/{user_id}", response_model=UserPublic)
 def read_user(
@@ -55,6 +51,7 @@ def read_user(
         saldo=saldo,
         username=db_user.username,
         avatar=db_user.avatar,
+        usuarioAministador = db_user.usuarioAdministrador,
         id=db_user.id,
         dataCriacion=db_user.dataCriacion,
         status=True,
@@ -212,7 +209,7 @@ async def webhookAsaas(
             monto=float(event.get("payment").get("value")), session=session
         ).actualizaTransaccionEntrada(idTransac=event.get("payment").get("pixQrCodeId"))
 
-    return Response(status_code=200)
+    return  
 
 
 @router.get(
@@ -240,10 +237,9 @@ def retiroDeFondos(
 ):
     if current_user.id != retiro.userId:
         raise HTTPException(status_code=400, detail="Permissões insuficientes")
-
+    
     Banco(session=session, user=current_user).retiroFondos(retiro)
-
-    return Response(status_code=200)
+    return ResponseRequest().CrearRespuestaSucesso({"Status":"ok"})
 
 
 @router.post("/recuperar-senha/", status_code=200)
