@@ -57,8 +57,6 @@ class Send_Mail:
     def send(self):
 
         try:
-            
-
             context = ssl.create_default_context()            
             with smtplib.SMTP_SSL(self.smtp_server, self.port, context=context) as server:
                 server.login(self.user, self.password)

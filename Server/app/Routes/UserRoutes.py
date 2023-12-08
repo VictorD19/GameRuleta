@@ -260,7 +260,7 @@ def recuperarSenha(user_email:UserEmail, session: Session = Depends(get_session)
     if not (Usuario(session=session).recuperaSenha(emailDB)):
         raise HTTPException(status_code=400, detail="Não foi possível enviar o Email")
 
-    return Response(status_code=200)
+    return JSONResponse(content={"details":"ok"}, status_code=200)
 
 
 @router.get("/status-pix/{id_pix}", status_code=200, response_model=StatusPix)
