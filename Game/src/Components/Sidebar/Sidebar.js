@@ -8,6 +8,7 @@ import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
 import {
   FaBars,
   FaHistory,
+  FaListOl,
   FaMoneyBillWave,
   FaQuestionCircle,
   FaSignOutAlt,
@@ -61,16 +62,26 @@ const MENUS = [
     Titulo: "CONTA",
     Icon: <FaUserAstronaut />,
     Path: "/Conta",
+    Administrador: false,
   },
   {
     Titulo: "PARTIDAS",
     Icon: <FaHistory />,
     Path: "/Partidas",
+    Administrador: false,
   },
   {
     Titulo: "FAQ",
     Icon: <FaQuestionCircle />,
     Path: "/Faq",
+    Administrador: false,
+  },
+
+  {
+    Titulo: "PAGAMENTOS",
+    Icon: <FaListOl />,
+    Path: "/PagamentosPendentes",
+    Administrador: true,
   },
 ];
 
@@ -120,6 +131,8 @@ export function Sidebar({
       data: { Saldo: data.account + data.ganancias },
     });
   };
+
+  useEffect(()=>{},[Usuario.Id])
   return (
     <>
       <NavComponent $visible={{ visible: visible == true ? true : false }}>
@@ -203,7 +216,9 @@ export function Sidebar({
 
             <div className="sidebar-links">
               <ul className="p-0">
-                {MENUS.map((x, i) => (
+                {MENUS.filter((x) =>
+                  Usuario.Administrador ? 1 : x.Administrador == false
+                ).map((x, i) => (
                   <li
                     className={` tooltip-element  ${
                       pathname

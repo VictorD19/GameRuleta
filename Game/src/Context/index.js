@@ -109,6 +109,7 @@ export const ContextAppProvider = ({ children }) => {
           DataCreacion: data.dataCriacion,
           Nombre: data.username,
           Status: data.status,
+          Administrador: data.usuarioAministador,
         };
 
         dispatch({ tipo: "CONECTADO", data: true });

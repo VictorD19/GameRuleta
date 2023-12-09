@@ -36,6 +36,7 @@ export const DataInicialApp = {
     Nombre: "",
     Ganancias: 0.0,
     DataCreacion: "",
+    Administrador: false,
     HistoricoTransiones: [],
   },
   Partidas: [],

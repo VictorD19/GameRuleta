@@ -33,6 +33,7 @@ class UserPublic(BaseModel):
     status: bool = True
     dataCriacion: datetime | None = None
     ganancias: float | None = None
+    usuarioAministador: bool | None = None
 
 
 class Token(BaseModel):
@@ -66,7 +67,7 @@ class DetalhesApuestaUsuario(BaseModel):
 
 
 class TransaccionesBanco(BaseModel):
-    idExterno: str
+    idExterno: str | None = None
     id: int
     tipo: str
     monto: float
