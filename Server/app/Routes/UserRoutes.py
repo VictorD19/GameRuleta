@@ -55,6 +55,7 @@ def read_user(
         saldo=saldo,
         username=db_user.username,
         avatar=db_user.avatar,
+        ganancias= db_user.ganancias,
         id=db_user.id,
         dataCriacion=db_user.dataCriacion,
         status=True,

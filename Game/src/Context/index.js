@@ -105,6 +105,7 @@ export const ContextAppProvider = ({ children }) => {
           Id: data.id,
           Saldo: data.saldo,
           FotoAvatar: data.avatar,
+          Ganancias: data.ganancias,
           DataCreacion: data.dataCriacion,
           Nombre: data.username,
           Status: data.status,

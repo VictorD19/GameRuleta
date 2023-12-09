@@ -32,6 +32,7 @@ class UserPublic(BaseModel):
     saldo: float | None = None
     status: bool = True
     dataCriacion: datetime | None = None
+    ganancias: float | None = None
 
 
 class Token(BaseModel):

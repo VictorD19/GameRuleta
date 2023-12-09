@@ -222,7 +222,8 @@ class Mesa:
                     apuestaUser.resultado = True
 
                 if cuenta_actual + valorAReceber > jugador.ganancias:
-                    jugador.ganancias += valorAReceber
+                    jugador.account += totalValorApostadoJugador
+                    jugador.ganancias += valorAReceber - totalValorApostadoJugador
 
                 self.session.commit()
             return True

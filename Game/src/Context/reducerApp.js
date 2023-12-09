@@ -34,6 +34,7 @@ export const DataInicialApp = {
     Saldo: 0.0,
     FotoAvatar: Profiles["Profile1"],
     Nombre: "",
+    Ganancias: 0.0,
     DataCreacion: "",
     HistoricoTransiones: [],
   },
