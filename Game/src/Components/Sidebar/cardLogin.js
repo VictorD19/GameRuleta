@@ -55,8 +55,6 @@ export const CardLogin = ({toogle}) => {
           className="text-center"
           style={{ fontSize: "0.8em", color: "#c1c1c1" }}
         >
-          Desenvolvido com muito carinho ❤️
-          <b />
           Jogue com moderação
         </p>
       </CardLoginComponet>
