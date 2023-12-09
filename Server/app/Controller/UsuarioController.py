@@ -1,7 +1,6 @@
 import os
-from fastapi import Depends, WebSocket, HTTPException
-from sqlalchemy import select, or_, and_
-from sqlalchemy.orm import joinedload
+from fastapi import Response, WebSocket, HTTPException
+from sqlalchemy import select, and_, desc
 from dotenv import load_dotenv
 from random import choice
 
@@ -13,12 +12,13 @@ from Service.datetime_now import datetime_local_actual
 from Service.securtity import get_password_hash
 from Schemas.Exection import ControllerException
 from Schemas.SchemaUser import UserPublic, TransaccionesBanco, RetiroFondos, StatusPix
+from Schemas.Apuesta import UltimaApuesta
 from Models.model import (
     Session,
-    get_session,
     TransacEntradaModel,
     UserModel,
     TransacSalidaModel,
+    ApuestaModel,
 )
 from datetime import datetime
 
@@ -55,6 +55,7 @@ class Usuario:
             usuario.password = get_password_hash(senha_aleatoria)
             self.session.commit()
             self.session.refresh(usuario)
+            return True
 
         except ControllerException as ex:
             self.session.rollback()
@@ -64,17 +65,25 @@ class Usuario:
             self.session.rollback()
             return False
 
-    # def ObterApuestaUsuario(self):
-    #     apuestaUsuario = Apuesta
-    #     print(self)
-    #     # apuestaUsuario.IdUsuario = self.WebSocket.query_params["IdUsuario"]
-    #     # apuestaUsuario.IdLadoApostado = self.WebSocket.query_params["IdLadoApostado"]
-    #     # apuestaUsuario.ValorApostado = self.WebSocket.query_params["ValorApostado"]
-    #     return apuestaUsuario
+    def ultimas_apuestas(self, usuario: UserModel):
+        apuestas = (
+            self.session.query(ApuestaModel)
+            .filter(ApuestaModel.usuario == usuario.id)
+            .order_by(desc(ApuestaModel.fecha))
+            .limit(20)
+        )
 
-    # async def HacerApuesta(self):
-    #     apuestaUsuario = self.ObterApuestaUsuario()
-    #     return json.dumps({"Apuesta": "qasas"})
+        return [
+            UltimaApuesta(
+                monto=apuesta.monto,
+                montoResultado=apuesta.montoResultado,
+                porcentaje=apuesta.porcentaje,
+                lado=apuesta.lado,
+                fecha=datetime.strftime(apuesta.fecha, "%d/%m/%Y, %H:%M:%S"),
+                resultado=apuesta.resultado,
+            ).model_dump()
+            for apuesta in apuestas
+        ]
 
 
 class Banco:
@@ -142,6 +151,12 @@ class Banco:
                 .first()
             )
 
+            cant = (
+                self.session.query(TransacEntradaModel)
+                .filter(TransacEntradaModel.usuario == transac.usuario)
+                .count()
+            )
+
             if not transac:
                 raise HTTPException(
                     status_code=400, detail="Monto invalido para actualizar"
@@ -149,12 +164,14 @@ class Banco:
             transac.status = True
             transac.fechaPagado = datetime_local_actual()
 
-            cuenta = (
-                self.session.query(UserModel)
-                .filter(UserModel.id == self.user.id)
-                .first()
-            )
-            cuenta.account = cuenta.account + transac.monto
+            # validamos si es la primera transaccion y acresentamos el bono del primer deposito..
+            if cant == 1:
+                transac.usuarioTransaccion.account += transac.monto + int(
+                    os.getenv("BONO_PRIMER_DEPOSITO")
+                )
+            else:
+                transac.usuarioTransaccion.account += transac.monto
+
             self.session.commit()
 
         except Exception as ex:
@@ -182,6 +199,7 @@ class Banco:
         out = [
             TransaccionesBanco(
                 **{
+                    "id": transacc.id,
                     "idExterno": transacc.idExterno,
                     "tipo": "entrada",
                     "monto": transacc.monto,
@@ -194,7 +212,10 @@ class Banco:
         ] + [
             TransaccionesBanco(
                 **{
-                    "idExterno": transacc.idExterno,
+                    "id": transacc.id,
+                    "idExterno": transacc.idExterno
+                    if transacc.idExterno != None
+                    else "",
                     "tipo": "salida",
                     "monto": transacc.monto,
                     "fechaCreado": transacc.fechaCreado,
@@ -223,7 +244,7 @@ class Banco:
 
             # Crear transaccion de salida
             transaccSalida = TransacSalidaModel(
-                usuario=self.user,
+                usuarioTransaccion=self.user,
                 monto=retiro.monto,
                 fechaCreado=datetime_local_actual(),
                 status=False,
@@ -242,19 +263,22 @@ class Banco:
             self.session.commit()
             self.session.refresh(cuenta)
 
+            # Sera desenvolvida depois no momento lo haremos manual
             # Llamar funcion que hace el pix
-            datos, status_code = NewTransferenciaPIX(
-                retiro=retiro, usuario=self.user
-            ).enviarPix()
+            # datos, status_code = NewTransferenciaPIX(
+            #     retiro=retiro, usuario=self.user
+            # ).enviarPix()
 
-            if status_code != 200:
-                raise ControllerException("erro na conexão do banco para enviar pix")
+            # if status_code != 200:
+            #     raise ControllerException("erro na conexão do banco para enviar pix")
 
-            # actualizamos el ID de la transaccion en la tabla
-            transaccSalida.idExterno = datos["id"]
+            # # actualizamos el ID de la transaccion en la tabla
+            # transaccSalida.idExterno = datos["id"]
             self.session.commit()
             self.session.refresh(transaccSalida)
-            return
+            return Response(
+                status_code=200,
+            )
 
         except ControllerException as ex:
             self.session.rollback()
@@ -266,7 +290,7 @@ class Banco:
         finally:
             self.session.close()
 
-    def get_status_pix(self, idPix:str):
+    def get_status_pix(self, idPix: str):
         if not (
             statusPix := self.session.scalar(
                 select(TransacEntradaModel).where(
@@ -275,7 +299,7 @@ class Banco:
             )
         ):
             raise HTTPException(
-                status_code=400, detail=StatusPix(error="transação pix não encontrada").model_dump()
+                status_code=400,
+                detail=StatusPix(error="transação pix não encontrada").model_dump(),
             )
         return StatusPix(idQr=statusPix.idExterno, status=statusPix.status).model_dump()
-    

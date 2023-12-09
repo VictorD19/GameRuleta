@@ -34,46 +34,64 @@ export const Transaciones = () => {
       });
     })();
   }, []);
-  console.log(Usuario.HistoricoTransiones);
   return (
-    <Table striped variant="dark" responsive>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Metodo</th>
-          <th>Valor (R$)</th>
-          <th>Data</th>
-          <th>Entrada / Saida</th>
-        </tr>
-      </thead>
-      <tbody>
-        {Usuario.HistoricoTransiones.map((transacione, index) => (
-          <tr key={"transacion_" + index}>
-            <td>
-              {transacione.idExterno.substring(
-                transacione.idExterno.length - 5,
-                4
-              )}
-            </td>
-            <td>Pix</td>
-            <td>{transacione.monto}</td>
-            <td>
-              {transacione.fechaPagado != null
-                ? new Date(transacione.fechaPagado).toLocaleString()
-                : new Date(transacione.fechaCreado).toLocaleString()}
-            </td>
-            <td>
-              {transacione.tipo == "entrada" ? (
-                <FaArrowCircleUp color={transacione.status ? "green" : "red"} />
-              ) : (
-                <FaArrowCircleDown
-                  color={transacione.status ? "green" : "red"}
-                />
-              )}
-            </td>
+    <>
+      <p
+        style={{ fontSize: "0.8em", color: "#c1c1c1" }}
+        className="d-flex gap-2"
+      >
+        <span>
+          {" "}
+          <FaArrowCircleUp color={"green"} /> - Deposito com successo
+        </span>
+        <span>
+          {" "}
+          <FaArrowCircleUp color={"red"} /> - Deposito não processado
+        </span>
+        <span>
+          {" "}
+          <FaArrowCircleDown color={"green"} /> - Saque com sucesso
+        </span>
+        <span>
+          {" "}
+          <FaArrowCircleDown color={"red  "} /> - Saque com falha
+        </span>
+      </p>
+      <Table striped variant="dark" responsive>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Metodo</th>
+            <th>Valor (R$)</th>
+            <th>Transaciones</th>
           </tr>
-        ))}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {Usuario.HistoricoTransiones.map((transacione, index) => (
+            <tr key={"transacion_" + index}>
+              <td>
+                {transacione.fechaPagado != null
+                  ? new Date(transacione.fechaPagado).toLocaleString()
+                  : new Date(transacione.fechaCreado).toLocaleString()}
+              </td>
+              <td>Pix</td>
+              <td>{parseFloat(`${transacione.monto}`).toFixed(2)}</td>
+
+              <td>
+                {transacione.tipo == "entrada" ? (
+                  <FaArrowCircleUp
+                    color={transacione.status ? "green" : "red"}
+                  />
+                ) : (
+                  <FaArrowCircleDown
+                    color={transacione.status ? "green" : "red"}
+                  />
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </>
   );
 };

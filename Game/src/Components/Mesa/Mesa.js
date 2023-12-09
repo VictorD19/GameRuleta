@@ -64,6 +64,9 @@ export function Mesa() {
         ? new Date(SalaAtual.UltimaNotificacaoFinJogada)
         : new Date();
 
+    if(dataAtual == dataUltimaPartida)
+    return;
+  
     var diferencaEmMilissegundos = Math.abs(dataAtual - dataUltimaPartida);
     if (diferencaEmMilissegundos / 1000 > 10) return;
     ruletaState.setRuletaActiva(true);
@@ -72,9 +75,8 @@ export function Mesa() {
     setTimeout(() => {
       spinRoulette(SalaAtual.IndiceGanador);
       setTimeout(() => {
-        setItemRuleta([]);
         (async () => {
-          if (!SessionLoginActiva()) return;
+          if (!SessionLoginActiva() || Usuario.Id == 0) return;
           const { error, ...data } = await executarREST(
             "user/saldo-cliente/" + Usuario.Id,
             "GET"
@@ -92,7 +94,8 @@ export function Mesa() {
           setGanhador(true);
           setTimeout(() => {
             setGanhador(false);
-          }, 2000);
+            setItemRuleta([]);
+          }, 6000);
         }, 100);
       }, 5000);
     }, 100);
@@ -100,11 +103,46 @@ export function Mesa() {
     return () => setItemRuleta([]);
   }, [SalaAtual.UltimaNotificacaoFinJogada]);
 
+
   function spinRoulette(numeroRandom) {
-    const rotation = numeroRandom * -50;
     if (!ruletaRef || !ruletaRef.current) return;
-    ruletaRef.current.style.transform = `translateX(${rotation}px)`;
-  }
+    let elemento = document.getElementById("Ganador");
+
+    let totalAnchoContainerRuleta = ruletaRef.current.offsetWidth;
+    let anchoElemento = elemento.offsetWidth;
+
+    // Establecer el tiempo de giro previo (en segundos)
+    let tiempoGiroPrevio = 3; // Ajusta según sea necesario
+    let posiciones  = 75
+    // Calcular la posición final
+    let translateXFinal = totalAnchoContainerRuleta / 2 - anchoElemento / 2 - numeroRandom * anchoElemento;
+
+      ruletaRef.current.style.transition = `${tiempoGiroPrevio}s transform ease-in-out`;
+      ruletaRef.current.style.transform = `translateX(${anchoElemento*-posiciones}px)`;
+
+        setTimeout(() => {
+          // Agregar transición para un movimiento suave hacia la posición final
+          ruletaRef.current.style.transition = `2.5s transform ease-in-out`;
+          ruletaRef.current.style.transform = `translateX(${translateXFinal}px)`;
+      }, tiempoGiroPrevio *1000);
+    
+}
+
+
+  // function spinRoulette(numeroRandom) {
+  //   const rotation = numeroRandom * -50;
+
+  //   if (!ruletaRef || !ruletaRef.current) return;
+  //   let elemento = document.getElementById("Ganador");
+
+    
+  //   let totalAchoContainerRuleta = ruletaRef.current.offsetWidth;
+  //   let larguraELemento = elemento.offsetWidth;
+
+  //   var translateX = totalAchoContainerRuleta /2 - larguraELemento /2 - numeroRandom * larguraELemento
+  //   ruletaRef.current.style.transition = `0.3s all ease-in-out`;
+  //   ruletaRef.current.style.transform = `translateX(${translateX}px)`;
+  // }
   return (
     <div className="col-sm-12 col-md-8">
       <div className="card bg-dark ">
@@ -115,7 +153,11 @@ export function Mesa() {
               <span className="indicador-end"></span>
               <RuletaItems id="ruletaItems" ref={ruletaRef}>
                 {ruletaItems.map((lado, i) => (
-                  <RuletaItem lado={lado} key={i} />
+                  <RuletaItem
+                    lado={lado}
+                    key={i}
+                    ganador={SalaAtual.IndiceGanador == i}
+                  />
                 ))}
               </RuletaItems>
             </RuletaComponente>
@@ -178,9 +220,9 @@ export function Mesa() {
   );
 }
 
-const RuletaItem = ({ lado }) => {
+const RuletaItem = ({ lado, ganador }) => {
   return (
-    <div className="">
+    <div className="" id={ganador ? "Ganador" : ""}>
       <Image
         src={lado == 1 ? Azul : Rojo}
         alt="lado hg"

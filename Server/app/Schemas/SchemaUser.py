@@ -10,11 +10,14 @@ class User(BaseModel):
     avatar: str | None = None
     codReferencia: str | None = None
     email: str | None = None
+    usuarioAdministrador: bool  = False
+
 
 class UserSaldo(BaseModel):
     id: int | None = None
     account: float
     ganancias: float
+
 
 class UserUpdate(BaseModel):
     username: str | None = None
@@ -29,6 +32,8 @@ class UserPublic(BaseModel):
     saldo: float | None = None
     status: bool = True
     dataCriacion: datetime | None = None
+    ganancias: float | None = None
+    usuarioAministador: bool | None = None
 
 
 class Token(BaseModel):
@@ -62,7 +67,8 @@ class DetalhesApuestaUsuario(BaseModel):
 
 
 class TransaccionesBanco(BaseModel):
-    idExterno: str
+    idExterno: str | None = None
+    id: int
     tipo: str
     monto: float
     fechaCreado: datetime

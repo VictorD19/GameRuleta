@@ -35,6 +35,7 @@ class UserModel(Base):
     account: Mapped[float] = mapped_column(default=0.0)
     ganancias: Mapped[float] = mapped_column(default=0.0, nullable= True)
     status: Mapped[bool] = mapped_column(default=True)
+    usuarioAdministrador: Mapped[bool] = mapped_column(default=False, nullable= True)
     codreferencia: Mapped[str] = mapped_column(nullable=True)
     codIndicacion: Mapped[str] = mapped_column(nullable=True)
     dataCriacion: Mapped[datetime] = mapped_column(nullable=True)

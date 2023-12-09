@@ -16,7 +16,7 @@ def crearMesas():
 #crearMesas()
 
 session = Session(engine)
-jugada = session.query(JugadaModel).filter(JugadaModel.id == 21).first()
-jugada.IndiceGanador = 22  
+jugada = session.query(JugadaModel).filter(JugadaModel.id == 61).first()
+jugada.IndiceGanador = 50  
 session.commit()
 session.refresh(jugada)

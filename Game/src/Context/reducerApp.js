@@ -34,7 +34,9 @@ export const DataInicialApp = {
     Saldo: 0.0,
     FotoAvatar: Profiles["Profile1"],
     Nombre: "",
+    Ganancias: 0.0,
     DataCreacion: "",
+    Administrador: false,
     HistoricoTransiones: [],
   },
   Partidas: [],
@@ -64,6 +66,11 @@ export const reducer = (state, action) => {
       return {
         ...state,
         SalasGerais: action.data,
+      };
+    case "PARTIDAS":
+      return {
+        ...state,
+        Partidas: action.data,
       };
     case "SALA_ATUAL":
       let salaAtual = state.SalaAtual;

@@ -6,20 +6,34 @@ import { useDataContext } from "@/Context";
 import { useAuthHook } from "@/Hooks/AuthHook";
 import { useRedirectApp } from "@/Hooks/RoutesHooks";
 import { useEffect } from "react";
+import { executarREST } from "@/Api";
+import { ObterDadosLado } from "../Cores";
 
 export const Partidas = () => {
-  const { appData } = useDataContext();
-  const { SessionLoginActiva } = useAuthHook();
+  const { appData, dispatch, loading } = useDataContext();
+  const { Usuario, Partidas } = appData;
+
+  const { SessionLoginActiva, ObterIdUsuariPorToken } = useAuthHook();
   const { IrPara } = useRedirectApp();
   useEffect(() => {
     if (!SessionLoginActiva()) return IrPara();
-  }, []);
+
+    (async () => {
+      const partidas = await executarREST(
+        "user/apuestas-jugador/" + ObterIdUsuariPorToken(),
+        "GET"
+      );
+      if (partidas.error) return loading.desativarLoading();
+      dispatch({ tipo: "PARTIDAS", data: partidas });
+      loading.desativarLoading();
+    })();
+  }, [Usuario.Id]);
   return (
     <Table striped variant="dark" responsive>
       <thead>
         <tr>
-          <th>#</th>
           <th>Lado</th>
+          <th>Data</th>
           <th>Valor (R$)</th>
           <th>%</th>
           <th>
@@ -28,14 +42,14 @@ export const Partidas = () => {
         </tr>
       </thead>
       <tbody>
-        {appData.Partidas.map((partida) => (
-          <tr key={"partida_" + partida.id}>
-            <td>{partida.id}</td>
-            <td>{partida.lado}</td>
-            <td>{partida.valor}</td>
-            <td>{partida.porcentagem}%</td>
+        {Partidas.map((partida, id) => (
+          <tr key={"partida_" + id}>
+            <td>{ObterDadosLado(partida.lado).Icon}</td>
+            <td>{new Date(partida.fecha).toLocaleString()}</td>
+            <td>{partida.resultado ?"+ " : "- "}R$ {parseFloat(partida.monto).toFixed(2)}</td>
+            <td>{partida.porcentaje}%</td>
             <td>
-              <FaCheckCircle color={partida.gano ? "green" : "red"} />
+              <FaCheckCircle color={partida.resultado ? "green" : "red"} />
             </td>
           </tr>
         ))}

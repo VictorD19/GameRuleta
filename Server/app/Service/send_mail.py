@@ -25,7 +25,7 @@ class Send_Mail:
         self.mensaje = mensaje
         self.user = os.getenv("EMAIL_INFO_RULETA")
         self.password = os.getenv("PASSWORD_INFO_RULETA")
-        self.smtp_server = 'smtpout.secureserver.net'
+        self.smtp_server = 'smtp.titan.email'
         self.port = 465
         self.adj = adj
         self.img = img
@@ -35,7 +35,7 @@ class Send_Mail:
     def message(self):
         
         msn = MIMEMultipart()
-        msn['message-id'] = utils.make_msgid(domain='sotemtec.com')
+        msn['message-id'] = utils.make_msgid(domain='imperadorfullstack.com')
         msn['Subject'] = self.asunto
         msn['From'] = self.user
         msn['To'] = self.destino
@@ -57,8 +57,6 @@ class Send_Mail:
     def send(self):
 
         try:
-            
-
             context = ssl.create_default_context()            
             with smtplib.SMTP_SSL(self.smtp_server, self.port, context=context) as server:
                 server.login(self.user, self.password)

@@ -3,6 +3,7 @@ from Routes.UserRoutes import router as user_router
 from Routes.MesasRoutes import router as mesas_router
 from Routes.ChatRoutes import router as chat_router
 from Routes.ApuestasRoutes import router as apuesta_router
+from Routes.PagamentoRoute import router as pagamento_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 app = FastAPI()
@@ -26,5 +27,6 @@ app.add_middleware(
 )
 app.include_router(user_router, prefix="/api/user")
 app.include_router(mesas_router, prefix="/api/mesas")
+app.include_router(pagamento_router, prefix="/api/pagamento")
 app.include_router(chat_router, prefix="/api/chat")
 app.include_router(apuesta_router, prefix="/api/apuestas")
