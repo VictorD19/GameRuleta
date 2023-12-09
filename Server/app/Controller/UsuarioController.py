@@ -151,14 +151,27 @@ class Banco:
                 .first()
             )
 
+            cant = (
+                self.session.query(TransacEntradaModel)
+                .filter(TransacEntradaModel.usuario == transac.usuario)
+                .count()
+            )
+
             if not transac:
                 raise HTTPException(
                     status_code=400, detail="Monto invalido para actualizar"
                 )
             transac.status = True
             transac.fechaPagado = datetime_local_actual()
-            transac.usuarioTransaccion.account += transac.monto
-          
+
+            # validamos si es la primera transaccion y acresentamos el bono del primer deposito..
+            if cant == 1:
+                transac.usuarioTransaccion.account += transac.monto + int(
+                    os.getenv("BONO_PRIMER_DEPOSITO")
+                )
+            else:
+                transac.usuarioTransaccion.account += transac.monto
+
             self.session.commit()
 
         except Exception as ex:
@@ -186,7 +199,7 @@ class Banco:
         out = [
             TransaccionesBanco(
                 **{
-                    "id":transacc.id,
+                    "id": transacc.id,
                     "idExterno": transacc.idExterno,
                     "tipo": "entrada",
                     "monto": transacc.monto,
@@ -199,8 +212,10 @@ class Banco:
         ] + [
             TransaccionesBanco(
                 **{
-                     "id":transacc.id,
-                    "idExterno": transacc.idExterno if transacc.idExterno != None else "",
+                    "id": transacc.id,
+                    "idExterno": transacc.idExterno
+                    if transacc.idExterno != None
+                    else "",
                     "tipo": "salida",
                     "monto": transacc.monto,
                     "fechaCreado": transacc.fechaCreado,
@@ -248,7 +263,7 @@ class Banco:
             self.session.commit()
             self.session.refresh(cuenta)
 
-            #Sera desenvolvida depois no momento lo haremos manual
+            # Sera desenvolvida depois no momento lo haremos manual
             # Llamar funcion que hace el pix
             # datos, status_code = NewTransferenciaPIX(
             #     retiro=retiro, usuario=self.user
@@ -261,7 +276,9 @@ class Banco:
             # transaccSalida.idExterno = datos["id"]
             self.session.commit()
             self.session.refresh(transaccSalida)
-            return Response(status_code=200,)
+            return Response(
+                status_code=200,
+            )
 
         except ControllerException as ex:
             self.session.rollback()

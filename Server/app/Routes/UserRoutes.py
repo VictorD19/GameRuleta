@@ -33,6 +33,7 @@ import json
 load_dotenv()
 router = APIRouter()
 
+
 @router.get("/get/{user_id}", response_model=UserPublic)
 def read_user(
     user_id: int,
@@ -51,8 +52,8 @@ def read_user(
         saldo=saldo,
         username=db_user.username,
         avatar=db_user.avatar,
-        ganancias= db_user.ganancias,
-        usuarioAministador = db_user.usuarioAdministrador,
+        ganancias=db_user.ganancias,
+        usuarioAministador=db_user.usuarioAdministrador,
         id=db_user.id,
         dataCriacion=db_user.dataCriacion,
         status=True,
@@ -194,23 +195,26 @@ async def webhookAsaas(
     data: Request,
     session: Session = Depends(get_session),
 ):
-    token = data.headers.get('asaas-access-token')
+    token = data.headers.get("asaas-access-token")
     event = json.loads(await data.body())
     if not token or token != os.getenv("WEBHOOK_TOKEN_ASAAS"):
         raise HTTPException(
-                status_code=400,
-                detail="Encabezado HTTP_ASAAS_ACCESS_TOKEN no proporcionado",
-            )
+            status_code=400,
+            detail="Encabezado HTTP_ASAAS_ACCESS_TOKEN no proporcionado",
+        )
 
     if event.get("event") == "PAYMENT_CREATED":
         ...
 
-    if event.get("event") == "PAYMENT_RECEIVED" and event.get("payment").get("billingType") == "PIX":
+    if (
+        event.get("event") == "PAYMENT_RECEIVED"
+        and event.get("payment").get("billingType") == "PIX"
+    ):
         Banco(
             monto=float(event.get("payment").get("value")), session=session
         ).actualizaTransaccionEntrada(idTransac=event.get("payment").get("pixQrCodeId"))
 
-    return  
+    return
 
 
 @router.get(
@@ -238,13 +242,13 @@ def retiroDeFondos(
 ):
     if current_user.id != retiro.userId:
         raise HTTPException(status_code=400, detail="Permissões insuficientes")
-    
+
     Banco(session=session, user=current_user).retiroFondos(retiro)
-    return ResponseRequest().CrearRespuestaSucesso({"Status":"ok"})
+    return ResponseRequest().CrearRespuestaSucesso({"Status": "ok"})
 
 
 @router.post("/recuperar-senha/", status_code=200)
-def recuperarSenha(user_email:UserEmail, session: Session = Depends(get_session)):
+def recuperarSenha(user_email: UserEmail, session: Session = Depends(get_session)):
     if not (
         emailDB := session.query(UserModel)
         .filter(UserModel.email == user_email.email)
@@ -257,7 +261,7 @@ def recuperarSenha(user_email:UserEmail, session: Session = Depends(get_session)
     if not (Usuario(session=session).recuperaSenha(emailDB)):
         raise HTTPException(status_code=400, detail="Não foi possível enviar o Email")
 
-    return JSONResponse(content={"details":"ok"}, status_code=200)
+    return JSONResponse(content={"details": "ok"}, status_code=200)
 
 
 @router.get("/status-pix/{id_pix}", status_code=200, response_model=StatusPix)
@@ -278,8 +282,7 @@ def saldo_cliente(user_id: int, current_user: UserSaldo = Depends(get_current_us
     return current_user
 
 
-@router.get(
-    "/apuestas-jugador/{user_id}", status_code=200)
+@router.get("/apuestas-jugador/{user_id}", status_code=200)
 def apuestas(
     user_id: int,
     current_user: UserSaldo = Depends(get_current_user),
@@ -291,6 +294,6 @@ def apuestas(
     if not (
         listaApuestas := Usuario(session=session).ultimas_apuestas(usuario=current_user)
     ):
-        return Response(content=[],status_code=200)
+        return Response(content=[], status_code=200)
 
     return JSONResponse(listaApuestas, status_code=200)
