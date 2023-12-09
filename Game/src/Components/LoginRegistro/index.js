@@ -176,7 +176,7 @@ export const RegistroModal = ({ show, cerrarModal }) => {
     const username = data["usuario"].value;
     const password = data["senha"].value;
     const email = data["email"].value;
-    const codReferencia = data["codReferencia"].value;
+    // const codReferencia = data["codReferencia"].value;
 
     if (username.length < 6 || username.includes(" "))
       return CriarAlerta(
@@ -203,8 +203,7 @@ export const RegistroModal = ({ show, cerrarModal }) => {
       username,
       password,
       email,
-      avatar: selectedImages,
-      codReferencia,
+      avatar: selectedImages
     };
     loading.ativarLoading();
     let dataCriacionUsuario = await executarREST(
@@ -263,8 +262,8 @@ export const RegistroModal = ({ show, cerrarModal }) => {
 
         <Form.Label htmlFor="email">E-mail</Form.Label>
         <FormControl type="email" required className="mb-3" id="email" />
-        <Form.Label htmlFor="codReferencia">Quem te indicou?</Form.Label>
-        <FormControl type="text" className="mb-3" id="codReferencia" />
+        {/* <Form.Label htmlFor="codReferencia">Quem te indicou?</Form.Label>
+        <FormControl type="text" className="mb-3" id="codReferencia" /> */}
 
         {/* USUARIO */}
         <h5 className="ml-2">Avatar</h5>
