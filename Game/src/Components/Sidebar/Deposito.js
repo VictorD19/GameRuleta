@@ -34,6 +34,13 @@ export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
 
     if (valorDeposito == 0)
       return CriarAlerta(TIPO_ALERTA.ERROR, null, "Insira um valor valido!");
+
+    if (parseFloat(valorDeposito) < 10)
+      return CriarAlerta(
+        TIPO_ALERTA.ERROR,
+        null,
+        "Monto minino de deposito é R$10"
+      );
     loading.ativarLoading();
     const { error, ...dataResponse } = await executarREST(
       `user/new-cobro-pix/${Usuario.Id}/${valorDeposito}`
