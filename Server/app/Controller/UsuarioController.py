@@ -165,7 +165,7 @@ class Banco:
             transac.fechaPagado = datetime_local_actual()
 
             # validamos si es la primera transaccion y acresentamos el bono del primer deposito..
-            if cant == 1:
+            if cant == 1 and transac.monto >= 100:
                 transac.usuarioTransaccion.account += transac.monto + int(
                     os.getenv("BONO_PRIMER_DEPOSITO")
                 )
