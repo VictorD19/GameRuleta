@@ -164,6 +164,14 @@ export const CuadroAposta = ({ idMesa }) => {
               >
                 +100
               </Button>
+              <Button
+                size="sm"
+                variant="outline-warning"
+                className="w-100"
+                onClick={() => aumentar(Usuario.Saldo)}
+              >
+                All
+              </Button>
             </div>
             <div className="row w-100 ">
               <div className="col-6  p-0  mt-md-0">
