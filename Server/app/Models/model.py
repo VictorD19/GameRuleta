@@ -90,6 +90,8 @@ class ApuestaModel(Base):
     usuario: Mapped[int] = mapped_column(ForeignKey("users.id"))
     usuarioRelacion: Mapped["UserModel"] = relationship(back_populates="apuestas")
     monto: Mapped[float]
+    gastoAccount: Mapped[float] = mapped_column(nullable=True, default=0)
+    gastoGanancia:Mapped[float] = mapped_column(nullable=True, default=0)
     montoResultado: Mapped[float] = mapped_column(nullable=True)
     porcentaje: Mapped[float]
     lado: Mapped[int]
