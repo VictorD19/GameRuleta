@@ -51,19 +51,29 @@ class ApuestaController:
             # Si tiene saldo suficiente en account lo descuenta solo de hay
             if self.user.account >= self.apuesta.ValorApostado:
                 self.user.account -= self.apuesta.ValorApostado
+                # Asignamos los gastos en los campos para saber de donde salio 
+                # el dinero para realizar la apuesta
+                self.apuesta.gastoAccount = self.apuesta.ValorApostado
+                self.apuesta.gastoGanancia = 0
                 self.session.commit()
                 self.session.refresh(self.user)
                 return
             # Si tiene saldo de las ganancias lo descuenta solo de hay
             if self.user.ganancias >= self.apuesta.ValorApostado:
                 self.user.ganancias -= self.apuesta.ValorApostado
+                # Asignamos los gastos en los campos para saber de donde salio 
+                # el dinero para realizar la apuesta
+                self.apuesta.gastoGanancia = self.apuesta.ValorApostado
+                self.apuesta.gastoAccount = 0
                 self.session.commit()
                 self.session.refresh(self.user)
                 return
             # si tiene saldo sufiente combinado descuenta primero de la cuenta y el resto de la ganancias
+            self.apuesta.gastoAccount = self.user.account
             restante = self.apuesta.ValorApostado - self.user.account
             self.user.account = 0
             self.user.ganancias -= restante
+            self.apuesta.gastoGanancia = restante
             self.session.commit()
             self.session.refresh(self.user)
             return
