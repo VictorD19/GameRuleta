@@ -35,8 +35,19 @@ export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
     if (valorDeposito == 0)
       return CriarAlerta(TIPO_ALERTA.ERROR, null, "Insira um valor valido!");
 
-    if(parseFloat(valorDeposito) >10000)
-      return CriarAlerta(TIPO_ALERTA.ERROR, null, "Limite permitido para depósito é até R$ 10.000,00");
+    if (parseFloat(valorDeposito) < 10)
+      return CriarAlerta(
+        TIPO_ALERTA.ERROR,
+        null,
+        "Monto minino de deposito é R$10"
+      );
+
+    if (parseFloat(valorDeposito) > 10000)
+      return CriarAlerta(
+        TIPO_ALERTA.ERROR,
+        null,
+        "Limite permitido para depósito é até R$ 10.000,00"
+      );
 
     loading.ativarLoading();
     const { error, ...dataResponse } = await executarREST(
