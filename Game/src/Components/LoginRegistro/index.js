@@ -199,11 +199,14 @@ export const RegistroModal = ({ show, cerrarModal }) => {
         "Email inserido não é valido!"
       );
 
+    if (!selectedImages)
+      return CriarAlerta(TIPO_ALERTA.ERROR, null, "Selecione um personagem");
+
     const novoUsuario = {
       username,
       password,
       email,
-      avatar: selectedImages
+      avatar: selectedImages,
     };
     loading.ativarLoading();
     let dataCriacionUsuario = await executarREST(
