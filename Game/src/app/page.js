@@ -45,11 +45,13 @@ export default function Page() {
     })();
   }, []);
 
-
   return (
     <div className="px-3">
       <HeadPaginaPrincialStyle>
-        <h1>Registre-se e receba um bônus de R$ 50 no se primerio deposito!</h1>
+        <h1>
+          Registre-se e receba um bônus de R$ 50 no se primerio deposito de
+          R$100!
+        </h1>
         <h5>
           Escolha uma cor, ganhe dinheiro! Sua sorte está na roleta. Qual cor
           você vai apostar?
@@ -67,28 +69,38 @@ export default function Page() {
           <div className="preechimento my-2 mt-4 d-flex justify-content-end">
             <FaUserAstronaut size={35} color="#00F566" />
           </div>
-          <h4>{dataPage.jugadoresActivos > 5 ? dataPage.jugadoresActivos : 10}</h4>
+          <h4>
+            {dataPage.jugadoresActivos > 5 ? dataPage.jugadoresActivos : 10}
+          </h4>
           <p>Jugadores Activos</p>
         </div>
         <div className="col-6 col-md-3">
           <div className="preechimento my-2 mt-4 d-flex justify-content-end">
             <FaUserFriends size={35} color="#F2E852" />
           </div>
-          <h4>{dataPage.totalJugadores > 500 ? dataPage.totalJugadores : 500}</h4>
+          <h4>
+            {dataPage.totalJugadores > 500 ? dataPage.totalJugadores : 500}
+          </h4>
           <p>Total de Jugadores</p>
         </div>
         <div className="col-6 col-md-3">
           <div className="preechimento my-2 mt-4 d-flex justify-content-end">
             <FaMoneyBill size={35} color="#48D904" />
           </div>
-          <h4>R$ {dataPage.totalPagado > 10000 ? dataPage.totalPagado: 10225}</h4>
+          <h4>
+            R$ {dataPage.totalPagado > 10000 ? dataPage.totalPagado : 10225}
+          </h4>
           <p>Total Pagado</p>
         </div>
         <div className="col-6 col-md-3">
           <div className="preechimento my-2 mt-4 d-flex justify-content-end">
             <FaSync size={35} color="#A31CA6" />
           </div>
-          <h4>{dataPage.totalJuegosRealizados > 150 ?dataPage.totalJuegosRealizados : 152 }</h4>
+          <h4>
+            {dataPage.totalJuegosRealizados > 150
+              ? dataPage.totalJuegosRealizados
+              : 152}
+          </h4>
           <p>Total Juego Realizados</p>
         </div>
       </EstaditicasJuegoStyled>
