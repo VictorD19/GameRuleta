@@ -69,7 +69,8 @@ export const ModalSaque = ({ show, close }) => {
           />
         </div>
         <p className=" mt-1" style={{ color: "#c1c1c1", fontSize: "0.8em" }}>
-          Diponivel: R${parseFloat(`${Usuario.Ganancias}`).toFixed(2)}
+          Diponivel: R${parseFloat(`${Usuario.Ganancias}`).toFixed(2)} - Monto
+          minimo para saque R$50
         </p>
         <div className="mt-3">
           <label for="chavePix" className="mb-2">
