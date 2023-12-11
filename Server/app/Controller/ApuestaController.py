@@ -45,7 +45,7 @@ class ApuestaController:
         except Exception as ex:
             return False
 
-    def descontarSaldo(self) -> None:
+    def descontarSaldo(self, apuesta) -> None:
         # Descuenta el saldo del clinte
         try:
             # Si tiene saldo suficiente en account lo descuenta solo de hay
@@ -53,8 +53,8 @@ class ApuestaController:
                 self.user.account -= self.apuesta.ValorApostado
                 # Asignamos los gastos en los campos para saber de donde salio 
                 # el dinero para realizar la apuesta
-                self.apuesta.gastoAccount = self.apuesta.ValorApostado
-                self.apuesta.gastoGanancia = 0
+                apuesta.gastoAccount = self.apuesta.ValorApostado
+                apuesta.gastoGanancia = 0
                 self.session.commit()
                 self.session.refresh(self.user)
                 return
@@ -63,17 +63,17 @@ class ApuestaController:
                 self.user.ganancias -= self.apuesta.ValorApostado
                 # Asignamos los gastos en los campos para saber de donde salio 
                 # el dinero para realizar la apuesta
-                self.apuesta.gastoGanancia = self.apuesta.ValorApostado
-                self.apuesta.gastoAccount = 0
+                apuesta.gastoGanancia = self.apuesta.ValorApostado
+                apuesta.gastoAccount = 0
                 self.session.commit()
                 self.session.refresh(self.user)
                 return
             # si tiene saldo sufiente combinado descuenta primero de la cuenta y el resto de la ganancias
-            self.apuesta.gastoAccount = self.user.account
+            apuesta.gastoAccount = self.user.account
             restante = self.apuesta.ValorApostado - self.user.account
             self.user.account = 0
             self.user.ganancias -= restante
-            self.apuesta.gastoGanancia = restante
+            apuesta.gastoGanancia = restante
             self.session.commit()
             self.session.refresh(self.user)
             return
@@ -129,7 +129,7 @@ class ApuestaController:
 
                 self.session.commit()
                 self.session.refresh(jugadaActiva)
-                self.descontarSaldo()
+                self.descontarSaldo(apuesta=nuevaApuesta)
 
                 return
             else:
@@ -155,7 +155,7 @@ class ApuestaController:
                     nuevaJugada.ruleta = str(Ruleta(jugada=nuevaJugada).GenerarRuleta())
                     self.session.commit()
                     self.session.refresh(nuevaJugada)
-                    self.descontarSaldo()
+                    self.descontarSaldo(apuesta=nuevaApuesta)
                     return
 
                 else:
@@ -183,7 +183,7 @@ class ApuestaController:
                         )
                         self.session.commit()
                         self.session.refresh(jugadaActiva)
-                        self.descontarSaldo()
+                        self.descontarSaldo(apuesta=nuevaApuesta)
                         return
                     else:
                         # si la mesa esta cerrada y tiene ambos lados com apuestas entra en este flujo
@@ -208,7 +208,7 @@ class ApuestaController:
                         jugadaActiva.inicio = datetime_local_actual()
                         self.session.commit()
                         self.session.refresh(jugadaActiva)
-                        self.descontarSaldo()
+                        self.descontarSaldo(apuesta=nuevaApuesta)
                         return
 
         except ControllerException as ex:

@@ -4,6 +4,7 @@ from sqlalchemy import select, and_, desc
 from Schemas.Apuesta import Apuesta
 from Service.datetime_now import datetime_local_actual
 from Service.Porcentagem import Porcentagem
+from Service.APIAsaasService import NewTransferenciaPIX
 from Schemas.Exection import ServicoException
 from datetime import datetime, timedelta
 from Schemas.Ruleta import Lados
@@ -192,7 +193,9 @@ class Mesa:
             )
             totalValorJugada = jugada.ladoA + jugada.ladoB
             # restamos el % de ganancia de la casa
-            totalValorJugada -= totalValorJugada * float(os.getenv("PORCENTAJE_CASA"))
+            porcentCasa = totalValorJugada * float(os.getenv("PORCENTAJE_CASA"))
+
+            totalValorJugada -= porcentCasa
             totalLadoGanador = jugada.ladoA if jugada.ladoGanador == 1 else jugada.ladoB
 
             UsuariosApostas = (
@@ -223,15 +226,23 @@ class Mesa:
                     ).CalcularValorPagarPorPorcentagem(porcentagemAReceber)
 
                     # Actualizamos los campos de esa apuesta
-                    apuesta.montoResultado
+                    apuesta.montoResultado = valorAReceber
                     apuesta.resultado = True
 
                     if cuenta_actual + valorAReceber > user.ganancias:
                         # Pagamos lo que el Jugador gasto junto con su valor a recibir
-                        user.account += apuesta.gastoAccount
-                        user.ganancias += apuesta.gastoGanancia + valorAReceber
+                        if apuesta.gastoGanancia > 0 and apuesta.gastoAccount == 0:
+                            user.ganancias += valorAReceber
+
+                        elif apuesta.gastoAccount > 0 and apuesta.gastoGanancia == 0:
+                            user.account += apuesta.gastoAccount
+                            user.ganancias += valorAReceber - apuesta.gastoAccount
+                        else:
+                            valorAReceber =valorAReceber - apuesta.gastoAccount
+                            user.account = apuesta.gastoAccount
+                            user.ganancias += valorAReceber
                         self.session.commit()
-            
+
             # for idUser in idsUsuariosApostas:
             #     apuestasPorUsuario = list(
             #         filter(lambda a: a.usuario == idUser, apuestasDelLadoGanador)
