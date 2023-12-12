@@ -17,20 +17,22 @@ export const ModalSaque = ({ show, close }) => {
     let data = e.target;
     const valor = data["valorSaque"].value;
     const chavePix = data["chavePix"].value;
+    const llaveTipo = data["group1"].value;
 
-    if (parseFloat(valor) > Usuario.Ganancias)
-      return CriarAlerta(
-        TIPO_ALERTA.ERROR,
-        null,
-        "Você não pode retirar uma quantidade maior que a disponivel R$" +
-          parseFloat(`${Usuario.Ganancias}`).toFixed(2)
-      );
+    // if (parseFloat(valor) > Usuario.Ganancias)
+    //   return CriarAlerta(
+    //     TIPO_ALERTA.ERROR,
+    //     null,
+    //     "Você não pode retirar uma quantidade maior que a disponivel R$" +
+    //       parseFloat(`${Usuario.Ganancias}`).toFixed(2)
+    //   );
 
     loading.ativarLoading();
     const { error } = await executarREST("user/retiro/", "POST", {
       userId: Usuario.Id,
       monto: valor,
       chavePix: chavePix,
+      llaveTipo
     });
     loading.desativarLoading();
     if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);
@@ -94,6 +96,7 @@ export const ModalSaque = ({ show, close }) => {
             label="CPF/CNPJ"
             name="group1"
             type="radio"
+            value="cpfCnpj"
             id={`cpfcnpj`}
           />
           <Form.Check
@@ -101,6 +104,7 @@ export const ModalSaque = ({ show, close }) => {
             label="Telefone"
             name="group1"
             type="radio"
+            value="telefone"
             id={`telefone`}
           />
           <Form.Check
@@ -108,6 +112,7 @@ export const ModalSaque = ({ show, close }) => {
             name="group1"
             label="Chave Aleatoria"
             type="radio"
+            value="llaveAleatorio"
             id={`chavealeatoria`}
           />
           <Form.Check
@@ -115,6 +120,7 @@ export const ModalSaque = ({ show, close }) => {
             name="group1"
             label="E-mail "
             type="radio"
+            value="email"
             id={`email`}
           />
         </div>

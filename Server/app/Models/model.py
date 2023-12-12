@@ -123,6 +123,8 @@ class TransacSalidaModel(Base):
     )
     usuario: Mapped[int] = mapped_column(ForeignKey("users.id"))
     idExterno: Mapped[str] = mapped_column(nullable=True)
+    llavePix: Mapped[str] = mapped_column(nullable=True)
+    tipoLlave: Mapped[str] = mapped_column(nullable=True)
     monto: Mapped[float] = mapped_column(nullable=True)
     fechaCreado: Mapped[datetime]
     fechaPagado: Mapped[datetime] = mapped_column(nullable=True)
