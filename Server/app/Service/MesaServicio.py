@@ -192,8 +192,13 @@ class Mesa:
                 set(list(map(lambda a: a.usuario, apuestasDelLadoGanador)))
             )
             totalValorJugada = jugada.ladoA + jugada.ladoB
+
             # restamos el % de ganancia de la casa
             porcentCasa = totalValorJugada * float(os.getenv("PORCENTAJE_CASA"))
+            casa = self.session.query(UserModel).filter(UserModel.id == 26).first()
+            # cargamos el valor de la ganacia a la casa.
+            casa.ganancias += porcentCasa
+            self.session.commit()
 
             totalValorJugada -= porcentCasa
             totalLadoGanador = jugada.ladoA if jugada.ladoGanador == 1 else jugada.ladoB
@@ -238,7 +243,7 @@ class Mesa:
                             user.account += apuesta.gastoAccount
                             user.ganancias += valorAReceber - apuesta.gastoAccount
                         else:
-                            valorAReceber =valorAReceber - apuesta.gastoAccount
+                            valorAReceber = valorAReceber - apuesta.gastoAccount
                             user.account = apuesta.gastoAccount
                             user.ganancias += valorAReceber
                         self.session.commit()

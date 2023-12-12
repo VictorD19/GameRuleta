@@ -84,6 +84,7 @@ class RetiroFondos(BaseModel):
     userId: int
     monto: float
     chavePix: str
+    llaveTipo: str
 
 
 class UserEmail(BaseModel):
