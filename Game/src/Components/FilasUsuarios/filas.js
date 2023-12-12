@@ -22,7 +22,7 @@ export default function Fila({
           <span>{porcentagem}%</span>
         </div>
         <div className="card-body">
-          <div className="row">
+          <div className="row" style={{ fontSize: "0.8em" }}>
             <span className="col-7">Usuarios</span>
             <span className="col-3 text-end">Valor (R$)</span>
             <span className="col-2 text-end">%</span>
@@ -33,9 +33,9 @@ export default function Fila({
               <Image src={lado == 1 ? CoffieAzul : CoffieRojo} alt="Espera" />
             </div>
           ) : (
-            Jugadores.map((jugador, i) => (
-              <Jugador jugador={jugador} key={"jugador_" + i} />
-            ))
+            Jugadores.sort((x, b) => b.valorApostado - x.valorApostado).map(
+              (jugador, i) => <Jugador jugador={jugador} key={"jugador_" + i} />
+            )
           )}
         </div>
       </div>
@@ -56,7 +56,9 @@ const Jugador = ({ jugador }) => {
               alt="Img_hy"
             />
           </div>
-          <div className="col-6">{jugador.nombre}</div>
+          <div className="col-8" style={{ fontSize: "0.9em" }}>
+            {jugador.nombre}
+          </div>
         </div>
       </span>
       <span className="col-3 valor   text-end">{jugador.valorApostado}</span>
