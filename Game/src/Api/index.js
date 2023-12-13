@@ -1,6 +1,7 @@
 export const URL_PADRAO = process.env.URL_PADRAO;
 export const URL_PADRAO_SOCKET = process.env.URL_PADRAO_SOCKET;
-
+export const PIXEL_FACEBOOK_ID = "902299578160614";
+export const ID_MICROSOFT_CLARITY = "k3g8ehl35v";
 const executarREST = async (
   url,
   tipoConsulta = "GET",
@@ -29,7 +30,7 @@ const executarREST = async (
         error: retorno.detail,
       };
 
-    return retorno == null ? {} : retorno ;
+    return retorno == null ? {} : retorno;
   } catch (error) {
     return {
       error: "Ocorreu uma falha ao tentar conectar",
