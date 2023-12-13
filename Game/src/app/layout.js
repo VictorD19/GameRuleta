@@ -1,4 +1,3 @@
-
 import { Archivo } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import paleta from "../styles/paletaColores";
@@ -8,6 +7,7 @@ const inter = Archivo({ subsets: ["latin"] });
 import { Providers } from "@/Providers";
 import { Footer } from "@/Components/Footer";
 import "./globals.css";
+import { PixelMeta } from "@/Components/PixelMeta";
 
 export const metadata = {
   title: "FunCombat",
@@ -15,11 +15,10 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
- 
   return (
     <html lang="en">
       {/* <head> */}
-        {/* <script type="text/javascript">
+      {/* <script type="text/javascript">
           {`(function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
@@ -31,6 +30,7 @@ export default async function RootLayout({ children }) {
         className={`${inter.className} row mx-0`}
         style={{ background: paleta.NEGRO, color: paleta.BLANCO }}
       >
+        <PixelMeta />
         {/* Provider   */}
         <Providers>
           <div className="col-12 col-md-2">
