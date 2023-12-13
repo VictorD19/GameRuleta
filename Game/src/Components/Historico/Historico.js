@@ -6,7 +6,7 @@ export default function Historico({ historicos = [] }) {
       <div className="card bg-dark text-white">
         <div className="card-header">Historicos Partidas</div>
         <div className="card-body">
-          <div className="row text-start">
+          <div className="row text-start" style={{fontSize: "0.9em"}}>
             <span className="col-3">#</span>
             <span className="col-3">Ganhador</span>
             <span className="col-3">Players</span>

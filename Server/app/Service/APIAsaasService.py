@@ -66,7 +66,7 @@ class NewTransferenciaPIX(AuthenticationAsaas):
             data = {
             "value": self.retiro.monto,
             "pixAddressKey": self.retiro.chavePix,
-            "pixAddressKeyType": self.retiro.chaveTipo,
+            "pixAddressKeyType": self.retiro.llaveTipo,
             "scheduleDate": None,
             "description": f"Retiro -> {self.usuario.username}",
         }

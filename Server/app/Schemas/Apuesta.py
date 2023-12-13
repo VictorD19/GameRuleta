@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing  import List
+from typing import List
 
 
 class Apuesta(BaseModel):
@@ -8,15 +8,18 @@ class Apuesta(BaseModel):
     ValorApostado: float
     IdLadoApostado: int
     IdMesa: int
+    gastoAccount: float | None = None
+    gastoGanancia: float | None = None
+
 
 class UltimaApuesta(BaseModel):
     monto: float | None = None
-    montoResultado: float| None = None
-    porcentaje: float| None = None
-    lado: int| None = None
-    fecha: str| None = None
-    resultado: bool| None = None
+    montoResultado: float | None = None
+    porcentaje: float | None = None
+    lado: int | None = None
+    fecha: str | None = None
+    resultado: bool | None = None
 
-class UltimasApuestas(BaseModel): 
+
+class UltimasApuestas(BaseModel):
     Apuestas: List[UltimaApuesta]
-

@@ -4,6 +4,7 @@ from sqlalchemy import select, and_, desc
 from Schemas.Apuesta import Apuesta
 from Service.datetime_now import datetime_local_actual
 from Service.Porcentagem import Porcentagem
+from Service.APIAsaasService import NewTransferenciaPIX
 from Schemas.Exection import ServicoException
 from datetime import datetime, timedelta
 from Schemas.Ruleta import Lados
@@ -11,6 +12,7 @@ from fastapi import HTTPException
 from dotenv import load_dotenv
 import os
 import math
+
 load_dotenv()
 
 
@@ -79,7 +81,9 @@ class Mesa:
 
     def CriarNovaJogada(self, apuesta: Apuesta):
         try:
-            novaJogada = JugadaModel(mesa=apuesta.IdMesa, creacion=datetime_local_actual())
+            novaJogada = JugadaModel(
+                mesa=apuesta.IdMesa, creacion=datetime_local_actual()
+            )
 
             if apuesta.IdLadoApostado == 1:
                 novaJogada.ladoA = apuesta.ValorApostado
@@ -188,44 +192,96 @@ class Mesa:
                 set(list(map(lambda a: a.usuario, apuestasDelLadoGanador)))
             )
             totalValorJugada = jugada.ladoA + jugada.ladoB
+
             # restamos el % de ganancia de la casa
-            totalValorJugada -= (totalValorJugada * float(os.getenv("PORCENTAJE_CASA")))
+            porcentCasa = totalValorJugada * float(os.getenv("PORCENTAJE_CASA"))
+            casa = self.session.query(UserModel).filter(UserModel.id == 26).first()
+            # cargamos el valor de la ganacia a la casa.
+            casa.ganancias += porcentCasa
+            self.session.commit()
+
+            totalValorJugada -= porcentCasa
             totalLadoGanador = jugada.ladoA if jugada.ladoGanador == 1 else jugada.ladoB
 
-            for idUser in idsUsuariosApostas:
+            UsuariosApostas = (
+                self.session.query(UserModel)
+                .filter(UserModel.id.in_(idsUsuariosApostas))
+                .all()
+            )
+
+            for user in UsuariosApostas:
+                # Determinamos todos las apuestas en la que participo
+                # este usuario
                 apuestasPorUsuario = list(
-                    filter(lambda a: a.usuario == idUser, apuestasDelLadoGanador)
+                    filter(lambda a: a.usuario == user.id, apuestasDelLadoGanador)
                 )
-                jugador = self.session.scalars(
-                    select(UserModel).where(UserModel.id == idUser)
-                ).one()
-                cuenta_actual = jugador.ganancias
 
-                totalValorApostadoJugador = sum(
-                    list(map(lambda a: a.monto, apuestasPorUsuario))
-                )
-                porcentagemAReceber = Porcentagem(
-                    totalLadoGanador
-                ).CalcularPorcentagemAReceberPorValor(totalValorApostadoJugador)
+                for apuesta in apuestasPorUsuario:
+                    # Obtenemos el valor actual del campo ganacia del jugador
+                    cuenta_actual = user.ganancias
 
-                valorAReceber = Porcentagem(
-                    totalValorJugada
-                ).CalcularValorPagarPorPorcentagem(porcentagemAReceber)
-
-                for apuestaUser in apuestasPorUsuario:
-                    porcentagemApuesta = Porcentagem(
+                    # Calculamos el valor a recibir el jugador
+                    porcentagemAReceber = Porcentagem(
                         totalLadoGanador
-                    ).CalcularPorcentagemAReceberPorValor(apuestaUser.monto)
-                    apuestaUser.montoResultado = Porcentagem(
-                        totalLadoGanador
-                    ).CalcularValorPagarPorPorcentagem(porcentagemApuesta)
-                    apuestaUser.resultado = True
+                    ).CalcularPorcentagemAReceberPorValor(apuesta.monto)
 
-                if cuenta_actual + valorAReceber > jugador.ganancias:
-                    jugador.account += totalValorApostadoJugador
-                    jugador.ganancias += valorAReceber - totalValorApostadoJugador
+                    # Calculamos el valor a recibir por el jugador
+                    valorAReceber = Porcentagem(
+                        totalValorJugada
+                    ).CalcularValorPagarPorPorcentagem(porcentagemAReceber)
 
-                self.session.commit()
+                    # Actualizamos los campos de esa apuesta
+                    apuesta.montoResultado = valorAReceber
+                    apuesta.resultado = True
+
+                    if cuenta_actual + valorAReceber > user.ganancias:
+                        # Pagamos lo que el Jugador gasto junto con su valor a recibir
+                        if apuesta.gastoGanancia > 0 and apuesta.gastoAccount == 0:
+                            user.ganancias += valorAReceber
+
+                        elif apuesta.gastoAccount > 0 and apuesta.gastoGanancia == 0:
+                            user.account += apuesta.gastoAccount
+                            user.ganancias += valorAReceber - apuesta.gastoAccount
+                        else:
+                            valorAReceber = valorAReceber - apuesta.gastoAccount
+                            user.account = apuesta.gastoAccount
+                            user.ganancias += valorAReceber
+                        self.session.commit()
+
+            # for idUser in idsUsuariosApostas:
+            #     apuestasPorUsuario = list(
+            #         filter(lambda a: a.usuario == idUser, apuestasDelLadoGanador)
+            #     )
+            #     jugador = self.session.scalars(
+            #         select(UserModel).where(UserModel.id == idUser)
+            #     ).one()
+            #     cuenta_actual = jugador.ganancias
+
+            #     totalValorApostadoJugador = sum(
+            #         list(map(lambda a: a.monto, apuestasPorUsuario))
+            #     )
+            #     porcentagemAReceber = Porcentagem(
+            #         totalLadoGanador
+            #     ).CalcularPorcentagemAReceberPorValor(totalValorApostadoJugador)
+
+            #     valorAReceber = Porcentagem(
+            #         totalValorJugada
+            #     ).CalcularValorPagarPorPorcentagem(porcentagemAReceber)
+
+            #     for apuestaUser in apuestasPorUsuario:
+            #         porcentagemApuesta = Porcentagem(
+            #             totalLadoGanador
+            #         ).CalcularPorcentagemAReceberPorValor(apuestaUser.monto)
+            #         apuestaUser.montoResultado = Porcentagem(
+            #             totalLadoGanador
+            #         ).CalcularValorPagarPorPorcentagem(porcentagemApuesta)
+            #         apuestaUser.resultado = True
+
+            #     if cuenta_actual + valorAReceber > jugador.ganancias:
+            #         jugador.account += totalValorApostadoJugador
+            #         jugador.ganancias += valorAReceber - totalValorApostadoJugador
+
+            #     self.session.commit()
             return True
         except Exception as ex:
             self.session.rollback()
