@@ -10,7 +10,7 @@ mensagems = []
 async def websocket_chat_general(websocket: WebSocket):
     await websocket.accept()    
     while True:        
-        mensaje = await websocket.receive_text()
+        mensaje = await websocket.receive_json()
         mensagems.insert(0, mensaje)
         mensagems = mensagems[0:50]
         await websocket.send_json(mensagems)
