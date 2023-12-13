@@ -21,7 +21,6 @@ export default async function RootLayout({ children }) {
           dangerouslySetInnerHTML={{
             __html: `
             <!-- Meta Pixel Code -->
-            <script>
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
             n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -32,14 +31,17 @@ export default async function RootLayout({ children }) {
             'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', '902299578160614');
             fbq('track', 'PageView');
-            </script>
-            <noscript><img height="1" width="1" style="display:none"
-            src="https://www.facebook.com/tr?id=902299578160614&ev=PageView&noscript=1"
-            /></noscript>
             <!-- End Meta Pixel Code -->
               `,
           }}
         />
+        <noscript
+          dangerouslySetInnerHTML={{
+            __html: `<img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=902299578160614&ev=PageView&noscript=1"
+/>`,
+          }}
+        ></noscript>
       </head>
       <body
         className={`${inter.className} row mx-0`}
