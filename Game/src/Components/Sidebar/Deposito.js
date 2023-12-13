@@ -1,6 +1,5 @@
 "use client";
 import { Button, Form, InputGroup } from "react-bootstrap";
-import facebookPixel from "react-facebook-pixel";
 import { ModalComponent } from "../Modal/Modal";
 import { useEffect, useRef, useState } from "react";
 import Image from "../../Assert/profile_defaul.png";
@@ -71,7 +70,7 @@ export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
       null,
       "Codigo Pix gerado com sucesso, Pague agora para que seu saldo seja ativado"
     );
-    facebookPixel.track("InitiateCheckout");
+    // facebookPixel.track("InitiateCheckout");
   };
 
   const copiarTexto = (e) => {

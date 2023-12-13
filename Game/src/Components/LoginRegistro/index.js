@@ -14,7 +14,6 @@ import { useState } from "react";
 import { BoxImagenContainer } from "./login.style";
 import { useRedirectApp } from "@/Hooks/RoutesHooks";
 import { useAuthHook } from "@/Hooks/AuthHook";
-import facebookPixel from "react-facebook-pixel";
 export const LoginModal = ({ show, cerrarModal }) => {
   const { dispatch, loading, loginsMethod } = useDataContext();
   const { IrPara } = useRedirectApp();
@@ -232,7 +231,7 @@ export const RegistroModal = ({ show, cerrarModal }) => {
       DataCreacion: dataCriacionUsuario.dataCriacion,
       Id: dataCriacionUsuario.id,
     };
-    facebookPixel.track("Lead", dataUsuario);
+    // facebookPixel.track("Lead", dataUsuario);
     loading.ativarLoading();
     InserirRegistroLocalStorage("token", { access_token, data: new Date() });
     dispatch({ tipo: "CONECTADO", data: true });

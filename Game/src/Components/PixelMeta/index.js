@@ -5,12 +5,14 @@ import { PIXEL_FACEBOOK_ID } from "@/Api";
 
 export const PixelMeta = () => {
   useEffect(() => {
-    import("react-facebook-pixel")
-      .then((x) => x.default)
-      .then((reactpixel) => {
-        reactpixel.init(PIXEL_FACEBOOK_ID);
-        reactpixel.pageview();
-      });
+    if (typeof window !== "undefined") {
+      import("react-facebook-pixel")
+        .then((x) => x.default)
+        .then((reactpixel) => {
+          reactpixel.init(PIXEL_FACEBOOK_ID);
+          reactpixel.pageView();
+        });
+    }
   });
   return null;
 };
