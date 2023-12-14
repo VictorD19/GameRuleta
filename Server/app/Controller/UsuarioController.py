@@ -249,6 +249,8 @@ class Banco:
             transaccSalida = TransacSalidaModel(
                 usuarioTransaccion=self.user,
                 monto=retiro.monto,
+                tipoLlave = retiro.llaveTipo,
+                llavePix=retiro.chavePix,
                 fechaCreado=datetime_local_actual(),
                 status=False,
             )

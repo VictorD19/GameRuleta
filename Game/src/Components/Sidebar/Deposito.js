@@ -70,6 +70,7 @@ export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
       null,
       "Codigo Pix gerado com sucesso, Pague agora para que seu saldo seja ativado"
     );
+    // facebookPixel.track("InitiateCheckout");
   };
 
   const copiarTexto = (e) => {
