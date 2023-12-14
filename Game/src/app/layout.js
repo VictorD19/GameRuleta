@@ -8,6 +8,7 @@ import { Providers } from "@/Providers";
 import { Footer } from "@/Components/Footer";
 import "./globals.css";
 import { PixelMeta } from "@/Components/PixelMeta";
+import { ChatComponent } from "@/Components/Chat";
 
 export const metadata = {
   title: "FunCombat",
@@ -38,7 +39,7 @@ export default async function RootLayout({ children }) {
         className={`${inter.className} row mx-0`}
         style={{ background: paleta.NEGRO, color: paleta.BLANCO }}
       >
-        <PixelMeta/>
+        <PixelMeta />
         {/* Provider   */}
         <Providers>
           <div className="col-12 col-md-2">
@@ -48,6 +49,7 @@ export default async function RootLayout({ children }) {
             <SalasCard />
             {children}
           </div>
+          <ChatComponent />
         </Providers>
         <Footer />
       </body>
