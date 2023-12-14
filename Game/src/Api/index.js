@@ -1,6 +1,7 @@
 export const URL_PADRAO = process.env.URL_PADRAO;
 export const URL_PADRAO_SOCKET = process.env.URL_PADRAO_SOCKET;
-export const PIXEL_FACEBOOK_ID = "902299578160614";
+// export const PIXEL_FACEBOOK_ID = "902299578160614"; -Conta 1
+export const PIXEL_FACEBOOK_ID = "618422050338150";
 export const ID_MICROSOFT_CLARITY = "k3g8ehl35v";
 const executarREST = async (
   url,
