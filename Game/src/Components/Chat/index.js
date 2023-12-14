@@ -8,26 +8,43 @@ import Profiles from "../../Assert/Profile";
 import Image from "next/image";
 import useWebSocket from "react-use-websocket";
 import { URL_PADRAO_SOCKET } from "@/Api";
+import { useDataContext } from "@/Context";
+import { useAuthHook } from "@/Hooks/AuthHook";
+import { CriarAlerta, TIPO_ALERTA } from "../Alertas/Alertas";
 export const ChatComponent = () => {
-  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
-    URL_PADRAO_SOCKET + "/chat/chat-general",
-    {
+  const { sendMessage, lastMessage, lastJsonMessage, readyState } =
+    useWebSocket(URL_PADRAO_SOCKET + "/chat/chat-general", {
       shouldReconnect: () => true,
       reconnectAttempts: 10,
       reconnectInterval: 3000,
-      on,
-    }
-  );
+    });
 
   const [message, setMessage] = useState([]);
   const [visibleChat, setVisibleChat] = useState(false);
-
+  const { SessionLoginActiva } = useAuthHook();
+  const { appData } = useDataContext();
+  const { Usuario } = appData;
   const abrirChat = () => setVisibleChat(true);
   const fecharChat = () => setVisibleChat(false);
   const enviarMensaje = (e) => {
     e.preventDefault();
-  };
+    if (!SessionLoginActiva())
+      return CriarAlerta(
+        TIPO_ALERTA.ERROR,
+        null,
+        "Entre na sua conta para enviar mensagems"
+      );
+    let data = e.target;
+    const mensage = data["chat-input"].value;
+    const dataEnvio = {
+      username: Usuario.Nombre,
+      img: Usuario.FotoAvatar,
+      mensaje: mensage,
+    };
 
+    sendMessage(dataEnvio);
+    data["chat-input"].value = "";
+  };
   useEffect(() => {
     if (readyState == 1 && lastJsonMessage != null) {
       setMessage(lastJsonMessage);
@@ -36,9 +53,9 @@ export const ChatComponent = () => {
     }
   }, [lastJsonMessage]);
 
-  useEffect(() => {
-    console.log(lastJsonMessage);
-  }, [readyState]);
+  useEffect(() => {}, [readyState]);
+  useEffect(() => {}, []);
+
   return (
     <>
       {!visibleChat && (
@@ -48,7 +65,7 @@ export const ChatComponent = () => {
         </div>
       )}
 
-      <ChatBox visible={visibleChat ? "visible" : ""}>
+      <ChatBox $visible={visibleChat}>
         <ChatHeader>
           Chat
           <span className="chat-box-toggle" onClick={fecharChat}>
@@ -64,7 +81,7 @@ export const ChatComponent = () => {
                 id={"cm-msg-" + i}
                 className={"chat-msg" + "user" + " row mb-2 "}
               >
-                {msg.username == "Yo" ? (
+                {msg.username == Usuario.Nombre && Usuario.Nombre != "" ? (
                   <>
                     <div className="col-2 ps-3">
                       <span className="msg-avatar ">

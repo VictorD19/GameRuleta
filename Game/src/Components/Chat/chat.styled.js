@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const ChatBox = styled.div`
-  display: ${({ visible }) => (visible == "visible" ? "block" : "none")};
+  display: ${(prop) => (prop.$visible == true ? "block" : "none")};
   background: #efefef;
   position: fixed;
   right: 30px;
