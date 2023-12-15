@@ -165,30 +165,30 @@ export const LoginModal = ({ show, cerrarModal }) => {
 };
 
 export const RegistroModal = ({ show, cerrarModal }) => {
-  const [selectedImages, setSelectImage] = useState("");
+  const [selectedImages, setSelectImage] = useState("Profile1");
   const { dispatch, loading } = useDataContext();
   const { IrPara } = useRedirectApp();
 
   const criarConta = async (event) => {
     event.preventDefault();
     let data = event.target;
-    const username = data["usuario"].value;
-    const password = data["senha"].value;
-    const email = data["email"].value;
+    const username = data["usuario"].value.trim();
+    const password = data["senha"].value.trim();
+    const email = data["email"].value.trim();
     // const codReferencia = data["codReferencia"].value;
 
     if (username.length < 6 || username.includes(" "))
       return CriarAlerta(
         TIPO_ALERTA.ERROR,
         null,
-        "O nome de usuário é muito pequeno, deve ter pelo menos 6 carácter e/ou contém espaços em branco"
+        "O nome de usuário é muito pequeno, deve ter pelo menos 6 carácter"
       );
 
     if (password == " " || password.includes(" ") || password.length < 4)
       return CriarAlerta(
         TIPO_ALERTA.ERROR,
         null,
-        "Sua senha deve ter menos 4 caráter e não pode possuir espaço em branco"
+        "Sua senha deve ter menos 4 caráter"
       );
 
     if (email == "" || !email.includes("@"))
