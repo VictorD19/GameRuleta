@@ -39,8 +39,7 @@ export const CriarAlerta = (
       position: "center",
       icon: "error",
       title: titulo != null ? titulo : mesage,
-      showConfirmButton: false,
-      timer: 1500,
+      showConfirmButton: true,
     });
     return;
   }

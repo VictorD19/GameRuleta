@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "react-bootstrap";
-import { EstaditicasJuegoStyled, HeadPaginaPrincialStyle } from "./app.style";
+import { CardPasoAPaso, EstaditicasJuegoStyled, HeadPaginaPrincialStyle } from "./app.style";
 import {
   FaCalculator,
   FaDoorOpen,
@@ -50,21 +50,49 @@ export default function Page() {
     <div className="px-3">
       <HeadPaginaPrincialStyle>
         <h1>
-          Registre-se e receba um bônus de R$ 50 no se primerio deposito de
-          R$100!
+        Damos as boas-vindas com um bônus de até R$100 para impulsionar a sua sorte.
         </h1>
-        <h5>
-          Escolha uma cor, ganhe dinheiro! Sua sorte está na roleta. Qual cor
-          você vai apostar?
-        </h5>
+        
+        <div className=" my-4 row bg-dark justify-content-center aling-item-center">
+          <div className="col-12 col-md-3 " >
+          <CardPasoAPaso>
+            <span>1</span>
+            <div className="w-100">
+              <h6>Registrar</h6>
+              <p>Crie a sua conta</p>
+            </div>
+          </CardPasoAPaso>
+          </div>
+          <div className="col-12 col-md-3" >
+          <CardPasoAPaso> 
+            <span>2</span>
+            <div className="w-100">
+              <h6>Depositar</h6>
+              <p>Faça o seu 1º depósito <br/>(min R$10)</p>
+            </div>
+          </CardPasoAPaso>
+          </div>
+          <div className="col-12 col-md-3" >
+          <CardPasoAPaso>
+            <span>3</span>
+            <div className="w-100">
+              <h6>Ganhe o seu BÔNUS</h6>
+              <p>Duplicamos o valor do seu deposito inicial até R$100</p>
+            </div>
+            </CardPasoAPaso>
+            </div>
+        </div>
+
         <Button
           variant="primary"
-          className=" mt-2 px-5 py-2"
+          className=" mt-2  py-2"
+          style={{padding:"6rem",height:"4rem",fontWeight:"bold",fontSize:"1.2em"}}
           onClick={loginsMethod.abrirModalRegistro}
         >
-          COMEÇE AGORA
+          JOGAR AGORA
         </Button>
       </HeadPaginaPrincialStyle>
+      <h3 className="mt-2 mb-5 text-center">Nossos Indicadores</h3>
       <EstaditicasJuegoStyled className="row">
         <div className="col-6 col-md-3">
           <div className="preechimento my-2 mt-4 d-flex justify-content-end">
@@ -73,7 +101,7 @@ export default function Page() {
           <h4>
             {dataPage.jugadoresActivos > 5 ? dataPage.jugadoresActivos : 10}
           </h4>
-          <p>Jugadores Activos</p>
+          <p>Jogadores Activos</p>
         </div>
         <div className="col-6 col-md-3">
           <div className="preechimento my-2 mt-4 d-flex justify-content-end">
@@ -82,16 +110,16 @@ export default function Page() {
           <h4>
             {dataPage.totalJugadores > 500 ? dataPage.totalJugadores : 500}
           </h4>
-          <p>Total de Jugadores</p>
+          <p>Total de Jogadores</p>
         </div>
         <div className="col-6 col-md-3">
           <div className="preechimento my-2 mt-4 d-flex justify-content-end">
             <FaMoneyBill size={35} color="#48D904" />
           </div>
           <h4>
-            R$ {dataPage.totalPagado > 10000 ? dataPage.totalPagado : 10225}
+            R$ {dataPage.totalPagado > 10000 ? dataPage.totalPagado : 11225}
           </h4>
-          <p>Total Pagado</p>
+          <p>Total Pagado a Jogadores</p>
         </div>
         <div className="col-6 col-md-3">
           <div className="preechimento my-2 mt-4 d-flex justify-content-end">
@@ -106,7 +134,7 @@ export default function Page() {
         </div>
       </EstaditicasJuegoStyled>
 
-      <h3 className="my-4 text-center">Nossos Diferenciais</h3>
+      <h3 className="my-5 text-center">Nossos Diferenciais</h3>
       <EstaditicasJuegoStyled
         className="text-center row"
         style={{ color: "#c1c1c1" }}
@@ -116,7 +144,7 @@ export default function Page() {
             <FaDoorOpen size={35} color="#F2E852" />
           </div>
           <h5>
-            Possuimos 3 salas diferente com montos minimos de R$1 até R$10.000
+            Faça suas apostas apartir de R$1
           </h5>
         </div>
         <div className="col-6 col-md-4">
