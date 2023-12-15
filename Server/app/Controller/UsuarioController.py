@@ -235,7 +235,7 @@ class Banco:
                 .first()
             )
 
-            if cuenta.ganancias < float(os.getenv("MONTO_MINIMO_RETIROS")):
+            if cuenta.ganancias < float(os.getenv("MONTO_MINIMO_RETIROS")) or retiro.monto < float(os.getenv("MONTO_MINIMO_RETIROS")):
                 raise ControllerException(
                     "Não possui o monto minimo R$50 de ganancias para saque - Atual: R$"
                     + cuenta.ganancias
