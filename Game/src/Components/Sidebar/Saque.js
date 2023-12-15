@@ -27,12 +27,15 @@ export const ModalSaque = ({ show, close }) => {
     //       parseFloat(`${Usuario.Ganancias}`).toFixed(2)
     //   );
 
+    if (parseFloat(valor) < 50)
+      return CriarAlerta(TIPO_ALERTA.ERROR, null, "Monto minimo para saque R$50");
+
     loading.ativarLoading();
     const { error } = await executarREST("user/retiro/", "POST", {
       userId: Usuario.Id,
       monto: valor,
       chavePix: chavePix,
-      llaveTipo
+      llaveTipo,
     });
     loading.desativarLoading();
     if (error) return CriarAlerta(TIPO_ALERTA.ERROR, null, error);

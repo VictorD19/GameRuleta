@@ -103,12 +103,13 @@ export const ChatComponent = () => {
                </>
                 ) : (
                   <>
-                  <div className="col-2 ps-3">
+                  <div className="col-2 ">
                     <span className="msg-avatar ">
                       <Image
                         style={{ borderRadius: "50%" }}
                         src={Profiles[msg.img]}
                         width={45}
+                        height={45}
                         alt="chat-profile"
                       />
                     </span>
