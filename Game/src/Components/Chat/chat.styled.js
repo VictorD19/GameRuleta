@@ -65,9 +65,10 @@ export const ChatBody = styled.div`
 
 export const ChatMessages = styled.div`
   padding: 15px;
-  height: 570px;
+  height: 400px;
   width: 100%;
-  overflow-y: scroll;
+  
+  overflow-y: auto;
   &::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     border-radius: 10px;

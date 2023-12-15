@@ -22,7 +22,7 @@ async def websocket_chat_general(websocket: WebSocket):
             mensaje = None
 
         if mensaje:       
-            mensagems.insert(0, json.loads(mensaje))
-            mensagems = mensagems[0:50]
+            mensagems.append(json.loads(mensaje))
+            mensagems = mensagems[0:50]          
         await websocket.send_json(mensagems)
         await asyncio.sleep(1)
