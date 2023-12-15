@@ -165,7 +165,7 @@ export const LoginModal = ({ show, cerrarModal }) => {
 };
 
 export const RegistroModal = ({ show, cerrarModal }) => {
-  const [selectedImages, setSelectImage] = useState("");
+  const [selectedImages, setSelectImage] = useState("Profile1");
   const { dispatch, loading } = useDataContext();
   const { IrPara } = useRedirectApp();
 

@@ -5,6 +5,7 @@ from fastapi import APIRouter
 from sqlalchemy.orm import Session
 from random import randint
 from sqlalchemy import select
+from Service.TelegramBot import send_mensaje_telegram
 from Schemas.Response import ResponseRequest
 from Schemas.SchemaUser import (
     UserPublic,
@@ -117,7 +118,7 @@ def create_user(user: User, session: Session = Depends(get_session)):
         dataCriacion=db_user.dataCriacion,
         status=True,
     )
-
+    send_mensaje_telegram(mensaje=f"Nuevo Usuario Cadastrado: {user.username}")
     return user
 
 

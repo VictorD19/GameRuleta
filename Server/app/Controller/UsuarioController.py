@@ -13,6 +13,7 @@ from Service.securtity import get_password_hash
 from Schemas.Exection import ControllerException
 from Schemas.SchemaUser import UserPublic, TransaccionesBanco, RetiroFondos, StatusPix
 from Schemas.Apuesta import UltimaApuesta
+from Service.TelegramBot import send_mensaje_telegram
 from Models.model import (
     Session,
     TransacEntradaModel,
@@ -107,7 +108,7 @@ class Banco:
                 )
 
             self.guardaTransaccionInicial(idTransac=datos["id"])
-
+            send_mensaje_telegram(mensaje=f"Pix Generado: Usuario: {self.user.username} - Valor: R$ {self.monto}")
             return {
                 "idQr": datos["id"],
                 "encodedImage": datos["encodedImage"],
@@ -165,15 +166,13 @@ class Banco:
             transac.fechaPagado = datetime_local_actual()
 
             # validamos si es la primera transaccion y acresentamos el bono del primer deposito..
-            if cant == 1 and transac.monto >= 100:
-                transac.usuarioTransaccion.account += transac.monto + int(
-                    os.getenv("BONO_PRIMER_DEPOSITO")
-                )
+            if cant == 1:
+                transac.usuarioTransaccion.account += (transac.monto * 2)  if transac.monto <= 100 else transac.monto + 100
             else:
                 transac.usuarioTransaccion.account += transac.monto
 
             self.session.commit()
-
+            send_mensaje_telegram(mensaje=f"Deposito Validado - Valor: R$ {transac.monto}")
         except Exception as ex:
             self.session.rollback()
             raise HTTPException(
@@ -264,10 +263,11 @@ class Banco:
                 .filter(UserModel.id == self.user.id)
                 .first()
             )
+            
             cuenta.ganancias = cuenta.ganancias - retiro.monto
             self.session.commit()
             self.session.refresh(cuenta)
-
+            send_mensaje_telegram(mensaje=f"Usuario {self.user.username} - Solicitou Saque no Valor de R$ {retiro.monto}")
             # Sera desenvolvida depois no momento lo haremos manual
             # Llamar funcion que hace el pix
             # datos, status_code = NewTransferenciaPIX(
