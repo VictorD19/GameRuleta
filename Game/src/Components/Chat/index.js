@@ -45,12 +45,11 @@ export const ChatComponent = () => {
     sendMessage(JSON.stringify(dataEnvio));
     data["chat-input"].value = "";
 
-    let chat = document.getElementById("chat-logs")
-    chat.scrollTop = chat.scrollHeight
+    let chat = document.getElementById("chat-logs");
+    chat.scrollTop = chat.scrollHeight;
   };
   useEffect(() => {
     if (readyState == 1 && lastJsonMessage != null) {
-      
       setMessage(lastJsonMessage);
     } else {
       setMessage([]);
@@ -78,49 +77,55 @@ export const ChatComponent = () => {
         <ChatBody>
           <div className="chat-box-overlay"></div>
           <ChatMessages className="chat-logs" id="chat-logs">
-            {message != null && message.length > 0  && message.map((msg, i) => (
-              <div
-                key={"cm-msg-" + i}
-                id={"cm-msg-" + i}
-                className={"chat-msg" + "user" + " row mb-2 "}
-              >
-                {msg.username == Usuario.Nombre && Usuario.Nombre != "" ? (
-                 
-                 <>
-                 <div className="col-10 pe-0">
-                   <div className="cm-msg-text">{msg.mensaje}</div>
-                 </div>
-                 <div className="col-2 pe-3">
-                   <span className="msg-avatar ">
-                     <Image
-                       style={{ borderRadius: "50%" }}
-                       src={Profiles[msg.img]}
-                       width={45}
-                       alt="chat-profile"
-                     />
-                   </span>
-                 </div>
-               </>
-                ) : (
-                  <>
-                  <div className="col-2 ">
-                    <span className="msg-avatar ">
-                      <Image
-                        style={{ borderRadius: "50%" }}
-                        src={Profiles[msg.img]}
-                        width={45}
-                        height={45}
-                        alt="chat-profile"
-                      />
-                    </span>
-                  </div>
-                  <div className="col-10 ps-0">
-                    <div className="cm-msg-text">{msg.mensaje}</div>
-                  </div>
-                </>
-                )}
-              </div>
-            ))}
+            {message != null &&
+              message.length > 0 &&
+              message.map((msg, i) => (
+                <div
+                  key={"cm-msg-" + i}
+                  id={"cm-msg-" + i}
+                  className={"chat-msg" + "user" + " row mb-2 "}
+                >
+                  {msg.username == Usuario.Nombre && Usuario.Nombre != "" ? (
+                    <>
+                      <div className="col-10 pe-0">
+                        <h5 style={{ color: "#000" }}>{msg.username}</h5>
+                        <div className="cm-msg-text">{msg.mensaje}</div>
+                      </div>
+                      <div className="col-2 pe-3">
+                        <span className="msg-avatar ">
+                          <Image
+                            style={{ borderRadius: "50%" }}
+                            src={Profiles[msg.img]}
+                            width={45}
+                            alt="chat-profile"
+                          />
+                        </span>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="col-2 ps-3">
+                        <span className="msg-avatar ">
+                          <Image
+                            style={{ borderRadius: "50%" }}
+                            src={Profiles[msg.img]}
+                            width={45}
+                            alt="chat-profile"
+                          />
+                        </span>
+                      </div>
+                      <div className="col-10 ps-0">
+                        <div className="px-1">
+                          <div style={{ fontSize: "0.9em", color: "#000" }}>
+                            {msg.username}
+                          </div>
+                          <div className="cm-msg-text">{msg.mensaje}</div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
           </ChatMessages>
         </ChatBody>
         <div className="chat-input">
