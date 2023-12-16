@@ -88,7 +88,9 @@ export const ChatComponent = () => {
                   {msg.username == Usuario.Nombre && Usuario.Nombre != "" ? (
                     <>
                       <div className="col-10 pe-0">
-                        <h5 style={{ color: "#000" }}>{msg.username}</h5>
+                        <h5 style={{ fontSize: "0.9em", color: "#000" }}>
+                          {msg.username}
+                        </h5>
                         <div className="cm-msg-text">{msg.mensaje}</div>
                       </div>
                       <div className="col-2 pe-3">
