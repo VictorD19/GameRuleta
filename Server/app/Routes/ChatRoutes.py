@@ -18,7 +18,7 @@ async def websocket_chat_general(websocket: WebSocket):
          
         try:
             mensaje = await asyncio.wait_for(websocket.receive_text(), timeout=1.0)
-        except asyncio.TimeoutError:
+        except Exception:
             mensaje = None
 
         if mensaje:       
