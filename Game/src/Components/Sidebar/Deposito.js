@@ -20,10 +20,11 @@ const objetoPadrao = {
   DataExpiracion: "",
   Valor: 0,
 };
-export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
+export const DepositoModal = () => {
   const [dadosPix, setDadosPix] = useState(objetoPadrao);
-  const { appData, dispatch, loading } = useDataContext();
+  const { appData, dispatch, loading,modalDepositoFuntions } = useDataContext();
   const { Usuario } = appData;
+  const {modalDeposito,setModalDeposito } = modalDepositoFuntions
   const { SessionLoginActiva } = useAuthHook();
   const { IrPara } = useRedirectApp();
   const textArea = useRef(null);
@@ -130,8 +131,8 @@ export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
   return (
     <ModalComponent
       show={modalDeposito}
-      cerrarModal={cerrarModalDeposito}
-      titulo={"Deposito"}
+      cerrarModal={()=>setModalDeposito(false) }
+      titulo={"Recarga"}
     >
       <Form onSubmit={onSubmitDeposito}>
         <div>
@@ -149,7 +150,7 @@ export const DepositoModal = ({ modalDeposito, cerrarModalDeposito }) => {
           </InputGroup>
         </div>
         <div className=" my-3">
-          <label for="metodoPagamento">Método de Deposito</label>
+          <label for="metodoPagamento">Método de Recarga</label>
           <Form.Check
             defaultChecked={true}
             type={"radio"}

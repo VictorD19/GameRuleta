@@ -11,9 +11,10 @@ import { useSearchParams } from "next/navigation";
 export const CuadroAposta = ({ idMesa }) => {
   const [valor, setValor] = useState(0);
   const { SessionLoginActiva } = useAuthHook();
-  const { appData, loginsMethod, dispatch, loading, ruletaState } =
+  const { appData, loginsMethod, dispatch, loading, ruletaState,modalDepositoFuntions } =
     useDataContext();
   const { Usuario } = appData;
+  const {setModalDeposito} = modalDepositoFuntions
   const params = useSearchParams();
   const roomAtual = params.get("room");
 
@@ -40,6 +41,15 @@ export const CuadroAposta = ({ idMesa }) => {
         null,
         "Insira um valor maior que 0"
       );
+
+    if (Usuario.Saldo == 0) {
+       CriarAlerta(
+        TIPO_ALERTA.ATENCAO,
+        null,
+        "Recargue Agora para começãr a LUCRAR!!"
+      );
+      return setModalDeposito(true)
+    }
     const novaAposta = {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,
@@ -79,7 +89,14 @@ export const CuadroAposta = ({ idMesa }) => {
         null,
         "Insira um valor maior que 0"
       );
-
+      if (Usuario.Saldo == 0) {
+        CriarAlerta(
+         TIPO_ALERTA.ATENCAO,
+         null,
+         "Recargue Agora para começãr a LUCRAR!!"
+       );
+       return setModalDeposito(true)
+     }
     const novaAposta = {
       IdUsuario: Usuario.Id,
       ValorApostado: valor,

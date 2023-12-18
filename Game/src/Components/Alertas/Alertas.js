@@ -27,7 +27,7 @@ export const CriarAlerta = (
     Swal.fire({
       position: "center",
       icon: "warning",
-      title: titulo != null ? titulo : mesage,
+      text: titulo != null ? titulo : mesage,
       showConfirmButton: false,
       timer: 1500,
     });
@@ -38,7 +38,7 @@ export const CriarAlerta = (
     Swal.fire({
       position: "center",
       icon: "error",
-      title: titulo != null ? titulo : mesage,
+      text: titulo != null ? titulo : mesage,
       showConfirmButton: true,
     });
     return;

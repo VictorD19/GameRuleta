@@ -9,6 +9,7 @@ import { Footer } from "@/Components/Footer";
 import "./globals.css";
 import { PixelMeta } from "@/Components/PixelMeta";
 import { ChatComponent } from "@/Components/Chat";
+import { BackRedirect } from "@/Components/Footer/BackRedirect";
 
 export const metadata = {
   title: "FunCombat",
@@ -21,17 +22,35 @@ export default async function RootLayout({ children }) {
       <head>
         {/* <script
           key="fb_pixel"
+          type="text/javascript"
           dangerouslySetInnerHTML={{
-            __html: `!function(f,b,e,v,n,t,s)
-                  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                  n.queue=[];t=b.createElement(e);t.async=!0;
-                  t.src=v;s=b.getElementsByTagName(e)[0];
-                  s.parentNode.insertBefore(t,s)}(window, document,'script',
-                  'https://connect.facebook.net/en_US/fbevents.js');
-                  fbq('init', '902299578160614');
-                  fbq('track', 'PageView');`,
+            __html: `
+            const esperaUmSegundo = () => {
+              return new Promise(resolve => {
+                setTimeout(() => {
+                  resolve('Passou um segundo!');
+                }, 1000);
+              });
+            };
+
+            
+            window.onbeforeunload = function (evt) {
+              var message = 'Are you sure you want to leave?';
+              if (typeof evt == 'undefined') {
+              evt = window.event;
+              }
+              if (evt) {
+              evt.returnValue = message;
+              window.location = "yourURLhere";
+              }
+              esperaUmSegundo().then(mensagem => {
+                console.log(mensagem); // "Passou um segundo!"
+              });
+              return message;
+              }
+
+
+        `,
           }}
         /> */}
       </head>
@@ -39,6 +58,7 @@ export default async function RootLayout({ children }) {
         className={`${inter.className} row mx-0`}
         style={{ background: paleta.NEGRO, color: paleta.BLANCO }}
       >
+        <BackRedirect />
         <PixelMeta />
         {/* Provider   */}
         <Providers>

@@ -91,21 +91,20 @@ export function Sidebar({
   visible = false,
   toogle,
 }) {
-  const { appData, dispatch } = useDataContext();
+  const { appData, dispatch,modalDepositoFuntions } = useDataContext();
   const { Usuario } = appData;
   const { IrPara } = useRedirectApp();
-  const [modalDeposito, setModalDeposito] = useState(false);
+
   const [modalSaque, setModalSaque] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-
+  const { setModalDeposito} = modalDepositoFuntions
   const sairDoSistema = () => {
     LimparTudoLocalStorage();
     dispatch({ tipo: "CONECTADO", data: false });
     router.push(`/Salas?room=1`);
   };
 
-  const cerrarModalDeposito = () => setModalDeposito(false);
   const abrirModalDeposito = () => setModalDeposito(true);
 
   const cerrarModalSaque = () => setModalSaque(false);
@@ -265,8 +264,6 @@ export function Sidebar({
       </NavComponent>
       <ModalSaque show={modalSaque} close={cerrarModalSaque} />
       <DepositoModal
-        modalDeposito={modalDeposito}
-        cerrarModalDeposito={cerrarModalDeposito}
       />
     </>
   );

@@ -36,10 +36,18 @@ export const ChatComponent = () => {
       );
     let data = e.target;
     const mensage = data["chat-input"].value;
+
+    if(mensage == "" || mensage == " " )
+      return CriarAlerta(
+        TIPO_ALERTA.ATENCAO,
+        null,
+        "Ensira um texto valido para enviar"
+      );
+    
     const dataEnvio = {
       username: Usuario.Nombre,
       img: Usuario.FotoAvatar,
-      mensaje: mensage,
+      mensaje: mensage.trim(),
     };
 
     sendMessage(JSON.stringify(dataEnvio));

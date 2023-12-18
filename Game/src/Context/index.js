@@ -49,6 +49,8 @@ export const ContextAppProvider = ({ children }) => {
   const [modalLoginVisibilidade, setVisibilidadeModalLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [ruletaActiva, setRuletaActiva] = useState(false);
+  const [modalDeposito, setModalDeposito] = useState(false);
+
   const cerrarModalLogin = () => setVisibilidadeModalLogin(false);
   const abrirModalLogin = () => setVisibilidadeModalLogin(true);
 
@@ -61,6 +63,10 @@ export const ContextAppProvider = ({ children }) => {
     ativarLoading,
     desativarLoading,
   };
+  const modalDepositoFuntions = {
+    modalDeposito,
+    setModalDeposito
+  }
   const ruletaState = {
     ruletaActiva,
     setRuletaActiva,
@@ -132,6 +138,7 @@ export const ContextAppProvider = ({ children }) => {
         loginsMethod,
         ruletaState,
         loading,
+        modalDepositoFuntions
       }}
     >
       {isLoading ? <LoadingComponet /> : <></>}
@@ -150,6 +157,7 @@ export const useDataContext = () => {
     modalLoginVisibilidade,
     loginsMethod,
     loading,
+    modalDepositoFuntions,
     ruletaState,
   } = useContext(ContextoApp);
   return {
@@ -158,6 +166,7 @@ export const useDataContext = () => {
     webservice,
     dispatch,
     loading,
+    modalDepositoFuntions,
     modalRegistroVisibilidade,
     modalLoginVisibilidade,
     loginsMethod,

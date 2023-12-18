@@ -1,6 +1,10 @@
 "use client";
 import { Button } from "react-bootstrap";
-import { CardPasoAPaso, EstaditicasJuegoStyled, HeadPaginaPrincialStyle } from "./app.style";
+import {
+  CardPasoAPaso,
+  EstaditicasJuegoStyled,
+  HeadPaginaPrincialStyle,
+} from "./app.style";
 import {
   FaCalculator,
   FaDoorOpen,
@@ -28,6 +32,7 @@ export default function Page() {
     totalJuegosRealizados: 1200,
   });
   useEffect(() => {
+
     if (SessionLoginActiva()) return IrPara("/Salas?room=1");
 
     (async () => {
@@ -50,43 +55,52 @@ export default function Page() {
     <div className="px-3">
       <HeadPaginaPrincialStyle>
         <h1>
-        Damos as boas-vindas com um bônus de até R$100 para impulsionar a sua sorte.
+          Damos as boas-vindas com um bônus de até R$100 para impulsionar a sua
+          sorte.
         </h1>
-        
+
         <div className=" my-4 row bg-dark justify-content-center aling-item-center">
-          <div className="col-12 col-md-3 " >
-          <CardPasoAPaso>
-            <span>1</span>
-            <div className="w-100">
-              <h6>Registrar</h6>
-              <p>Crie a sua conta</p>
-            </div>
-          </CardPasoAPaso>
-          </div>
-          <div className="col-12 col-md-3" >
-          <CardPasoAPaso> 
-            <span>2</span>
-            <div className="w-100">
-              <h6>Depositar</h6>
-              <p>Faça o seu 1º depósito <br/>(min R$10)</p>
-            </div>
-          </CardPasoAPaso>
-          </div>
-          <div className="col-12 col-md-3" >
-          <CardPasoAPaso>
-            <span>3</span>
-            <div className="w-100">
-              <h6>Ganhe o seu BÔNUS</h6>
-              <p>Duplicamos o valor do seu deposito inicial até R$100</p>
-            </div>
+          <div className="col-12 col-md-3 ">
+            <CardPasoAPaso>
+              <span>1</span>
+              <div className="w-100">
+                <h6>Registrar</h6>
+                <p>Crie a sua conta</p>
+              </div>
             </CardPasoAPaso>
-            </div>
+          </div>
+          <div className="col-12 col-md-3">
+            <CardPasoAPaso>
+              <span>2</span>
+              <div className="w-100">
+                <h6>Depositar</h6>
+                <p>
+                  Faça o seu 1º depósito <br />
+                  (min R$10)
+                </p>
+              </div>
+            </CardPasoAPaso>
+          </div>
+          <div className="col-12 col-md-3">
+            <CardPasoAPaso>
+              <span>3</span>
+              <div className="w-100">
+                <h6>Ganhe o seu BÔNUS</h6>
+                <p>Duplicamos o valor do seu deposito inicial até R$100</p>
+              </div>
+            </CardPasoAPaso>
+          </div>
         </div>
 
         <Button
           variant="primary"
           className=" mt-2  py-2"
-          style={{padding:"6rem",height:"4rem",fontWeight:"bold",fontSize:"1.2em"}}
+          style={{
+            padding: "6rem",
+            height: "4rem",
+            fontWeight: "bold",
+            fontSize: "1.2em",
+          }}
           onClick={loginsMethod.abrirModalRegistro}
         >
           JOGAR AGORA
@@ -143,9 +157,7 @@ export default function Page() {
           <div className="preechimento my-2 mt-4  mb-3 d-flex justify-content-center">
             <FaDoorOpen size={35} color="#F2E852" />
           </div>
-          <h5>
-            Faça suas apostas apartir de R$1
-          </h5>
+          <h5>Faça suas apostas apartir de R$1</h5>
         </div>
         <div className="col-6 col-md-4">
           <div className="preechimento my-2 mt-4  mb-3 d-flex justify-content-center">
@@ -166,59 +178,69 @@ export default function Page() {
         </div>
       </EstaditicasJuegoStyled>
 
-     <div className=" mt-3 p-2"> <h5  style={{ color: "#f29a0b" }}>
-        Regras do Jogo:
-      </h5>
-      <ol style={{ padding: 0 }}>
-        <li>
-          <b style={{ color: "#dc3545" }}>Jogo de 2 lados:</b> O jogo tem dois
-          times, um é azul {ObterDadosLado(1).Icon} e o outro é vermelho  {ObterDadosLado(2).Icon}.
-        </li>
-        <li>
-          <b style={{ color: "#dc3545" }}> Apostas:</b> Os jogadores precisam
-          fazer apostas escolhendo o lado azul {ObterDadosLado(1).Icon} ou vermelho {ObterDadosLado(2).Icon}. Pelo menos 1 jogador
-          de cada lado é necessário.
-        </li>
-        <li>
-          <b style={{ color: "#dc3545" }}>Sorteio:</b>Um sorteio de 30 segundos
-          começa assim que há pelo menos 1 jogador de cada lado na mesa.
-        </li>
-        <li>
-          <b style={{ color: "#dc3545" }}>Tempo Limite:</b>Quando os 30 segundos
-          acabam, um lado é escolhido como vencedor. Esse lado ganha todas as
-          apostas do lado contrario.
-        </li>
-      </ol>
-      <h5 style={{ color: "#f29a0b" }}>Exemplo:</h5>
-      <ol style={{ padding: 0 }}>
-        <li>
-          <b style={{ color: "#dc3545" }}>Lado Azul :{ObterDadosLado(1).Icon}</b> 2 jogadores apostaram,
-          um R$ 10 e o outro R$ 50, totalizando R$ 60.
-        </li>
-        <li>
-          <b style={{ color: "#dc3545" }}>Lado Vermelho: {ObterDadosLado(2).Icon}</b> 1 jogador apostou
-          R$ 100.
-        </li>
-        <li>
-          <b style={{ color: "#dc3545" }}>Chances de Ganhar:</b>Lado Vermelho {ObterDadosLado(2).Icon} {" "}
-          tem 62,5%, e Lado Azul {ObterDadosLado(1).Icon} tem 37,5%, baseado no total apostado de cada
-          lado.
-        </li>
-      </ol>
-
-      <h5 style={{ color: "#f29a0b" }}>Se o Vermelho ganhar: {ObterDadosLado(2).Icon}</h5>
-      <p>
-        Ele leva todo o dinheiro apostado no lado Azul (R$ 60 + R$ 100) menos
-        5%, totalizando R$ 152, ja conseguindo realizar o saque de R$52
-      </p>
-      <h5 style={{ color: "#f29a0b", fontWeight: "bold" }}>
-        Se o Azul ganhar: {ObterDadosLado(1).Icon}
-      </h5>
-      <p>
-        Cada jogador recebe dinheiro proporcional ao que apostou. Por exemplo, o
-        jogador que apostou R$ 10 recebe R$ 26,66, e o jogador que apostou R$ 50
-        recebe R$ 133,33.
-      </p></div>
+      <div className=" mt-3 p-2">
+        {" "}
+        <h5 style={{ color: "#f29a0b" }}>Regras do Jogo:</h5>
+        <ol style={{ padding: 0 }}>
+          <li>
+            <b style={{ color: "#dc3545" }}>Jogo de 2 lados:</b> O jogo tem dois
+            times, um é azul {ObterDadosLado(1).Icon} e o outro é vermelho{" "}
+            {ObterDadosLado(2).Icon}.
+          </li>
+          <li>
+            <b style={{ color: "#dc3545" }}> Apostas:</b> Os jogadores precisam
+            fazer apostas escolhendo o lado azul {ObterDadosLado(1).Icon} ou
+            vermelho {ObterDadosLado(2).Icon}. Pelo menos 1 jogador de cada lado
+            é necessário.
+          </li>
+          <li>
+            <b style={{ color: "#dc3545" }}>Sorteio:</b>Um sorteio de 30
+            segundos começa assim que há pelo menos 1 jogador de cada lado na
+            mesa.
+          </li>
+          <li>
+            <b style={{ color: "#dc3545" }}>Tempo Limite:</b>Quando os 30
+            segundos acabam, um lado é escolhido como vencedor. Esse lado ganha
+            todas as apostas do lado contrario.
+          </li>
+        </ol>
+        <h5 style={{ color: "#f29a0b" }}>Exemplo:</h5>
+        <ol style={{ padding: 0 }}>
+          <li>
+            <b style={{ color: "#dc3545" }}>
+              Lado Azul :{ObterDadosLado(1).Icon}
+            </b>{" "}
+            2 jogadores apostaram, um R$ 10 e o outro R$ 50, totalizando R$ 60.
+          </li>
+          <li>
+            <b style={{ color: "#dc3545" }}>
+              Lado Vermelho: {ObterDadosLado(2).Icon}
+            </b>{" "}
+            1 jogador apostou R$ 100.
+          </li>
+          <li>
+            <b style={{ color: "#dc3545" }}>Chances de Ganhar:</b>Lado Vermelho{" "}
+            {ObterDadosLado(2).Icon} tem 62,5%, e Lado Azul{" "}
+            {ObterDadosLado(1).Icon} tem 37,5%, baseado no total apostado de
+            cada lado.
+          </li>
+        </ol>
+        <h5 style={{ color: "#f29a0b" }}>
+          Se o Vermelho ganhar: {ObterDadosLado(2).Icon}
+        </h5>
+        <p>
+          Ele leva todo o dinheiro apostado no lado Azul (R$ 60 + R$ 100) menos
+          5%, totalizando R$ 152, ja conseguindo realizar o saque de R$52
+        </p>
+        <h5 style={{ color: "#f29a0b", fontWeight: "bold" }}>
+          Se o Azul ganhar: {ObterDadosLado(1).Icon}
+        </h5>
+        <p>
+          Cada jogador recebe dinheiro proporcional ao que apostou. Por exemplo,
+          o jogador que apostou R$ 10 recebe R$ 26,66, e o jogador que apostou
+          R$ 50 recebe R$ 133,33.
+        </p>
+      </div>
     </div>
   );
 }

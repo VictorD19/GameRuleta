@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Logo from "../../Assert/logo.svg";
 import Link from "next/link";
-
 export const Footer = () => {
   return (
     <footer className=" mt-3">
