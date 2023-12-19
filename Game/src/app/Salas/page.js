@@ -1,10 +1,11 @@
 "use client";
 import { MesaComponent } from "./mesa";
 import { Jugadas } from "./jugadas";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDataContext } from "@/Context";
 import { useSearchParams } from "next/navigation";
 import { useRedirectApp } from "@/Hooks/RoutesHooks";
+import { NovosJogadoresComponent } from "@/Components/NovosJogadores";
 
 export default function Page() {
   const { dispatch, atualizarUrlSala, webservice, loading } = useDataContext();
@@ -19,6 +20,7 @@ export default function Page() {
       atualizarUrlSala(0);
     }
   }, [roomAtual, webservice.readyState]);
+  
   useEffect(() => {
     if (webservice.lastJsonMessage != null) {
       if (webservice.lastJsonMessage.estatusGeral != null)
@@ -34,10 +36,15 @@ export default function Page() {
         });
     }
   }, [webservice.lastJsonMessage, roomAtual]);
+
+  const list = []
+
+  const componenteMemory = useMemo(()=> <NovosJogadoresComponent/>,[list])
   return (
     <div className="">
       <MesaComponent />
       <Jugadas />
+      {componenteMemory}
     </div>
   );
 }
