@@ -11,6 +11,12 @@ import { URL_PADRAO_SOCKET } from "@/Api";
 import { useDataContext } from "@/Context";
 import { useAuthHook } from "@/Hooks/AuthHook";
 import { CriarAlerta, TIPO_ALERTA } from "../Alertas/Alertas";
+
+function validarString(valor) {
+  var regex = /\S/;
+  return regex.test(valor);
+}
+
 export const ChatComponent = () => {
   const { sendMessage, lastMessage, lastJsonMessage, readyState } =
     useWebSocket(URL_PADRAO_SOCKET + "/chat/chat-general", {
@@ -37,7 +43,7 @@ export const ChatComponent = () => {
     let data = e.target;
     const mensage = data["chat-input"].value;
 
-    if(mensage == "" || mensage == " " )
+    if(!validarString(mensage))
       return CriarAlerta(
         TIPO_ALERTA.ATENCAO,
         null,
