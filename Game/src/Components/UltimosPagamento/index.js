@@ -1,7 +1,7 @@
 import { CardJogador } from "../FilasUsuarios/style.styled";
 import Profiles from "../../Assert/Profile";
 import Image from "next/image";
-import { useEffect, useMemo } from "react";
+import {useMemo } from "react";
 
 export const UltimosPagamentos = ({ list = [...Array(10)] }) => {
   return useMemo(
