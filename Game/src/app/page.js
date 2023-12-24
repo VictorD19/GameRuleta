@@ -2,6 +2,7 @@
 import { Button } from "react-bootstrap";
 import {
   CardPasoAPaso,
+  ContaineCardPaso,
   EstaditicasJuegoStyled,
   HeadPaginaPrincialStyle,
 } from "./app.style";
@@ -21,6 +22,7 @@ import { useAuthHook } from "@/Hooks/AuthHook";
 import { useRedirectApp } from "@/Hooks/RoutesHooks";
 import { useDataContext } from "@/Context";
 import { ObterDadosLado } from "./Cores";
+import { CarruselComponet } from "@/Components/Carrusel";
 export default function Page() {
   const { SessionLoginActiva } = useAuthHook();
   const { loginsMethod } = useDataContext();
@@ -54,22 +56,19 @@ export default function Page() {
   return (
     <div className="px-3">
       <HeadPaginaPrincialStyle>
-        <h1>
-          Damos as boas-vindas com um bônus de até R$100 para impulsionar a sua
-          sorte.
-        </h1>
+        <CarruselComponet />
 
-        <div className=" my-4 row bg-dark justify-content-center aling-item-center">
-          <div className="col-12 col-md-3 ">
+        <div className=" my-4 row bg-dark justify-content-center gap-2 aling-item-center">
+          <ContaineCardPaso className="col-12 col-md-3 ">
             <CardPasoAPaso>
               <span>1</span>
               <div className="w-100">
-                <h6>Registrar</h6>
+                <h6>Registrar-se</h6>
                 <p>Crie a sua conta</p>
               </div>
             </CardPasoAPaso>
-          </div>
-          <div className="col-12 col-md-3">
+          </ContaineCardPaso>
+          <ContaineCardPaso className="col-12 col-md-3">
             <CardPasoAPaso>
               <span>2</span>
               <div className="w-100">
@@ -80,8 +79,8 @@ export default function Page() {
                 </p>
               </div>
             </CardPasoAPaso>
-          </div>
-          <div className="col-12 col-md-3">
+          </ContaineCardPaso>
+          <ContaineCardPaso className="col-12 col-md-3">
             <CardPasoAPaso>
               <span>3</span>
               <div className="w-100">
@@ -89,7 +88,7 @@ export default function Page() {
                 <p>Duplicamos o valor do seu deposito inicial até R$100</p>
               </div>
             </CardPasoAPaso>
-          </div>
+          </ContaineCardPaso>
         </div>
 
         <Button
@@ -99,7 +98,7 @@ export default function Page() {
             padding: "6rem",
             height: "4rem",
             fontWeight: "bold",
-            fontSize: "1.2em",
+            fontSize: "1.1em",
           }}
           onClick={loginsMethod.abrirModalRegistro}
         >
@@ -113,7 +112,7 @@ export default function Page() {
             <FaUserAstronaut size={35} color="#00F566" />
           </div>
           <h4>
-            {dataPage.jugadoresActivos > 5 ? dataPage.jugadoresActivos : 10}
+            {dataPage.jugadoresActivos > 5 ? dataPage.jugadoresActivos : 5}
           </h4>
           <p>Jogadores Activos</p>
         </div>

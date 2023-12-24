@@ -55,4 +55,14 @@ p{
   vertical-align:middle;
 }
 
+
+
 `
+
+export const ContaineCardPaso = styled.div`
+   border-top:4px solid #f29a0b;
+   gap:1;
+@media only screen and (max-width: 767px) {
+   border-left:4px solid #f29a0b;
+   border-top:none;
+  }`
