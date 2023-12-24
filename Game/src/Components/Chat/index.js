@@ -18,6 +18,10 @@ function validarString(valor) {
 }
 
 export const ChatComponent = () => {
+  const [novosMensagem, setNovosMensagems] = useState({
+    atual: 0,
+    naoLidas: 0
+  })
   const { sendMessage, lastMessage, lastJsonMessage, readyState } =
     useWebSocket(URL_PADRAO_SOCKET + "/chat/chat-general", {
       shouldReconnect: () => true,
@@ -30,7 +34,10 @@ export const ChatComponent = () => {
   const { SessionLoginActiva } = useAuthHook();
   const { appData } = useDataContext();
   const { Usuario } = appData;
-  const abrirChat = () => setVisibleChat(true);
+  const abrirChat = () => {
+    setVisibleChat(true);
+    setNovosMensagems(atual => ({ ...atual, naoLidas: 0 }))
+  }
   const fecharChat = () => setVisibleChat(false);
   const enviarMensaje = (e) => {
     e.preventDefault();
@@ -43,13 +50,13 @@ export const ChatComponent = () => {
     let data = e.target;
     const mensage = data["chat-input"].value;
 
-    if(!validarString(mensage))
+    if (!validarString(mensage))
       return CriarAlerta(
         TIPO_ALERTA.ATENCAO,
         null,
         "Ensira um texto valido para enviar"
       );
-    
+
     const dataEnvio = {
       username: Usuario.Nombre,
       img: Usuario.FotoAvatar,
@@ -61,26 +68,35 @@ export const ChatComponent = () => {
 
     let chat = document.getElementById("chat-logs");
     chat.scrollTop = chat.scrollHeight;
+    setNovosMensagems(atual => ({ ...atual, naoLidas: 0 }))
   };
   useEffect(() => {
     if (readyState == 1 && lastJsonMessage != null) {
       setMessage(lastJsonMessage);
+      setNovosMensagems(temp => novosMensagem.atual != lastJsonMessage.length ?
+        {
+          atual: lastJsonMessage.length,
+          naoLidas: novosMensagem.atual == 0 && novosMensagem.atual == 0 ? lastJsonMessage.length : visibleChat ? novosMensagem.atual - lastJsonMessage.length : lastJsonMessage.length
+        } : temp
+      )
     } else {
       setMessage([]);
     }
   }, [lastJsonMessage]);
 
-  useEffect(() => {}, [readyState]);
-  useEffect(() => {}, []);
+  useEffect(() => { }, [readyState]);
   return (
     <>
       {!visibleChat && (
         <div id="chat-circle" onClick={abrirChat}>
           <div id="chat-overlay"></div>
+          {novosMensagem.naoLidas > 0 && <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {novosMensagem.naoLidas == -1 ? 0 : novosMensagem.naoLidas}
+            <span className="visually-hidden">unread messages</span>
+          </span>}
           <IoIosChatboxes size={30} />
         </div>
       )}
-
       <ChatBox $visible={visibleChat}>
         <ChatHeader>
           Chat
