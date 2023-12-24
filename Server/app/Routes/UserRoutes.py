@@ -64,9 +64,11 @@ def read_user(
 
 @router.post("/create-user", response_model=UserPublic, status_code=201)
 def create_user(user: User, session: Session = Depends(get_session)):
-    
     if not user.avatar:
-        raise HTTPException(status_code=400, detail="Você precisa selecionar um avatar para criar a conta.")
+        raise HTTPException(
+            status_code=400,
+            detail="Você precisa selecionar um avatar para criar a conta.",
+        )
 
     db_user = session.scalar(
         select(UserModel).where(UserModel.username == user.username)
@@ -302,3 +304,12 @@ def apuestas(
         return JSONResponse(content=[], status_code=200)
 
     return JSONResponse(listaApuestas, status_code=200)
+
+
+@router.get("/ultimos-usuarios/")
+def apuestas(
+    session: Session = Depends(get_session),
+):
+    usuarios = Usuario(session=session).UltimosUsuarios()
+
+    return JSONResponse(usuarios, status_code=200)

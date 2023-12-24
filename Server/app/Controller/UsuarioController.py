@@ -11,7 +11,13 @@ from Service import templates_mail
 from Service.datetime_now import datetime_local_actual
 from Service.securtity import get_password_hash
 from Schemas.Exection import ControllerException
-from Schemas.SchemaUser import UserPublic, TransaccionesBanco, RetiroFondos, StatusPix
+from Schemas.SchemaUser import (
+    UserPublic,
+    NuevoUsuario,
+    TransaccionesBanco,
+    RetiroFondos,
+    StatusPix,
+)
 from Schemas.Apuesta import UltimaApuesta
 from Service.TelegramBot import send_mensaje_telegram
 from Models.model import (
@@ -86,6 +92,13 @@ class Usuario:
             for apuesta in apuestas
         ]
 
+    def UltimosUsuarios(self):
+        usuarios = self.session.query(UserModel).order_by(UserModel.id.desc()).limit(10)
+        return [
+            NuevoUsuario(avatar=user.avatar, username=user.username).model_dump()
+            for user in usuarios
+        ]
+
 
 class Banco:
     def __init__(
@@ -108,7 +121,9 @@ class Banco:
                 )
 
             self.guardaTransaccionInicial(idTransac=datos["id"])
-            send_mensaje_telegram(mensaje=f"Pix Generado: Usuario: {self.user.username} - Valor: R$ {self.monto}")
+            send_mensaje_telegram(
+                mensaje=f"Pix Generado: Usuario: {self.user.username} - Valor: R$ {self.monto}"
+            )
             return {
                 "idQr": datos["id"],
                 "encodedImage": datos["encodedImage"],
@@ -167,12 +182,16 @@ class Banco:
 
             # validamos si es la primera transaccion y acresentamos el bono del primer deposito..
             if cant == 1:
-                transac.usuarioTransaccion.account += (transac.monto * 2)  if transac.monto <= 100 else transac.monto + 100
+                transac.usuarioTransaccion.account += (
+                    (transac.monto * 2) if transac.monto <= 100 else transac.monto + 100
+                )
             else:
                 transac.usuarioTransaccion.account += transac.monto
 
             self.session.commit()
-            send_mensaje_telegram(mensaje=f"Deposito Validado - Valor: R$ {transac.monto}")
+            send_mensaje_telegram(
+                mensaje=f"Deposito Validado - Valor: R$ {transac.monto}"
+            )
         except Exception as ex:
             self.session.rollback()
             raise HTTPException(
@@ -235,7 +254,9 @@ class Banco:
                 .first()
             )
 
-            if cuenta.ganancias < float(os.getenv("MONTO_MINIMO_RETIROS")) or retiro.monto < float(os.getenv("MONTO_MINIMO_RETIROS")):
+            if cuenta.ganancias < float(
+                os.getenv("MONTO_MINIMO_RETIROS")
+            ) or retiro.monto < float(os.getenv("MONTO_MINIMO_RETIROS")):
                 raise ControllerException(
                     "Não possui o monto minimo R$50 de ganancias para saque - Atual: R$"
                     + cuenta.ganancias
@@ -248,7 +269,7 @@ class Banco:
             transaccSalida = TransacSalidaModel(
                 usuarioTransaccion=self.user,
                 monto=retiro.monto,
-                tipoLlave = retiro.llaveTipo,
+                tipoLlave=retiro.llaveTipo,
                 llavePix=retiro.chavePix,
                 fechaCreado=datetime_local_actual(),
                 status=False,
@@ -263,11 +284,13 @@ class Banco:
                 .filter(UserModel.id == self.user.id)
                 .first()
             )
-            
+
             cuenta.ganancias = cuenta.ganancias - retiro.monto
             self.session.commit()
             self.session.refresh(cuenta)
-            send_mensaje_telegram(mensaje=f"Usuario {self.user.username} - Solicitou Saque no Valor de R$ {retiro.monto}")
+            send_mensaje_telegram(
+                mensaje=f"Usuario {self.user.username} - Solicitou Saque no Valor de R$ {retiro.monto}"
+            )
             # Sera desenvolvida depois no momento lo haremos manual
             # Llamar funcion que hace el pix
             # datos, status_code = NewTransferenciaPIX(

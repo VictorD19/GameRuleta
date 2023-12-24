@@ -10,7 +10,7 @@ class User(BaseModel):
     avatar: str | None = None
     codReferencia: str | None = None
     email: str | None = None
-    usuarioAdministrador: bool  = False
+    usuarioAdministrador: bool = False
 
 
 class UserSaldo(BaseModel):
@@ -59,6 +59,11 @@ class StatusPix(BaseModel):
     error: str | None = None
 
 
+class NuevoUsuario(BaseModel):
+    avatar: str
+    username: str
+
+
 class DetalhesApuestaUsuario(BaseModel):
     nombre: str
     imagen: str
@@ -74,6 +79,15 @@ class TransaccionesBanco(BaseModel):
     fechaCreado: datetime
     fechaPagado: datetime | None = None
     status: bool
+
+
+class TransaccionPagada(BaseModel):
+    id: int
+    tipo: str
+    monto: float
+    usuario: str
+    avatar: str
+    chavePix: str
 
 
 class ListTransaccionesBanco(BaseModel):

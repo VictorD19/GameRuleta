@@ -35,8 +35,8 @@ const NavComponent = styled.nav`
     transition: 0.5s all ease;
     display: ${(prop) => (prop.$visible.visible ? "block" : "none")};
     width: 100%;
-    height: 100vh;
-    height: 100dvh;
+    height: 100%;
+    height: 100%;
 
     .botonClose {
       display: block;
@@ -49,8 +49,8 @@ const NavComponent = styled.nav`
   /* Media query para notebooks e PCs (a partir de 768px) */
   @media only screen and (min-width: 768px) {
     display: block;
-    height: 100vh;
-    height: 100dvh;
+    height: 100%;
+    height: 100%;
     margin-left: -10px;
     .botonClose {
       display: none;
@@ -91,14 +91,14 @@ export function Sidebar({
   visible = false,
   toogle,
 }) {
-  const { appData, dispatch,modalDepositoFuntions } = useDataContext();
+  const { appData, dispatch, modalDepositoFuntions } = useDataContext();
   const { Usuario } = appData;
   const { IrPara } = useRedirectApp();
 
   const [modalSaque, setModalSaque] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { setModalDeposito} = modalDepositoFuntions
+  const { setModalDeposito } = modalDepositoFuntions
   const sairDoSistema = () => {
     LimparTudoLocalStorage();
     dispatch({ tipo: "CONECTADO", data: false });
@@ -110,7 +110,7 @@ export function Sidebar({
   const cerrarModalSaque = () => setModalSaque(false);
   const abrirModalSaque = () => setModalSaque(true);
 
-  const onSubmitSaque = (e) => {};
+  const onSubmitSaque = (e) => { };
 
   const itParaLaPagina = (pagina) => {
     router.push(`${pagina}`);
@@ -131,7 +131,7 @@ export function Sidebar({
     });
   };
 
-  useEffect(()=>{},[Usuario.Id])
+  useEffect(() => { }, [Usuario.Id])
   return (
     <>
       <NavComponent $visible={{ visible: visible == true ? true : false }}>
@@ -219,13 +219,12 @@ export function Sidebar({
                   Usuario.Administrador ? 1 : x.Administrador == false
                 ).map((x, i) => (
                   <li
-                    className={` tooltip-element  ${
-                      pathname
-                        .toLocaleLowerCase()
-                        .includes(x.Titulo.toLocaleLowerCase())
-                        ? "active-tab"
-                        : ""
-                    }`}
+                    className={` tooltip-element  ${pathname
+                      .toLocaleLowerCase()
+                      .includes(x.Titulo.toLocaleLowerCase())
+                      ? "active-tab"
+                      : ""
+                      }`}
                     data-tooltip="0"
                     key={x.Titulo + i}
                   >
@@ -240,11 +239,10 @@ export function Sidebar({
                   </li>
                 ))}
                 <li
-                  className={` tooltip-element  ${
-                    pathname.toLocaleLowerCase().includes("SAIR")
-                      ? "active-tab"
-                      : ""
-                  }`}
+                  className={` tooltip-element  ${pathname.toLocaleLowerCase().includes("SAIR")
+                    ? "active-tab"
+                    : ""
+                    }`}
                   data-tooltip="0"
                   key={"OpcaoSair_"}
                 >
