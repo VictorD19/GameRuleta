@@ -33,9 +33,9 @@ class UserModel(Base):
     password: Mapped[str]
     avatar: Mapped[str] = mapped_column(nullable=True)
     account: Mapped[float] = mapped_column(default=0.0)
-    ganancias: Mapped[float] = mapped_column(default=0.0, nullable= True)
+    ganancias: Mapped[float] = mapped_column(default=0.0, nullable=True)
     status: Mapped[bool] = mapped_column(default=True)
-    usuarioAdministrador: Mapped[bool] = mapped_column(default=False, nullable= True)
+    usuarioAdministrador: Mapped[bool] = mapped_column(default=False, nullable=True)
     codreferencia: Mapped[str] = mapped_column(nullable=True)
     codIndicacion: Mapped[str] = mapped_column(nullable=True)
     dataCriacion: Mapped[datetime] = mapped_column(nullable=True)
@@ -91,7 +91,7 @@ class ApuestaModel(Base):
     usuarioRelacion: Mapped["UserModel"] = relationship(back_populates="apuestas")
     monto: Mapped[float]
     gastoAccount: Mapped[float] = mapped_column(nullable=True, default=0)
-    gastoGanancia:Mapped[float] = mapped_column(nullable=True, default=0)
+    gastoGanancia: Mapped[float] = mapped_column(nullable=True, default=0)
     montoResultado: Mapped[float] = mapped_column(nullable=True)
     porcentaje: Mapped[float]
     lado: Mapped[int]
@@ -129,3 +129,22 @@ class TransacSalidaModel(Base):
     fechaCreado: Mapped[datetime]
     fechaPagado: Mapped[datetime] = mapped_column(nullable=True)
     status: Mapped[bool] = mapped_column(default=False)
+
+
+class ApuestaMinasModel(Base):
+    __tablename__ = "apuestas_minas"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    usuario: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    gastoAccount: Mapped[float] = mapped_column(nullable=True, default=0)
+    gastoGanancia: Mapped[float] = mapped_column(nullable=True, default=0)
+    resultado: Mapped[bool] = mapped_column(nullable=True)
+    montoResultado: Mapped[float] = mapped_column(nullable=True)
+    # String Set format de las abiertas en la Matriz
+    abiertas: Mapped[str] = mapped_column(nullable=True)
+    # Fin de la jugada
+    fin: Mapped[datetime] = mapped_column(nullable=True) 
+    minas: Mapped[int] # Cantidad de minas en la matriz
+    monto: Mapped[float] # Monto de la apuesta
+    matriz: Mapped[str] # String de la matriz creada
+    inicio: Mapped[datetime] # Inicio de la jugada
