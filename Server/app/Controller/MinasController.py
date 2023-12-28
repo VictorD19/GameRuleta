@@ -3,11 +3,13 @@ from Service.datetime_now import datetime_local_actual
 from Schemas.MinasSchema import MinasApuesta
 from Models.model import ApuestaMinasModel, UserModel
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
+from fastapi import HTTPException
 
 
 class MinasController:
     def __init__(
-        self, minas_apuesta: MinasApuesta, session: Session, user: UserModel
+        self, session: Session, user: UserModel, minas_apuesta: MinasApuesta = None
     ) -> None:
         self.minas_apuesta = minas_apuesta
         self.session = session
@@ -49,11 +51,28 @@ class MinasController:
         except Exception as e:
             self.session.rollback()
 
-    def crea_jugada_minas(self):
+    def crea_apuesta_minas(self):
         try:
+            # Validar si jugador no tiene jugadas en abierto
+            if (
+                mina_activa := self.session.query(ApuestaMinasModel)
+                .filter(
+                    and_(
+                        ApuestaMinasModel.fin == None,
+                        ApuestaMinasModel.usuario == self.user.id,
+                    )
+                )
+                .exists()
+            ):
+                raise HTTPException(
+                    status_code=400, detail="Jugador com partida minas ativa."
+                )
+            # Se genera una nueva matriz con la cantidad
+            # de minas seleccionadas por el jugador
             matriz = self.minas_service.generar_matriz(
                 minas=self.minas_apuesta.cant_minas
             )
+            # Se genera la apuertas de tipo Minas
             new_apuesta = ApuestaMinasModel(
                 usuario=self.user.id,
                 monto=self.minas_apuesta.monto,
@@ -63,8 +82,27 @@ class MinasController:
             self.session.add(new_apuesta)
             self.session.commit()
             self.session.refresh(new_apuesta)
+            # Se descuenta el saldo del cliente
             self.descontarSaldo(apuesta=new_apuesta)
             return True
         except Exception as e:
             print(e)
             self.session.rollback()
+
+    def crea_jugada_minas(self):
+        # Validar si jugador no tiene jugadas en abierto
+        if not (
+            mina_activa := self.session.query(ApuestaMinasModel)
+            .filter(
+                and_(
+                    ApuestaMinasModel.fin == None,
+                    ApuestaMinasModel.usuario == self.user.id,
+                )
+            )
+            .first()
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail="Não há nenhum jogo de Minas ativo para este jogador",
+            )
+        
